@@ -97,13 +97,14 @@ const Header = () => {
                 height={32}
                 alt="ic-profile"
                 src="/ic-profile.svg"
+                className="min-w-[32px] w-8 h-8"
               />
             </Link>
           )}
           {theme && (
             <div className="flex text-white ml-4 bg-gray-400 rounded">
               <button
-                className={`p-4 rounded ${
+                className={`p-4 rounded min-w-[52px] ${
                   theme === "light" ? "primaryButton" : "bg-gray-400"
                 }`}
                 onClick={() => {
@@ -111,17 +112,29 @@ const Header = () => {
                   setTheme("light");
                 }}
               >
-                <Image src="/ic-light.svg" alt="light" width={20} height={20} />
+                <Image
+                  src="/ic-light.svg"
+                  alt="light"
+                  className="min-w-5 w-5 h-5"
+                  width={20}
+                  height={20}
+                />
               </button>
               <button
-                className={`p-4 rounded ${
+                className={`p-4 rounded min-w-[52px] ${
                   theme === "dark" ? "primaryButton" : "bg-gray-400"
                 }`}
                 onClick={() => {
                   setTheme("dark");
                 }}
               >
-                <Image src="/ic-dark.svg" alt="light" width={20} height={20} />
+                <Image
+                  src="/ic-dark.svg"
+                  alt="light"
+                  className="min-w-5 w-5 h-5"
+                  width={20}
+                  height={20}
+                />
               </button>
             </div>
           )}
