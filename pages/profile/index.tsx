@@ -91,7 +91,6 @@ const Collection = () => {
                   items={tabs}
                   className="dark:text-gray-500 text-primary"
                 />
-                ;
               </div>
             </div>
           </div>
