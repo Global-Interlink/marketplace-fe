@@ -41,12 +41,12 @@ const Header = () => {
           .catch((error) => {
             throw error;
           });
-        if (!resultLogin.data.access_token) {
+        if (!resultLogin.data.accessToken) {
           throw "Cannot login";
         }
         LocalStorage.set(
           LocalStorageKey.ACCESS_TOKEN,
-          resultLogin.data.access_token
+          resultLogin.data.accessToken
         );
       }
     } catch (e: any) {

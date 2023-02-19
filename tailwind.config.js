@@ -12,6 +12,7 @@ module.exports = {
         inputBg: "rgba(255, 255, 255, 0.2);",
         error: "#EB5757",
         description: "#646464",
+        item: "rgba(255, 255, 255, 0.6);",
       },
       backgroundImage: {
         bgCommon: "url('/bg-common.svg')",
@@ -20,6 +21,8 @@ module.exports = {
         bgDetail: "url('/bg-detail.svg')",
         footerSP:
           "linear-gradient(125.53deg, rgba(0, 0, 0, 0) -63.23%, rgba(255, 255, 255, 0.8) 222.31%);",
+        bgLinear:
+          "linear-gradient(0deg, rgba(255, 255, 255, 0.5) -30.57%, rgba(178, 182, 242, 0) 93.83%);",
       },
       scale: {
         101: "1.01",

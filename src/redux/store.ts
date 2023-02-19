@@ -4,13 +4,16 @@ import appReducer from "./app/appSlice";
 import homeReducer from "./home/homeSlice";
 import verifyReducer from "./verify/verifySlice";
 import searchReducer from "./search/searchSlice";
-
+import collectionReducer from "./collection/collectionSlice";
+import nftReducer from "./nft/nftSlice";
 export const store = configureStore({
   reducer: {
     app: appReducer,
     home: homeReducer,
     verify: verifyReducer,
     search: searchReducer,
+    collection: collectionReducer,
+    nft: nftReducer,
   },
 });
 export type AppDispatch = typeof store.dispatch;

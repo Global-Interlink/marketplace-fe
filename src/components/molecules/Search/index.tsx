@@ -6,24 +6,6 @@ import { useDetectClickOutside } from "react-detect-click-outside";
 import { useAppDispatch, useAppSelector } from "../../../redux/hook";
 import { clear, searchLaunchpad } from "../../../redux/search/searchSlice";
 
-const data = [
-  {
-    title: "Kitaro World Official",
-    items: 7648,
-    image: "/ic-temp-search.svg",
-  },
-  {
-    title: "SolanaKit Builders",
-    items: 7648,
-    image: "/ic-temp-search.svg",
-  },
-  {
-    title: "Kitten Coup",
-    items: 7648,
-    image: "/ic-temp-search.svg",
-  },
-];
-
 const SearchForm = () => {
   const [text, setText] = React.useState("");
   const [showBottom, setShowBottom] = React.useState(false);

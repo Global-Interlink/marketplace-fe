@@ -1,13 +1,17 @@
 import React from "react";
 import ArrowDown from "../Icons/ArrowDown";
 import { useDetectClickOutside } from "react-detect-click-outside";
-const Sort = () => {
+interface Props {
+  onChange: (sort: "ASC" | "DESC") => void;
+}
+const Sort: React.FC<Props> = ({ onChange }) => {
   const ref = useDetectClickOutside({
     onTriggered: () => {
       setOpen(false);
     },
   });
   const [open, setOpen] = React.useState(false);
+  const [currentSort, setCurrentSort] = React.useState<"ASC" | "DESC">("DESC");
   return (
     <div className="relative" ref={ref}>
       <div
@@ -16,7 +20,7 @@ const Sort = () => {
           setOpen(true);
         }}
       >
-        <p>Newest</p>
+        <p>{currentSort === "DESC" ? "Newest" : "Oldest"}</p>
         <ArrowDown />
       </div>
       {open && (
@@ -24,10 +28,17 @@ const Sort = () => {
           <p
             onClick={() => {
               setOpen(false);
+              if (currentSort === "DESC") {
+                setCurrentSort("ASC");
+                onChange("ASC");
+              } else {
+                setCurrentSort("DESC");
+                onChange("DESC");
+              }
             }}
             className="rounded-[10px] text-black px-5 py-3 hover:bg-slate-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white"
           >
-            Oldest
+            {currentSort === "ASC" ? "Newest" : "Oldest"}
           </p>
         </div>
       )}

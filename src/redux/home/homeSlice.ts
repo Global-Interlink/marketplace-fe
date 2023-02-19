@@ -2,12 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 import { APIFunctions, FetchStatus } from "../../api/APIFunctions";
-import { Launchpad } from "../../api/types";
+import { Collection, Meta } from "../../api/types";
 
-export type FetchListLaunchpadSuccess = {
-  data: Launchpad[];
+export type FetchListCollectionSuccess = {
+  data: Collection[];
+  meta: Meta;
 };
-export type FetchListLaunchpadPrams = any;
+export type FetchListCollectionPrams = {
+  page: number;
+  limit: number;
+  sort: "DESC" | "ASC";
+};
 
 export type CommonError = {
   statusCode: number;
@@ -17,16 +22,16 @@ export type CommonError = {
 export interface DetailNFTState {
   homeData: {
     status: FetchStatus;
-    response?: FetchListLaunchpadSuccess;
+    response?: FetchListCollectionSuccess;
   };
 }
 
-export const fetchLaunchpadList = createAsyncThunk(
-  "home/launchpad/list",
-  async (time_status: string, { rejectWithValue }) => {
+export const fetchListCollection = createAsyncThunk(
+  "home/collections",
+  async (params: FetchListCollectionPrams, { rejectWithValue }) => {
     try {
-      const response = await APIFunctions.get<FetchListLaunchpadSuccess>(
-        `/launchpad?time_status=${time_status}`
+      const response = await APIFunctions.get<FetchListCollectionSuccess>(
+        `/nft-collection?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
       );
       return response.data;
     } catch (err: any) {
@@ -49,15 +54,15 @@ export const homeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchLaunchpadList.pending, (state) => {
+      .addCase(fetchListCollection.pending, (state) => {
         state.homeData.status = FetchStatus.pending;
         state.homeData.response = undefined;
       })
-      .addCase(fetchLaunchpadList.fulfilled, (state, action) => {
+      .addCase(fetchListCollection.fulfilled, (state, action) => {
         state.homeData.status = FetchStatus.succeeded;
         state.homeData.response = action.payload;
       })
-      .addCase(fetchLaunchpadList.rejected, (state, action) => {
+      .addCase(fetchListCollection.rejected, (state, action) => {
         state.homeData.status = FetchStatus.failed;
         const error = action.payload as CommonError;
         toast.error(error?.message);

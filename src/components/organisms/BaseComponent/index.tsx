@@ -37,7 +37,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   return (
     <div
       className={`
-    bg-gray-50 dark:bg-black min-h-[100vh] relative bg-none dark:bg-bgCommonSP dark:md:bg-bgCommon bg-bottom bg-contain bg-no-repeat
+    bg-bgLinear dark:bg-black min-h-[100vh] relative bg-none dark:bg-bgCommonSP dark:md:bg-bgCommon bg-bottom bg-contain bg-no-repeat
     `}
     >
       <Header />
@@ -79,7 +79,10 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
           </div>
           <SearchForm />
           <div className="flex w-full justify-center">
-            <ConnectButton label="Connect Wallet" className="primaryButton !rounded-md" />
+            <ConnectButton
+              label="Connect Wallet"
+              className="primaryButton !rounded-md"
+            />
           </div>
         </div>
       )}

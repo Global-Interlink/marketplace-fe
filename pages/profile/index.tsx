@@ -66,7 +66,7 @@ const Collection = () => {
                     <p>0x24a1...c5d46717</p>
                   </div>
                 </div>
-                <SocialView />
+                {/* <SocialView /> */}
               </div>
               <div className="bg-white text-black dark:text-white border shadow dark:bg-gray-800 p-6 rounded-[20px] justify-between flex mt-6">
                 <div>

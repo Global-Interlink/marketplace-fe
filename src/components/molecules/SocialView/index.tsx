@@ -2,11 +2,11 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Launchpad } from "../../../api/types";
+// import { Launchpad } from "../../../api/types";
 import ShareItem from "../../atoms/ShareItem";
 
 interface Props {
-  response?: Launchpad;
+  response?: any;
 }
 const SocialView: React.FC<Props> = ({ response }) => {
   const { theme } = useTheme();
