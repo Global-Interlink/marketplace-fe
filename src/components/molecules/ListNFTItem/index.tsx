@@ -10,7 +10,7 @@ const ListNFTItem: React.FC<Props> = ({ title, data }) => {
     <Link href={`/nft/${data?.id}`}>
       <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white hover:scale-101 shadow">
         <Image
-          src={data?.image || ""}
+          src={data?.image || "/img-mock-1.png"}
           width={200}
           height={200}
           className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover"

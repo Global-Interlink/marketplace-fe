@@ -2,7 +2,6 @@ import { Tabs } from "antd";
 import Image from "next/image";
 import React from "react";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
-import SocialView from "../../src/components/molecules/SocialView";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 
 const Collection = () => {
@@ -66,7 +65,6 @@ const Collection = () => {
                     <p>0x24a1...c5d46717</p>
                   </div>
                 </div>
-                {/* <SocialView /> */}
               </div>
               <div className="bg-white text-black dark:text-white border shadow dark:bg-gray-800 p-6 rounded-[20px] justify-between flex mt-6">
                 <div>

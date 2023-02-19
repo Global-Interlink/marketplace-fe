@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import Sort from "../../src/components/atoms/Sort";
+import Empty from "../../src/components/molecules/EmptyView";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
 import SocialView from "../../src/components/molecules/SocialView";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
@@ -94,11 +95,15 @@ const Collection = () => {
             <p className="text-black dark:text-white font-bold">Items</p>
             <Sort onChange={setSort} />
           </div>
-          <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {response?.data.map((i) => {
-              return <ListNFTItem key={i.id} data={i} />;
-            })}
-          </div>
+          {response && response.data ? (
+            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+              {response?.data.map((i) => {
+                return <ListNFTItem key={i.id} data={i} />;
+              })}
+            </div>
+          ) : (
+            <Empty />
+          )}
           {response &&
             response.data &&
             currentPage < response.meta.totalPages && (

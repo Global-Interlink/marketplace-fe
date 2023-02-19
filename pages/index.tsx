@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import ImgIcon from "../src/components/atoms/Icons/ImgIcon";
 import Sort from "../src/components/atoms/Sort";
+import Empty from "../src/components/molecules/EmptyView";
 import ListCollectionItem from "../src/components/molecules/ListCollectionItem";
 import BaseComponent from "../src/components/organisms/BaseComponent";
 import { fetchListCollection } from "../src/redux/home/homeSlice";
@@ -31,11 +32,15 @@ const Home = () => {
         <div className="flex items-center justify-end mt-10">
           <Sort onChange={setSort} />
         </div>
-        <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-          {response?.data.map((i) => {
-            return <ListCollectionItem key={i.id} data={i} />;
-          })}
-        </div>
+        {response && response.data ? (
+          <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+            {response?.data.map((i) => {
+              return <ListCollectionItem key={i.id} data={i} />;
+            })}
+          </div>
+        ) : (
+          <Empty />
+        )}
         {response &&
           response.data &&
           currentPage < response.meta.totalPages && (
