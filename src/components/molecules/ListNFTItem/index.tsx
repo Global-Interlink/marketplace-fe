@@ -7,7 +7,7 @@ interface Props {
 }
 const ListNFTItem: React.FC<Props> = ({ title, data }) => {
   return (
-    <Link href={`/nft/${data?.id}`}>
+    <Link href={`/nft/${data?.id || data?.objectId}`}>
       <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white hover:scale-101 shadow">
         <Image
           src={data?.image || "/img-mock-1.png"}

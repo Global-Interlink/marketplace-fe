@@ -40,7 +40,7 @@ const SearchForm = () => {
       <div
         className={` ${
           isFocus ? "border" : ""
-        } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-gray-100 dark:bg-gray-900 rounded-full`}
+        } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-gray-900 rounded-full`}
       >
         <Image src="/ic_search.svg" width={24} height={24} alt="ic-search"/>
         <input

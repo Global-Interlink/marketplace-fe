@@ -70,4 +70,5 @@ export interface NFT {
   owner: Owner;
   collection?: Collection;
   properties?: { name: string; value: string }[];
+  objectId?: string;
 }

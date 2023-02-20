@@ -19,7 +19,6 @@ span.externalSP:after {
   margin-left: 4px;
   vertical-align: middle;
 }
-
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
@@ -53,7 +52,7 @@ span.externalSP:after {
 .modal-content {
   --tw-bg-opacity: 1;
   background-clip: padding-box;
-  @apply bg-gray-800;
+  @apply bg-[#F2F2F2] dark:bg-gray-800 px-10;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
@@ -129,7 +128,6 @@ div.footerC {
   backdrop-filter: blur(7.5px);
 }
 
-
 .text-gradient-primary {
   background: linear-gradient(170.6deg, #fa98e8 21.14%, #a466f4 80.69%);
   -webkit-background-clip: text;
@@ -144,11 +142,10 @@ div.footerC {
   --foreground: black;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --background: black;
   --foreground: white;
 }
-
 
 .ant-tabs-tab-btn {
   @apply text-base font-medium md:text-2xl mb-[10px] font-sans;

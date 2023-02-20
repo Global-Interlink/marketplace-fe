@@ -3,16 +3,31 @@ import Image from "next/image";
 import React from "react";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
+import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
+import { fetchMyNFTs } from "../../src/redux/profile/profileSlice";
 
 const Collection = () => {
+  const dispatch = useAppDispatch();
+  const { response } = useAppSelector((store) => store.profie.profileData);
+  React.useEffect(() => {
+    dispatch(fetchMyNFTs());
+  }, []);
+
   const tabs = [
     {
-      label: "My Items",
+      label: (
+        <div className="flex items-center space-x-[6px]">
+          <p>My items</p>
+          <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
+            {(response?.result && response?.result.length) || 0}
+          </span>
+        </div>
+      ),
       children: (
         <div>
           <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {Array.from(Array(5).keys()).map((i) => {
-              return <ListNFTItem key={i} />;
+            {response?.result?.map((i) => {
+              return <ListNFTItem key={i.onChainId} data={i} />;
             })}
           </div>
           <div className="mt-[70px] flex justify-center">
@@ -25,7 +40,14 @@ const Collection = () => {
       key: "1",
     },
     {
-      label: "Listing",
+      label: (
+        <div className="flex items-center space-x-[6px]">
+          <p>Listing</p>
+          <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
+            0
+          </span>
+        </div>
+      ),
       children: (
         <div>
           <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">

@@ -9,6 +9,8 @@ import Footer from "../Footer";
 import Header from "../Header";
 import jwt_decode from "jwt-decode";
 import SearchForm from "../../molecules/Search";
+import BuyModal from "../../molecules/BuyModal";
+import SuccessModal from "../../molecules/SuccessModal";
 
 interface Props {
   children: React.ReactNode;
@@ -37,12 +39,12 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   return (
     <div
       className={`
-    bg-bgLinear dark:bg-black min-h-[100vh] relative bg-none dark:bg-bgCommonSP dark:md:bg-bgCommon bg-bottom bg-contain bg-no-repeat
+    bg-gray-50 dark:bg-black min-h-[100vh] relative
     `}
     >
       <Header />
       <div
-        className={`flex flex-1 w-full px-4 md:px-20 ${
+        className={`flex flex-1 w-full px-4 md:px-20  ${
           showBgTop ? "dark:md:bg-bgDetail md:bg-right-top md:bg-no-repeat" : ""
         }  `}
       >
