@@ -8,10 +8,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { JsonRpcProvider } from "@mysten/sui.js";
 import { toast } from "react-toastify";
 import { SUI_DECIMAL, SUI_TESTNET } from "../../../api/constants";
-import {
-  verifyBuyTransaction,
-  verifyDelistTransaction,
-} from "../../../redux/verify/verifySlice";
+import { verifyBuyTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import { fetchMyListingNFTs } from "../../../redux/profile/profileSlice";
 import SaleModal from "../SaleModal";
@@ -112,7 +109,7 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
           })
         );
         setTimeout(() => {
-          dispatch(fetchMyListingNFTs());
+          dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
           setLoading(false);
         }, 3000);
       } else {

@@ -20,6 +20,9 @@ const Collection = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   React.useEffect(() => {
     dispatch(fetchMyNFTs());
+  }, []);
+
+  React.useEffect(() => {
     dispatch(
       fetchMyListingNFTs({
         page: currentPage,
@@ -27,8 +30,7 @@ const Collection = () => {
         sort: sort,
       })
     );
-  }, []);
-
+  }, [currentPage, sort]);
   const tabs = [
     {
       label: (
