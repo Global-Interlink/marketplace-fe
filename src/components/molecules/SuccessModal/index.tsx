@@ -6,10 +6,11 @@ interface Props {
   txHash?: string;
   owner?: string;
   price?: number;
+  title: string;
+  message: string;
 }
 
-const SuccessModal: React.FC<Props> = ({ close }) => {
-  const router = useRouter();
+const SuccessModal: React.FC<Props> = ({ close, title, message }) => {
   return (
     <div>
       <div className={"modal fade show block"}>
@@ -23,10 +24,10 @@ const SuccessModal: React.FC<Props> = ({ close }) => {
                 height={246}
               />
               <p className="text-[#892DF0] font-medium text-[36px] mt-[37px]">
-                Congratulations !
+                {title}
               </p>
-              <p className="text-2xl mt-2">
-                Your item has been activated for sale
+              <p className="text-2xl mt-2 text-black dark:text-white">
+                {message}
               </p>
             </div>
             {/* footer */}

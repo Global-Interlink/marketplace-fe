@@ -24,6 +24,8 @@ import {
 } from "../../src/redux/verify/verifySlice";
 import { Spin } from "antd";
 import { SUI_DECIMAL, SUI_TESTNET } from "../../src/api/constants";
+import DelistModal from "../../src/components/molecules/DelistModal";
+import SuccessModal from "../../src/components/molecules/SuccessModal";
 
 const NFT = () => {
   const router = useRouter();
@@ -33,7 +35,13 @@ const NFT = () => {
   const { response } = useAppSelector((store) => store.nft.listNFTData);
   const { signAndExecuteTransaction, connected, address } = useWallet();
   const [openListing, setOpenListing] = React.useState(false);
+  const [openDelist, setOpenDelist] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState({
+    title: "",
+    message: "",
+    isOpen: false,
+  });
   React.useEffect(() => {
     if (id) {
       dispatch(fetchNFTDetail({ id: String(id) }));
@@ -133,58 +141,11 @@ const NFT = () => {
         setTimeout(() => {
           dispatch(fetchNFTDetail({ id: String(id) }));
           setLoading(false);
-          toast.success("Buy success!");
-        }, 3000);
-      } else {
-        toast.error(error);
-      }
-    } catch (e: any) {
-      console.log("=e", e);
-      setLoading(false);
-      toast.error(e.message);
-    }
-  };
-
-  const handleDelist = async (nftId: string, nftType: string) => {
-    setLoading(true);
-    const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
-    const contractModule = process.env.NEXT_PUBLIC_MODULE;
-    const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
-    if (!marketId || !packageObjectId || !contractModule) {
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const tx = (await signAndExecuteTransaction({
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "delist",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
-        },
-      })) as any;
-      console.log("===tx", tx);
-      const { status, error } = tx.effects.status;
-      if (status === "success") {
-        dispatch(
-          verifyDelistTransaction({
-            id: nftData?.id || "",
-            params: {
-              txhash: tx.certificate.transactionDigest,
-              chain: "SUI",
-            },
-          })
-        );
-        setTimeout(() => {
-          dispatch(fetchNFTDetail({ id: String(id) }));
-          setLoading(false);
-          toast.success("Delist success!");
+          setSuccess({
+            isOpen: true,
+            title: "Congratulations !",
+            message: "This item has been added to your wallet",
+          });
         }, 3000);
       } else {
         toast.error(error);
@@ -213,22 +174,24 @@ const NFT = () => {
             <p className="text-black dark:text-white text-[24px] mt-4 md:mt-[26px] md:text-[36px] font-medium">
               {nftData?.name}
             </p>
-            <div className="flex w-full items-center space-x-2">
-              <div className="">
-                <Image
-                  alt="logo-lp"
-                  src={nftData?.collection?.logo || ""}
-                  width={36}
-                  height={26}
-                  className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
-                />
+            {nftData?.collection && (
+              <div className="flex w-full items-center space-x-2">
+                <div className="">
+                  <Image
+                    alt="logo-lp"
+                    src={nftData?.collection?.logo || ""}
+                    width={36}
+                    height={26}
+                    className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
+                  />
+                </div>
+                <Link href={"/collection/1"}>
+                  <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
+                    {nftData?.collection?.name}
+                  </p>
+                </Link>
               </div>
-              <Link href={"/collection/1"}>
-                <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
-                  {nftData?.collection?.name}
-                </p>
-              </Link>
-            </div>
+            )}
             <div className="bg-white border shadow dark:bg-gray-800 p-6 rounded-[20px] flex items-center justify-between mt-6">
               {nftData?.saleStatus ? (
                 <div className="text-black dark:text-white">
@@ -282,9 +245,7 @@ const NFT = () => {
                   <button
                     className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
                     onClick={() => {
-                      if (nftData) {
-                        handleDelist(nftData?.onChainId, nftData?.nftType);
-                      }
+                      setOpenDelist(true);
                     }}
                   >
                     {isLoading ? (
@@ -377,6 +338,45 @@ const NFT = () => {
               nftId={nftData.onChainId}
               nftType={nftData.nftType}
               id={nftData.id}
+              onSuccess={() => {
+                setOpenListing(false);
+                setSuccess({
+                  isOpen: true,
+                  title: "Congratulations !",
+                  message: "Your item has been activated for sale",
+                });
+              }}
+            />
+          )}
+          {openDelist && nftData && (
+            <DelistModal
+              close={() => {
+                setOpenDelist(false);
+              }}
+              nftId={nftData.onChainId}
+              nftType={nftData.nftType}
+              id={nftData.id}
+              onSuccess={() => {
+                setOpenDelist(false);
+                setSuccess({
+                  isOpen: true,
+                  title: "Delist Success",
+                  message: "Your item has been delisted!",
+                });
+              }}
+            />
+          )}
+          {success.isOpen && (
+            <SuccessModal
+              close={() => {
+                setSuccess({
+                  isOpen: false,
+                  title: "",
+                  message: "",
+                });
+              }}
+              title={success.title}
+              message={success.message}
             />
           )}
         </div>

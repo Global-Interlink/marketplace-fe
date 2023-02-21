@@ -4,13 +4,29 @@ import React from "react";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
-import { fetchMyNFTs } from "../../src/redux/profile/profileSlice";
+import {
+  fetchMyListingNFTs,
+  fetchMyNFTs,
+} from "../../src/redux/profile/profileSlice";
 
 const Collection = () => {
   const dispatch = useAppDispatch();
   const { response } = useAppSelector((store) => store.profie.profileData);
+  const { response: listed } = useAppSelector(
+    (store) => store.profie.listedData
+  );
+  const LIMIT = 20;
+  const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
+  const [currentPage, setCurrentPage] = React.useState(1);
   React.useEffect(() => {
     dispatch(fetchMyNFTs());
+    dispatch(
+      fetchMyListingNFTs({
+        page: currentPage,
+        limit: LIMIT,
+        sort: sort,
+      })
+    );
   }, []);
 
   const tabs = [
@@ -44,22 +60,31 @@ const Collection = () => {
         <div className="flex items-center space-x-[6px]">
           <p>Listing</p>
           <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
-            0
+            {(listed?.data && listed?.data.length) || 0}
           </span>
         </div>
       ),
       children: (
         <div>
           <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {Array.from(Array(2).keys()).map((i) => {
-              return <ListNFTItem key={i} />;
+            {listed?.data?.map((i) => {
+              return <ListNFTItem key={i.onChainId} data={i} />;
             })}
           </div>
-          <div className="mt-[70px] flex justify-center">
-            <button className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]">
-              Load more
-            </button>
-          </div>
+          {listed && listed.data && currentPage < listed.meta.totalPages && (
+            <div className="mt-[70px] flex justify-center">
+              <button
+                onClick={() => {
+                  if (listed?.meta.currentPage < listed?.meta.totalPages) {
+                    setCurrentPage(listed?.meta.currentPage + 1);
+                  }
+                }}
+                className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]"
+              >
+                Load more
+              </button>
+            </div>
+          )}
         </div>
       ),
       key: "2",
@@ -91,19 +116,19 @@ const Collection = () => {
               <div className="bg-white text-black dark:text-white border shadow dark:bg-gray-800 p-6 rounded-[20px] justify-between flex mt-6">
                 <div>
                   <p>Total Items</p>
-                  <p>8</p>
+                  <p>{response?.result?.length || 0}</p>
                 </div>
                 <div>
                   <p>Listed Items</p>
-                  <p>8</p>
+                  <p>{(listed?.data && listed?.data?.length) || 0}</p>
                 </div>
                 <div>
                   <p>Total Volume</p>
-                  <p>8</p>
+                  <p>-</p>
                 </div>
                 <div>
                   <p>Estimated Value</p>
-                  <p>8</p>
+                  <p>-</p>
                 </div>
               </div>
               <div className="mt-[36px] space-y-[10px]">

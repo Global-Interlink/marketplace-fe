@@ -103,7 +103,7 @@ export const nftSlice = createSlice({
       .addCase(fetchListNFTOfNFT.rejected, (state, action) => {
         state.listNFTData.status = FetchStatus.failed;
         const error = action.payload as CommonError;
-        toast.error(error?.message);
+        // toast.error(error?.message);
       });
   },
 });
