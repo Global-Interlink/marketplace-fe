@@ -240,16 +240,18 @@ const NFT = () => {
               ) : (
                 <div />
               )}
-              {nftData && !nftData?.saleStatus && (
-                <button
-                  className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
-                  onClick={() => {
-                    setOpenListing(true);
-                  }}
-                >
-                  Put on sale
-                </button>
-              )}
+              {nftData &&
+                !nftData?.saleStatus &&
+                nftData.owner.address.address === address && (
+                  <button
+                    className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                    onClick={() => {
+                      setOpenListing(true);
+                    }}
+                  >
+                    Put on sale
+                  </button>
+                )}
               {nftData?.saleStatus &&
                 nftData.saleStatus.onSale &&
                 nftData.owner.address.address !== address && (
