@@ -1,23 +1,86 @@
 import { Spin } from "antd";
 import Image from "next/image";
 import React from "react";
-
-import { formatLongString } from "../../../contract-abi/consts";
-import { useAppSelector } from "../../../redux/hook";
 import { LoadingOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { SUI_DECIMAL } from "../../../api/constants";
+import { useWallet } from "@suiet/wallet-kit";
+import { toast } from "react-toastify";
+import { verifySaleTransaction } from "../../../redux/verify/verifySlice";
+import { useAppDispatch } from "../../../redux/hook";
+import { fetchNFTDetail } from "../../../redux/nft/nftSlice";
 interface Props {
   close?: () => void;
-  txHash?: string;
-  owner?: string;
-  price?: number;
+  nftId: string;
+  nftType: string;
+  id: string;
 }
 
-const BuyModal: React.FC<Props> = ({ close }) => {
-  const router = useRouter();
+const SaleModal: React.FC<Props> = ({ close, nftId, nftType, id }) => {
+  const dispatch = useAppDispatch();
+  const { signAndExecuteTransaction, connected } = useWallet();
+  const [price, setPrice] = React.useState("0");
+  const [isLoading, setLoading] = React.useState(false);
+
+  const handleListing = async (
+    nftId: string,
+    price: number,
+    nftType: string,
+    id: string
+  ) => {
+    setLoading(true);
+    const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
+    const contractModule = process.env.NEXT_PUBLIC_MODULE;
+    const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
+    if (!marketId || !packageObjectId || !contractModule) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const tx = (await signAndExecuteTransaction({
+        transaction: {
+          kind: "moveCall",
+          data: {
+            packageObjectId: packageObjectId,
+            module: contractModule,
+            function: "list",
+            typeArguments: [nftType],
+            arguments: [marketId, nftId, String(price * SUI_DECIMAL)],
+            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
+          },
+        },
+      })) as any;
+      console.log("===tx", tx);
+      const { status, error } = tx.effects.status;
+      if (status === "success") {
+        dispatch(
+          verifySaleTransaction({
+            id: id,
+            params: {
+              txhash: tx.certificate.transactionDigest,
+              chain: "SUI",
+            },
+          })
+        );
+        setTimeout(() => {
+          setLoading(false);
+          dispatch(fetchNFTDetail({ id: String(id) }));
+          close && close();
+          toast.success("Put on sale success!");
+        }, 3000);
+      } else {
+        toast.error(error);
+        close && close();
+      }
+    } catch (e: any) {
+      console.log("=e", e);
+      setLoading(false);
+      toast.error(e.message);
+    }
+  };
   return (
-    <div>
+    <div className="text-black dark:text-white">
       <div className={"modal fade show block"}>
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content relative w-[572px]">
@@ -55,8 +118,15 @@ const BuyModal: React.FC<Props> = ({ close }) => {
                 </div>
                 <div className="w-full">
                   <input
-                    className="h-12 w-full bg-white px-5 rounded-md"
+                    className="h-12 w-full bg-white px-5 rounded-md text-black"
                     placeholder="0.0"
+                    value={price}
+                    type="number"
+                    onChange={(e) => {
+                      if (Number(e.target.value) >= 0) {
+                        setPrice(e.target.value);
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -77,19 +147,33 @@ const BuyModal: React.FC<Props> = ({ close }) => {
             <div className="font-light flex items-center justify-center space-x-5 mb-11">
               <button
                 className="hoverCommon primaryButton  text-white font-medium w-1/2 h-12 rounded-full"
+                disabled={!connected || isLoading}
                 onClick={() => {
-                  router.push("/profile");
+                  handleListing(nftId, Number(price), nftType, id);
                 }}
               >
-                List
+                {isLoading ? (
+                  <Spin
+                    indicator={<LoadingOutlined className="text-white" />}
+                  />
+                ) : (
+                  "Listing"
+                )}
               </button>
-              <button className="border hoverCommon text-[#892DF0] border-[#892DF0] font-medium rounded-full w-1/2 h-12">
+              <button
+                onClick={() => {
+                  close && close();
+                }}
+                disabled={isLoading}
+                className="border hoverCommon text-[#892DF0] border-[#892DF0] font-medium rounded-full w-1/2 h-12"
+              >
                 Cancel
               </button>
             </div>
             <button
               type="button"
               className="absolute right-4 top-4"
+              disabled={isLoading}
               onClick={() => {
                 close && close();
               }}
@@ -112,4 +196,4 @@ const BuyModal: React.FC<Props> = ({ close }) => {
   );
 };
 
-export default BuyModal;
+export default SaleModal;

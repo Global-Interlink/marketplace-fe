@@ -36,7 +36,8 @@ export interface TxData {
 }
 
 export type VerifyParams = {
-  txnHash: string;
+  txhash: string;
+  chain: string;
 };
 
 export type CommonError = {
@@ -45,19 +46,57 @@ export type CommonError = {
 };
 
 export interface DetailNFTState {
-  verifyData: {
+  verifyDelist: {
+    status: FetchStatus;
+    response?: TxData[];
+  };
+  verifySale: {
+    status: FetchStatus;
+    response?: TxData[];
+  };
+  verifyBuy: {
     status: FetchStatus;
     response?: TxData[];
   };
 }
 
-export const verifyTransaction = createAsyncThunk(
-  "verify/verifyTx",
-  async (params: VerifyParams, { rejectWithValue }) => {
+export const verifyDelistTransaction = createAsyncThunk(
+  "verify/verifyDelistTx",
+  async (data: { id: string; params: VerifyParams }, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.post<TxData[]>(
-        "/launchpad/verify-mint-transaction",
-        params
+        `/nft/${data.id}/update-delist-event`,
+        data.params
+      );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const verifyBuyTransaction = createAsyncThunk(
+  "verify/verifyBuyTx",
+  async (data: { id: string; params: VerifyParams }, { rejectWithValue }) => {
+    try {
+      const response = await APIFunctions.post<TxData[]>(
+        `/nft/${data.id}/update-from-buy-event`,
+        data.params
+      );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const verifySaleTransaction = createAsyncThunk(
+  "verify/verifySaleTx",
+  async (data: { id: string; params: VerifyParams }, { rejectWithValue }) => {
+    try {
+      const response = await APIFunctions.post<TxData[]>(
+        `/nft/${data.id}/update-put-on-sale-event`,
+        data.params
       );
       return response.data;
     } catch (err: any) {
@@ -67,7 +106,13 @@ export const verifyTransaction = createAsyncThunk(
 );
 
 const initialState: DetailNFTState = {
-  verifyData: {
+  verifyBuy: {
+    status: FetchStatus.idle,
+  },
+  verifyDelist: {
+    status: FetchStatus.idle,
+  },
+  verifySale: {
     status: FetchStatus.idle,
   },
 };
@@ -80,20 +125,42 @@ export const verifySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(verifyTransaction.pending, (state) => {
-        state.verifyData.status = FetchStatus.pending;
-        state.verifyData.response = undefined;
+      .addCase(verifyDelistTransaction.pending, (state) => {
+        state.verifyDelist.status = FetchStatus.pending;
+        state.verifyDelist.response = undefined;
       })
-      .addCase(verifyTransaction.fulfilled, (state, action) => {
-        state.verifyData.status = FetchStatus.succeeded;
-        console.log("===action", action);
-        state.verifyData.response = action.payload;
+      .addCase(verifyDelistTransaction.fulfilled, (state, action) => {
+        state.verifyDelist.status = FetchStatus.succeeded;
+        state.verifyDelist.response = action.payload;
       })
-      .addCase(verifyTransaction.rejected, (state, action) => {
-        state.verifyData.status = FetchStatus.failed;
-        const error = action.payload as CommonError;
-        console.log("====verifyError: ", error);
-        // toast.error(error?.message);
+      .addCase(verifyDelistTransaction.rejected, (state, action) => {
+        state.verifyDelist.status = FetchStatus.failed;
+      });
+
+    builder
+      .addCase(verifyBuyTransaction.pending, (state) => {
+        state.verifyBuy.status = FetchStatus.pending;
+        state.verifyBuy.response = undefined;
+      })
+      .addCase(verifyBuyTransaction.fulfilled, (state, action) => {
+        state.verifyBuy.status = FetchStatus.succeeded;
+        state.verifyBuy.response = action.payload;
+      })
+      .addCase(verifyBuyTransaction.rejected, (state, action) => {
+        state.verifyBuy.status = FetchStatus.failed;
+      });
+
+    builder
+      .addCase(verifySaleTransaction.pending, (state) => {
+        state.verifySale.status = FetchStatus.pending;
+        state.verifySale.response = undefined;
+      })
+      .addCase(verifySaleTransaction.fulfilled, (state, action) => {
+        state.verifySale.status = FetchStatus.succeeded;
+        state.verifySale.response = action.payload;
+      })
+      .addCase(verifySaleTransaction.rejected, (state, action) => {
+        state.verifySale.status = FetchStatus.failed;
       });
   },
 });

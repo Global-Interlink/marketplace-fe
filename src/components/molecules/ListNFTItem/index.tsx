@@ -5,7 +5,7 @@ interface Props {
   title?: string;
   data?: NFT;
 }
-const ListNFTItem: React.FC<Props> = ({ title, data }) => {
+const ListNFTItem: React.FC<Props> = ({ data }) => {
   return (
     <Link href={`/nft/${data?.id || data?.objectId}`}>
       <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white hover:scale-101 shadow">
@@ -18,11 +18,7 @@ const ListNFTItem: React.FC<Props> = ({ title, data }) => {
         />
         <div className="flex p-5 space-x-[14px] bg-white rounded-b-[20px]">
           <div className="w-full">
-            {title && (
-              <p className="text-[24px] text-primary font-medium">
-                {data?.name}
-              </p>
-            )}
+            <p className="text-[24px] text-primary font-medium">{data?.name}</p>
             <span className="text-primary">Sayaka CollectionNFT</span>
             <div className="flex items-center mt-[18px] space-x-[30px]">
               <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] border rounded-[5px] border-black">

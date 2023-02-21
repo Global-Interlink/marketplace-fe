@@ -9,7 +9,7 @@ import Footer from "../Footer";
 import Header from "../Header";
 import jwt_decode from "jwt-decode";
 import SearchForm from "../../molecules/Search";
-import BuyModal from "../../molecules/BuyModal";
+import SaleModal from "../../molecules/SaleModal";
 import SuccessModal from "../../molecules/SuccessModal";
 
 interface Props {

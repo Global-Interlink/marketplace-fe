@@ -59,16 +59,24 @@ export interface NFT {
   createdDate: string;
   lastUpdatedDate: string;
   id: string;
-  onChainId: number;
+  onChainId: string;
   name: string;
   description: string;
   image: string;
   fileType: string;
   state: string;
   ownedDate?: any;
-  saleStatus?: any;
+  saleStatus?: {
+    onSale: boolean;
+    price: string;
+    saleItemId: string;
+    buyType: string;
+    auction?: any;
+    hasExpired: boolean;
+  };
   owner: Owner;
   collection?: Collection;
   properties?: { name: string; value: string }[];
   objectId?: string;
+  nftType: string;
 }

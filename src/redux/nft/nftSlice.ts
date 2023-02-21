@@ -18,9 +18,9 @@ export type FetchListNFTNFTSuccess = {
   meta: Meta;
 };
 export type FetchListNFTNFTPrams = {
-  page: number;
-  limit: number;
-  sort: "DESC" | "ASC";
+  // page: number;
+  // limit: number;
+  // sort: "DESC" | "ASC";
   id: string;
 };
 
@@ -51,7 +51,7 @@ export const fetchListNFTOfNFT = createAsyncThunk(
   async (params: FetchListNFTNFTPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListNFTNFTSuccess>(
-        `/nft/${params.id}/others-in-collection?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+        `/nft/${params.id}/others-in-collection`
       );
       return response.data;
     } catch (err: any) {

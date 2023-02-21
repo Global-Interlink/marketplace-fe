@@ -1,8 +1,12 @@
+import { JsonRpcProvider } from "@mysten/sui.js";
+import { useWallet } from "@suiet/wallet-kit";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { LoadingOutlined } from "@ant-design/icons";
 import Sort from "../../src/components/atoms/Sort";
+import SaleModal from "../../src/components/molecules/SaleModal";
 import Empty from "../../src/components/molecules/EmptyView";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
@@ -13,6 +17,13 @@ import {
   fetchListNFTOfNFT,
   fetchNFTDetail,
 } from "../../src/redux/nft/nftSlice";
+import { toast } from "react-toastify";
+import {
+  verifyBuyTransaction,
+  verifyDelistTransaction,
+} from "../../src/redux/verify/verifySlice";
+import { Spin } from "antd";
+import { SUI_DECIMAL, SUI_TESTNET } from "../../src/api/constants";
 
 const NFT = () => {
   const router = useRouter();
@@ -20,10 +31,9 @@ const NFT = () => {
   const dispatch = useAppDispatch();
   const nftData = useAppSelector((store) => store.nft.nftData.response);
   const { response } = useAppSelector((store) => store.nft.listNFTData);
-  const LIMIT = 20;
-  const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
-  const [currentPage, setCurrentPage] = React.useState(1);
-
+  const { signAndExecuteTransaction, connected, address } = useWallet();
+  const [openListing, setOpenListing] = React.useState(false);
+  const [isLoading, setLoading] = React.useState(false);
   React.useEffect(() => {
     if (id) {
       dispatch(fetchNFTDetail({ id: String(id) }));
@@ -35,13 +45,157 @@ const NFT = () => {
       dispatch(
         fetchListNFTOfNFT({
           id: String(id),
-          page: currentPage,
-          limit: LIMIT,
-          sort: sort,
         })
       );
     }
-  }, [currentPage, id, sort]);
+  }, [id]);
+
+  const handleBuyNow = async (
+    nftId: string,
+    nftType: string,
+    price: number
+  ) => {
+    setLoading(true);
+    const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
+    const contractModule = process.env.NEXT_PUBLIC_MODULE;
+    const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
+    if (!marketId || !packageObjectId || !contractModule || !address) {
+      setLoading(false);
+      return;
+    }
+    const provider = new JsonRpcProvider(
+      process.env.NEXT_PUBLIC_SUI_NETWORK_RPC || SUI_TESTNET
+    );
+    const userBalance = (await provider.getCoinBalancesOwnedByAddress(
+      address
+    )) as any;
+    const filteredData = userBalance.filter(
+      (i: any) => i.details.data.type === "0x2::coin::Coin<0x2::sui::SUI>"
+    );
+    console.log("==userBalance", filteredData);
+    const params = [] as string[];
+    let prevAmount = 0;
+    filteredData.forEach((i: any) => {
+      if (prevAmount > price) {
+        return;
+      }
+      const newAmount = prevAmount + Number(i.details.data.fields.balance);
+      console.log("==newAmount", newAmount);
+      if (newAmount > price) {
+        prevAmount = newAmount;
+        params.push(i.details.data.fields.id.id);
+        return;
+      } else {
+        params.push(i.details.data.fields.id.id);
+        prevAmount = newAmount;
+      }
+    });
+
+    try {
+      const payload = {
+        transaction: {
+          kind: "moveCall",
+          data: {
+            packageObjectId: packageObjectId,
+            module: contractModule,
+            function: "buy",
+            typeArguments: [nftType],
+            arguments: [marketId, nftId, params],
+            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
+          },
+        },
+      };
+      console.log("=payload", payload);
+      const tx = (await signAndExecuteTransaction({
+        transaction: {
+          kind: "moveCall",
+          data: {
+            packageObjectId: packageObjectId,
+            module: contractModule,
+            function: "buy",
+            typeArguments: [nftType],
+            arguments: [marketId, nftId, params],
+            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
+          },
+        },
+      })) as any;
+      const { status, error } = tx.effects.status;
+      if (status === "success") {
+        dispatch(
+          verifyBuyTransaction({
+            id: nftData?.id || "",
+            params: {
+              txhash: tx.certificate.transactionDigest,
+              chain: "SUI",
+            },
+          })
+        );
+        setTimeout(() => {
+          dispatch(fetchNFTDetail({ id: String(id) }));
+          setLoading(false);
+          toast.success("Buy success!");
+        }, 3000);
+      } else {
+        toast.error(error);
+      }
+    } catch (e: any) {
+      console.log("=e", e);
+      setLoading(false);
+      toast.error(e.message);
+    }
+  };
+
+  const handleDelist = async (nftId: string, nftType: string) => {
+    setLoading(true);
+    const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
+    const contractModule = process.env.NEXT_PUBLIC_MODULE;
+    const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
+    if (!marketId || !packageObjectId || !contractModule) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const tx = (await signAndExecuteTransaction({
+        transaction: {
+          kind: "moveCall",
+          data: {
+            packageObjectId: packageObjectId,
+            module: contractModule,
+            function: "delist",
+            typeArguments: [nftType],
+            arguments: [marketId, nftId],
+            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
+          },
+        },
+      })) as any;
+      console.log("===tx", tx);
+      const { status, error } = tx.effects.status;
+      if (status === "success") {
+        dispatch(
+          verifyDelistTransaction({
+            id: nftData?.id || "",
+            params: {
+              txhash: tx.certificate.transactionDigest,
+              chain: "SUI",
+            },
+          })
+        );
+        setTimeout(() => {
+          dispatch(fetchNFTDetail({ id: String(id) }));
+          setLoading(false);
+          toast.success("Delist success!");
+        }, 3000);
+      } else {
+        toast.error(error);
+      }
+    } catch (e: any) {
+      console.log("=e", e);
+      setLoading(false);
+      toast.error(e.message);
+    }
+  };
+
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
@@ -76,13 +230,70 @@ const NFT = () => {
               </Link>
             </div>
             <div className="bg-white border shadow dark:bg-gray-800 p-6 rounded-[20px] flex items-center justify-between mt-6">
-              <div className="text-black dark:text-white">
-                <p className="text-[20px]">Current Price :</p>
-                <p className="text-[24px] font-bold">1.97 (~$30.125)</p>
-              </div>
-              <button className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full ">
-                Buy Now
-              </button>
+              {nftData?.saleStatus ? (
+                <div className="text-black dark:text-white">
+                  <p className="text-[20px]">Current Price :</p>
+                  <p className="text-[24px] font-bold">
+                    {nftData.saleStatus.price} SUI
+                  </p>
+                </div>
+              ) : (
+                <div />
+              )}
+              {nftData && !nftData?.saleStatus && (
+                <button
+                  className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                  onClick={() => {
+                    setOpenListing(true);
+                  }}
+                >
+                  Put on sale
+                </button>
+              )}
+              {nftData?.saleStatus &&
+                nftData.saleStatus.onSale &&
+                nftData.owner.address.address !== address && (
+                  <button
+                    className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                    onClick={() => {
+                      if (nftData) {
+                        handleBuyNow(
+                          nftData?.onChainId,
+                          nftData?.nftType,
+                          Number(nftData.saleStatus?.price) * SUI_DECIMAL
+                        );
+                      }
+                    }}
+                  >
+                    {isLoading ? (
+                      <Spin
+                        indicator={<LoadingOutlined className="text-white" />}
+                      />
+                    ) : (
+                      "Buy Now"
+                    )}
+                  </button>
+                )}
+              {nftData?.saleStatus &&
+                nftData.owner.address.address === address &&
+                nftData.saleStatus.onSale && (
+                  <button
+                    className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                    onClick={() => {
+                      if (nftData) {
+                        handleDelist(nftData?.onChainId, nftData?.nftType);
+                      }
+                    }}
+                  >
+                    {isLoading ? (
+                      <Spin
+                        indicator={<LoadingOutlined className="text-white" />}
+                      />
+                    ) : (
+                      "Delist"
+                    )}
+                  </button>
+                )}
             </div>
             <div className="mt-[36px] space-y-[10px]">
               <p className="text-[20px] font-bold text-black dark:text-white">
@@ -146,7 +357,6 @@ const NFT = () => {
             <p className="text-black dark:text-white font-bold">
               More from this collection
             </p>
-            <Sort onChange={setSort} />
           </div>
           {response && response.data ? (
             <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
@@ -157,24 +367,16 @@ const NFT = () => {
           ) : (
             <Empty />
           )}
-          {response &&
-            response.data &&
-            currentPage < response.meta.totalPages && (
-              <div className="mt-[70px] flex justify-center">
-                <button
-                  onClick={() => {
-                    if (
-                      response?.meta.currentPage < response?.meta.totalPages
-                    ) {
-                      setCurrentPage(response?.meta.currentPage + 1);
-                    }
-                  }}
-                  className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]"
-                >
-                  Load more
-                </button>
-              </div>
-            )}
+          {openListing && nftData && (
+            <SaleModal
+              close={() => {
+                setOpenListing(false);
+              }}
+              nftId={nftData.onChainId}
+              nftType={nftData.nftType}
+              id={nftData.id}
+            />
+          )}
         </div>
       </div>
     </BaseComponent>

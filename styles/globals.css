@@ -113,10 +113,10 @@ button.hoverCommon:hover {
   box-shadow: inset 60px 60px 0px rgba(0, 0, 0, 0.25);
 }
 
-button.primaryButton:disabled {
-  background: rgba(255, 255, 255, 0.12);
+/* button.primaryButton:disabled {
+  background: gra;
   color: rgba(255, 255, 255, 0.3);
-}
+} */
 
 div.footerC {
   background: linear-gradient(
