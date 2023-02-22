@@ -42,8 +42,7 @@ const Collection = () => {
   React.useEffect(() => {
     if (address) {
       setOldAddress(address);
-    } else if (!address && oldAddress) {
-      console.log("===remove");
+    } else {
       push("/");
     }
   }, [address]);
