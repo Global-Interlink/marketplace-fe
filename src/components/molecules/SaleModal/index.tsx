@@ -10,22 +10,23 @@ import { verifySaleTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import { fetchNFTDetail } from "../../../redux/nft/nftSlice";
 import { NFT } from "../../../api/types";
+import { fetchListNFTOfCollection } from "../../../redux/collection/collectionSlice";
+import {
+  fetchMyListingNFTs,
+  fetchMyNFTs,
+} from "../../../redux/profile/profileSlice";
 interface Props {
   close?: () => void;
-  // nftId: string;
-  // nftType: string;
-  // id: string;
   onSuccess: () => void;
   item: NFT;
+  collectionId?: string;
 }
 
 const SaleModal: React.FC<Props> = ({
   close,
-  // nftId,
-  // nftType,
-  // id,
   item,
   onSuccess,
+  collectionId,
 }) => {
   const dispatch = useAppDispatch();
   const { signAndExecuteTransaction, connected } = useWallet();
@@ -75,7 +76,21 @@ const SaleModal: React.FC<Props> = ({
         );
         setTimeout(() => {
           setLoading(false);
-          dispatch(fetchNFTDetail({ id: String(id) }));
+
+          if (collectionId) {
+            dispatch(
+              fetchListNFTOfCollection({
+                id: collectionId,
+                page: 1,
+                limit: 20,
+                sort: "DESC",
+              })
+            );
+          } else {
+            dispatch(fetchNFTDetail({ id: String(id) }));
+            dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
+            dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
+          }
           toast.success("Listed success!");
           onSuccess();
         }, 3000);

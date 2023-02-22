@@ -10,15 +10,20 @@ import { toast } from "react-toastify";
 import { SUI_DECIMAL, SUI_TESTNET } from "../../../api/constants";
 import { verifyBuyTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
-import { fetchMyListingNFTs } from "../../../redux/profile/profileSlice";
+import {
+  fetchMyListingNFTs,
+  fetchMyNFTs,
+} from "../../../redux/profile/profileSlice";
 import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
 import SuccessModal from "../SuccessModal";
 import { useRouter } from "next/router";
+import { fetchListNFTOfCollection } from "../../../redux/collection/collectionSlice";
 interface Props {
   data?: NFT;
+  collectionId?: string;
 }
-const ListNFTItem: React.FC<Props> = ({ data }) => {
+const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
   const { signAndExecuteTransaction, connected, address } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
   const router = useRouter();
@@ -111,7 +116,19 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
           })
         );
         setTimeout(() => {
-          dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
+          if (collectionId) {
+            dispatch(
+              fetchListNFTOfCollection({
+                id: collectionId,
+                page: 1,
+                limit: 20,
+                sort: "DESC",
+              })
+            );
+          } else {
+            dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
+            dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
+          }
           setLoading(false);
         }, 3000);
       } else {
@@ -232,6 +249,7 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
               message: "Your item has been delisted!",
             });
           }}
+          collectionId={collectionId}
         />
       )}
       {openDelist && data && (
@@ -250,6 +268,7 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
               message: "Your item has been delisted!",
             });
           }}
+          collectionId={collectionId}
         />
       )}
       {success.isOpen && (

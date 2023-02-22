@@ -100,7 +100,9 @@ const Collection = () => {
           {response && response.data ? (
             <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
               {response?.data.map((i) => {
-                return <ListNFTItem key={i.id} data={i} />;
+                return (
+                  <ListNFTItem key={i.id} data={i} collectionId={String(id)} />
+                );
               })}
             </div>
           ) : (

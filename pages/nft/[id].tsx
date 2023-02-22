@@ -152,8 +152,12 @@ const NFT = () => {
         setLoading(false);
       }
     } catch (e: any) {
-      console.log("=e", e);
       setLoading(false);
+      if (e.message.includes("amount sufficient for the required gas amount")) {
+        toast.error("Your SUI balance is not enough to buy this item!");
+        return;
+      }
+
       toast.error(e.message);
     }
   };
