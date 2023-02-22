@@ -5,6 +5,7 @@ import React from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { useAppDispatch, useAppSelector } from "../../../redux/hook";
 import { clear, searchLaunchpad } from "../../../redux/search/searchSlice";
+import ImgIcon from "../../atoms/Icons/ImgIcon";
 
 const SearchForm = () => {
   const [text, setText] = React.useState("");
@@ -77,7 +78,7 @@ const SearchForm = () => {
           <hr className="border-gray-300 dark:border-gray-800 mt-3" />
           {response.data.map((i, idx) => {
             return (
-              <Link key={idx} href={`/launchpad/${i.id}`}>
+              <Link key={idx} href={`/collection/${i.id}`}>
                 <div
                   key={idx}
                   className="flex items-center space-x-3 px-6 pt-3 pb-3 cursor-pointer bg-white dark:bg-gray-900 hover:bg-gray-400 dark:hover:bg-gray-800"
@@ -97,16 +98,10 @@ const SearchForm = () => {
                   <div>
                     <span className="externalSP text-sm text-black dark:text-white">{i.name}</span>
                     <div className="flex items-center space-x-3 mt-[6px]">
-                      <Image
-                        width={24}
-                        height={24}
-                        alt="chain"
-                        src="/ic-sui.jpeg"
-                        className="rounded-full object-cover w-6 h-6"
-                      />
                       <span className="text-gray-500 text-sm">
-                        {i.totalItems} items
+                        {i.totalNfts} items
                       </span>
+                      <ImgIcon />
                     </div>
                   </div>
                 </div>
