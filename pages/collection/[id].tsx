@@ -66,15 +66,17 @@ const Collection = () => {
                     {collectionData?.name}
                   </p>
                 </div>
-                {/* <div className=" hidden lg:flex items-center space-x-3 md:space-x-6">
+                <div className=" hidden lg:flex items-center space-x-3 md:space-x-6">
                   <SocialView response={undefined} />
-                </div> */}
+                </div>
               </div>
 
-              <div className="flex text-black dark:text-white">Items 2,500</div>
-              {/* <div className="flex lg:hidden items-center space-x-3 mt-[28px]">
+              <div className="flex text-black dark:text-white">
+                Items {Number(collectionData?.totalNfts).toLocaleString()}
+              </div>
+              <div className="flex lg:hidden items-center space-x-3 mt-[28px]">
                 <SocialView response={undefined} />
-              </div> */}
+              </div>
             </div>
           </div>
         </div>

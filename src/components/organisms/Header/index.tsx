@@ -14,7 +14,6 @@ const Header = () => {
   const { connected, address, signMessage, disconnect } = useWallet();
   const dispatch = useAppDispatch();
   const { theme, setTheme } = useTheme();
-  console.log("===theme", theme);
   const handleLogin = async () => {
     try {
       const resultGetNonce = await axios
@@ -54,6 +53,7 @@ const Header = () => {
       disconnect();
     }
   };
+
   React.useEffect(() => {
     const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
     if (connected && !accessToken) {

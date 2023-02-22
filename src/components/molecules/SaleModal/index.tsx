@@ -9,26 +9,29 @@ import { toast } from "react-toastify";
 import { verifySaleTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import { fetchNFTDetail } from "../../../redux/nft/nftSlice";
+import { NFT } from "../../../api/types";
 interface Props {
   close?: () => void;
-  nftId: string;
-  nftType: string;
-  id: string;
+  // nftId: string;
+  // nftType: string;
+  // id: string;
   onSuccess: () => void;
+  item: NFT;
 }
 
 const SaleModal: React.FC<Props> = ({
   close,
-  nftId,
-  nftType,
-  id,
+  // nftId,
+  // nftType,
+  // id,
+  item,
   onSuccess,
 }) => {
   const dispatch = useAppDispatch();
   const { signAndExecuteTransaction, connected } = useWallet();
   const [price, setPrice] = React.useState("0");
   const [isLoading, setLoading] = React.useState(false);
-  
+
   const handleListing = async (
     nftId: string,
     price: number,
@@ -73,11 +76,12 @@ const SaleModal: React.FC<Props> = ({
         setTimeout(() => {
           setLoading(false);
           dispatch(fetchNFTDetail({ id: String(id) }));
-          toast.success("Put on sale success!");
+          toast.success("Listed success!");
           onSuccess();
         }, 3000);
       } else {
         toast.error(error);
+        setLoading(false);
         close && close();
       }
     } catch (e: any) {
@@ -93,12 +97,12 @@ const SaleModal: React.FC<Props> = ({
         <div className="modal-dialog max-w-2xl">
           <div className="modal-content relative w-[572px]">
             <div className="mt-8 space-y-2">
-              <p className="text-[24px] font-bold text-left">Sayaka NFT #17</p>
+              <p className="text-[24px] font-bold text-left">{item.name}</p>
               <div className="flex w-full items-center space-x-2">
                 <div className="">
                   <Image
                     alt="logo-lp"
-                    src={"/img-mock-logo-1.png"}
+                    src={item.collection?.logo || ""}
                     width={36}
                     height={36}
                     className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
@@ -106,7 +110,7 @@ const SaleModal: React.FC<Props> = ({
                 </div>
                 <Link href={"/collection/1"}>
                   <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
-                    Sayaka
+                    {item.collection?.name}
                   </span>
                 </Link>
               </div>
@@ -142,11 +146,11 @@ const SaleModal: React.FC<Props> = ({
               <div className="bg-white dark:bg-gray-800 border py-[10px] px-[28px] rounded-[20px]">
                 <div className="flex items-center justify-between">
                   <p>Service Fee</p>
-                  <p className="font-bold text-lg">2.5%</p>
+                  <p className="font-bold text-lg">0%</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p>Owner Fee</p>
-                  <p className="font-bold text-lg">5%</p>
+                  <p className="font-bold text-lg">0%</p>
                 </div>
               </div>
             </div>
@@ -157,7 +161,12 @@ const SaleModal: React.FC<Props> = ({
                 className="hoverCommon primaryButton  text-white font-medium w-1/2 h-12 rounded-full"
                 disabled={!connected || isLoading}
                 onClick={() => {
-                  handleListing(nftId, Number(price), nftType, id);
+                  handleListing(
+                    item.onChainId,
+                    Number(price),
+                    item.nftType,
+                    item.id
+                  );
                 }}
               >
                 {isLoading ? (

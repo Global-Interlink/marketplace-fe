@@ -69,6 +69,7 @@ const DelistModal: React.FC<Props> = ({ close, nftId, nftType, id, onSuccess }) 
         }, 3000);
       } else {
         toast.error(error);
+        setLoading(false);
       }
     } catch (e: any) {
       console.log("=e", e);

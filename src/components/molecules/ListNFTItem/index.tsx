@@ -14,12 +14,14 @@ import { fetchMyListingNFTs } from "../../../redux/profile/profileSlice";
 import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
 import SuccessModal from "../SuccessModal";
+import { useRouter } from "next/router";
 interface Props {
   data?: NFT;
 }
 const ListNFTItem: React.FC<Props> = ({ data }) => {
   const { signAndExecuteTransaction, connected, address } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
@@ -122,90 +124,97 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
     }
   };
   return (
-    <Link href={`/nft/${data?.id || data?.objectId}`}>
+    <div>
       <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white hover:scale-101 shadow">
         <Image
           src={data?.image || "/img-mock-1.png"}
           width={200}
           height={200}
-          className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover"
+          className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover cursor-pointer"
           alt="mock"
+          onClick={(e: any) => {
+            router.push(`/nft/${data?.id}`);
+          }}
         />
         <div className="flex p-5 space-x-[14px] bg-white rounded-b-[20px]">
           <div className="w-full">
-            <p className="text-[24px] text-primary font-medium">{data?.name}</p>
-            <span className="text-primary">Sayaka CollectionNFT</span>
-            {data?.saleStatus && (
-              <div className="flex items-center mt-[18px] space-x-[30px]">
-                {data?.saleStatus ? (
-                  <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] border rounded-[5px] border-black">
-                    {data.saleStatus.price} SUI
-                  </div>
-                ) : (
-                  <div className="flex-1" />
-                )}
-                <div className="flex-1">
-                  {data &&
-                    !data?.saleStatus &&
-                    data.owner?.address?.address === address && (
-                      <button
-                        className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
-                        onClick={() => {
-                          setOpenListing(true);
-                        }}
-                      >
-                        Put on sale
-                      </button>
-                    )}
-                  {data?.saleStatus &&
-                    data.saleStatus.onSale &&
-                    data.owner?.address?.address !== address && (
-                      <button
-                        className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
-                        onClick={() => {
-                          if (data) {
-                            handleBuyNow(
-                              data?.onChainId,
-                              data?.nftType,
-                              Number(data.saleStatus?.price) * SUI_DECIMAL
-                            );
-                          }
-                        }}
-                      >
-                        {isLoading ? (
-                          <Spin
-                            indicator={
-                              <LoadingOutlined className="text-white" />
-                            }
-                          />
-                        ) : (
-                          "Buy Now"
-                        )}
-                      </button>
-                    )}
-                  {data?.saleStatus &&
-                    data.owner?.address?.address === address &&
-                    data.saleStatus.onSale && (
-                      <button
-                        className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
-                        onClick={() => {
-                          setOpenDelist(true);
-                        }}
-                      >
-                        {isLoading ? (
-                          <Spin
-                            indicator={
-                              <LoadingOutlined className="text-white" />
-                            }
-                          />
-                        ) : (
-                          "Delist"
-                        )}
-                      </button>
-                    )}
+            <div
+              onClick={(e: any) => {
+                router.push(`/nft/${data?.id}`);
+              }}
+              className="cursor-pointer"
+            >
+              <p className="text-[24px] text-primary font-medium">
+                {data?.name}
+              </p>
+              <span className="text-primary">{data?.collection?.name}</span>
+            </div>
+
+            <div className="flex items-center mt-[18px] space-x-[30px]">
+              {data?.saleStatus ? (
+                <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] border rounded-[5px] border-black">
+                  {Number(data.saleStatus.price).toLocaleString()} SUI
                 </div>
+              ) : (
+                <div className="flex-1" />
+              )}
+              <div className="flex-1">
+                {data &&
+                  !data?.saleStatus &&
+                  data.owner?.address?.address === address && (
+                    <button
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
+                      onClick={() => {
+                        setOpenListing(true);
+                      }}
+                    >
+                      List Now
+                    </button>
+                  )}
+                {data?.saleStatus &&
+                  data.saleStatus.onSale &&
+                  data.owner?.address?.address !== address && (
+                    <button
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
+                      onClick={() => {
+                        if (data) {
+                          handleBuyNow(
+                            data?.onChainId,
+                            data?.nftType,
+                            Number(data.saleStatus?.price) * SUI_DECIMAL
+                          );
+                        }
+                      }}
+                    >
+                      {isLoading ? (
+                        <Spin
+                          indicator={<LoadingOutlined className="text-white" />}
+                        />
+                      ) : (
+                        "Buy Now"
+                      )}
+                    </button>
+                  )}
+                {data?.saleStatus &&
+                  data.owner?.address?.address === address &&
+                  data.saleStatus.onSale && (
+                    <button
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
+                      onClick={(e: any) => {
+                        setOpenDelist(true);
+                      }}
+                    >
+                      {isLoading ? (
+                        <Spin
+                          indicator={<LoadingOutlined className="text-white" />}
+                        />
+                      ) : (
+                        "Delist"
+                      )}
+                    </button>
+                  )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
@@ -214,10 +223,15 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
           close={() => {
             setOpenListing(false);
           }}
-          nftId={data.onChainId}
-          nftType={data.nftType}
-          id={data.id}
-          onSuccess={() => {}}
+          item={data}
+          onSuccess={() => {
+            setOpenListing(false);
+            setSuccess({
+              isOpen: true,
+              title: "Delist Success",
+              message: "Your item has been delisted!",
+            });
+          }}
         />
       )}
       {openDelist && data && (
@@ -251,7 +265,7 @@ const ListNFTItem: React.FC<Props> = ({ data }) => {
           message={success.message}
         />
       )}
-    </Link>
+    </div>
   );
 };
 

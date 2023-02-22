@@ -28,7 +28,7 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
           <div>
             <span className="text-primary external">{data.name}</span>
             <div className="flex items-center text-description space-x-1">
-              <p>1000 items</p>
+              <p>{data.totalNfts} items</p>
               <ImgIcon />
             </div>
           </div>

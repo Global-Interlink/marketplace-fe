@@ -149,6 +149,7 @@ const NFT = () => {
         }, 3000);
       } else {
         toast.error(error);
+        setLoading(false);
       }
     } catch (e: any) {
       console.log("=e", e);
@@ -197,7 +198,7 @@ const NFT = () => {
                 <div className="text-black dark:text-white">
                   <p className="text-[20px]">Current Price :</p>
                   <p className="text-[24px] font-bold">
-                    {nftData.saleStatus.price} SUI
+                    {Number(nftData.saleStatus.price).toLocaleString()} SUI
                   </p>
                 </div>
               ) : (
@@ -212,13 +213,14 @@ const NFT = () => {
                       setOpenListing(true);
                     }}
                   >
-                    Put on sale
+                    List Now
                   </button>
                 )}
               {nftData?.saleStatus &&
                 nftData.saleStatus.onSale &&
                 nftData.owner.address.address !== address && (
                   <button
+                    disabled={isLoading}
                     className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
                     onClick={() => {
                       if (nftData) {
@@ -274,11 +276,11 @@ const NFT = () => {
               )}
               <div className="text-black dark:text-white flex items-center justify-between">
                 <span>Transaction Fee</span>
-                <span className="text-[18px] font-bold ">2%</span>
+                <span className="text-[18px] font-bold ">0%</span>
               </div>
               <div className="text-black dark:text-white flex items-center justify-between">
                 <span>Royalties Fee</span>
-                <span className="text-[18px] font-bold ">8%</span>
+                <span className="text-[18px] font-bold ">0%</span>
               </div>
               <div className="text-black dark:text-white flex items-center justify-between">
                 <span>Listing/Bidding/Cancel</span>
@@ -335,9 +337,6 @@ const NFT = () => {
               close={() => {
                 setOpenListing(false);
               }}
-              nftId={nftData.onChainId}
-              nftType={nftData.nftType}
-              id={nftData.id}
               onSuccess={() => {
                 setOpenListing(false);
                 setSuccess({
@@ -346,6 +345,7 @@ const NFT = () => {
                   message: "Your item has been activated for sale",
                 });
               }}
+              item={nftData}
             />
           )}
           {openDelist && nftData && (

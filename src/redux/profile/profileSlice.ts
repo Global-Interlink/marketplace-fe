@@ -38,9 +38,11 @@ export type FetchPrams = {
 
 export const fetchMyNFTs = createAsyncThunk(
   "profile/my-nft",
-  async (_, { rejectWithValue }) => {
+  async (params: FetchPrams, { rejectWithValue }) => {
     try {
-      const response = await APIFunctions.get<FetchMyNFTSuccess>(`/nft`);
+      const response = await APIFunctions.get<FetchMyNFTSuccess>(
+        `/nft?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+      );
       return response.data;
     } catch (err: any) {
       return rejectWithValue(err.response.data);

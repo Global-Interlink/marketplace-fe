@@ -9,6 +9,7 @@ export interface Collection {
   banner: string;
   bannerFileType: string;
   featuredImage: string;
+  totalNfts: string;
   featuredImageFileType: string;
   creator: {
     createdDate: string;

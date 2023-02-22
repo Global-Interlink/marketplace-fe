@@ -26,7 +26,7 @@ export const searchLaunchpad = createAsyncThunk(
   async (searchWord: string, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListLaunchpadSuccess>(
-        `/launchpad?search=${searchWord}`
+        `/nft-collection?search=${searchWord}`
       );
       return response.data;
     } catch (err: any) {
