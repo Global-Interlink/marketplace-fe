@@ -26,7 +26,7 @@ const Collection = () => {
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [currentPageItems, setCurrentPageItems] = React.useState(1);
-  
+
   React.useEffect(() => {
     if (address && connected) {
       dispatch(
@@ -42,7 +42,7 @@ const Collection = () => {
   React.useEffect(() => {
     if (address) {
       setOldAddress(address);
-    } else {
+    } else if (!address && oldAddress) {
       push("/");
     }
   }, [address]);

@@ -189,7 +189,7 @@ const SaleModal: React.FC<Props> = ({
                     indicator={<LoadingOutlined className="text-white" />}
                   />
                 ) : (
-                  "Listing"
+                  "List Now"
                 )}
               </button>
               <button

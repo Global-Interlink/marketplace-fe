@@ -164,7 +164,11 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
               <p className="text-[24px] text-primary font-medium">
                 {data?.name}
               </p>
-              <span className="text-primary">{data?.collection?.name}</span>
+              {data?.collection?.name ? (
+                <span className="text-primary">{data?.collection?.name}</span>
+              ) : (
+                <div className="h-[24px]" />
+              )}
             </div>
 
             <div className="flex items-center mt-[18px] space-x-[30px]">
