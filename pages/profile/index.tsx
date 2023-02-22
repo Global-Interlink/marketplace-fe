@@ -1,6 +1,7 @@
 import { useWallet } from "@suiet/wallet-kit";
 import { Tabs } from "antd";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React from "react";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
@@ -11,6 +12,7 @@ import {
   fetchMyListingNFTs,
   fetchMyNFTs,
 } from "../../src/redux/profile/profileSlice";
+import LocalStorage, { LocalStorageKey } from "../../src/utils/localStorage";
 
 const Collection = () => {
   const dispatch = useAppDispatch();
@@ -18,12 +20,13 @@ const Collection = () => {
   const { response: listed } = useAppSelector(
     (store) => store.profie.listedData
   );
+  const { push } = useRouter();
   const { address, connected } = useWallet();
   const LIMIT = 20;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [currentPageItems, setCurrentPageItems] = React.useState(1);
-
+  const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
   React.useEffect(() => {
     if (address && connected) {
       dispatch(
@@ -35,6 +38,15 @@ const Collection = () => {
       );
     }
   }, [address, connected]);
+  const [oldAddress, setOldAddress] = React.useState("");
+  React.useEffect(() => {
+    if (address) {
+      setOldAddress(address);
+    } else if (!address && oldAddress) {
+      console.log("===remove");
+      push("/");
+    }
+  }, [address]);
 
   React.useEffect(() => {
     if (address) {

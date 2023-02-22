@@ -9,8 +9,6 @@ import Footer from "../Footer";
 import Header from "../Header";
 import jwt_decode from "jwt-decode";
 import SearchForm from "../../molecules/Search";
-import SaleModal from "../../molecules/SaleModal";
-import SuccessModal from "../../molecules/SuccessModal";
 
 interface Props {
   children: React.ReactNode;
@@ -21,6 +19,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   const { isOpenMenu } = useAppSelector((store) => store.app);
   const { disconnect } = useWallet();
   const dispatch = useAppDispatch();
+  
   const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
   React.useEffect(() => {
     if (accessToken) {

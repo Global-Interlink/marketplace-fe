@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { toggleMenu } from "../../../redux/app/appSlice";
 import { useAppDispatch } from "../../../redux/hook";
-
+import jwt_decode from "jwt-decode";
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import React from "react";
 import axios from "axios";
@@ -12,6 +12,7 @@ import { useTheme } from "next-themes";
 import SearchForm from "../../molecules/Search";
 const Header = () => {
   const { connected, address, signMessage, disconnect } = useWallet();
+  const [oldAddress, setOldAddress] = React.useState("");
   const dispatch = useAppDispatch();
   const { theme, setTheme } = useTheme();
   const handleLogin = async () => {
@@ -49,7 +50,7 @@ const Header = () => {
         );
       }
     } catch (e: any) {
-      toast.error(e);
+      toast.error(e.message);
       disconnect();
     }
   };
@@ -61,7 +62,14 @@ const Header = () => {
     }
   }, [connected]);
 
-  console.log("==theme", theme);
+  React.useEffect(() => {
+    if (address) {
+      setOldAddress(address);
+    } else if (!address && oldAddress) {
+      console.log("===remove");
+      LocalStorage.remove(LocalStorageKey.ACCESS_TOKEN);
+    }
+  }, [address]);
 
   return (
     <div className="bg-gray-50 dark:bg-black md:h-[84px] w-full flex md:border-b border-gray-700 px-4 md:px-20 2xl:px-0">

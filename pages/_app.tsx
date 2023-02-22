@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark">
       <Provider store={store}>
-        <WalletProvider autoConnect={true}>
+        <WalletProvider autoConnect={false}>
           <ConfigProvider
             theme={{
               token: {
