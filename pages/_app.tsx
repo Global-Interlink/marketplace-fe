@@ -9,11 +9,15 @@ import "@suiet/wallet-kit/style.css";
 import { ThemeProvider } from "next-themes";
 import React from "react";
 import { ConfigProvider } from "antd";
+import LocalStorage, { LocalStorageKey } from "../src/utils/localStorage";
 export default function App({ Component, pageProps }: AppProps) {
+  const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
   return (
     <ThemeProvider attribute="class" defaultTheme="dark">
       <Provider store={store}>
-        <WalletProvider autoConnect={false}>
+        <WalletProvider
+          autoConnect={(accessToken && accessToken.length > 0) || false}
+        >
           <ConfigProvider
             theme={{
               token: {

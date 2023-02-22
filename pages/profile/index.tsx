@@ -26,7 +26,7 @@ const Collection = () => {
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [currentPageItems, setCurrentPageItems] = React.useState(1);
-  const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
+  
   React.useEffect(() => {
     if (address && connected) {
       dispatch(
