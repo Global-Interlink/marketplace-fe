@@ -13,16 +13,16 @@ module.exports = {
         error: "#EB5757",
         description: "#646464",
         item: "rgba(255, 255, 255, 0.6);",
+        footer: "rgba(0, 0, 0, 0.55)",
+        linearItem: "rgba(65, 62, 120, 0.6)",
+        primaryDark: "#897DBC",
       },
       backgroundImage: {
         bgCommon: "url('/bg-common.svg')",
         bgCommonSP: "url('/bg-common.svg')",
         bg404: "url('/bg-404.svg')",
         bgDetail: "url('/bg-detail.svg')",
-        footerSP:
-          "linear-gradient(125.53deg, rgba(0, 0, 0, 0) -63.23%, rgba(255, 255, 255, 0.8) 222.31%);",
-        bgLinear:
-          "linear-gradient(0deg, rgba(255, 255, 255, 0.5) -30.57%, rgba(178, 182, 242, 0) 93.83%);",
+        bgLinear: "linear-gradient(180deg, #000000 0%, #1E0342 100%);",
       },
       scale: {
         101: "1.01",

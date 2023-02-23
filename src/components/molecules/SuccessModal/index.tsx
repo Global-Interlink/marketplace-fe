@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/router";
+import { useTheme } from "next-themes";
 interface Props {
   close?: () => void;
   txHash?: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const SuccessModal: React.FC<Props> = ({ close, title, message }) => {
+  const { theme } = useTheme();
   return (
     <div>
       <div className={"modal fade show block"}>
@@ -18,12 +20,14 @@ const SuccessModal: React.FC<Props> = ({ close, title, message }) => {
           <div className="modal-content relative w-[550px] max-w-[550px]">
             <div className="py-10 flex flex-col items-center justify-center">
               <Image
-                src={"/ic-success.svg"}
+                src={
+                  theme === "light" ? "/ic-success.svg" : "/ic-success-d.svg"
+                }
                 alt="success"
                 width={246}
                 height={246}
               />
-              <p className="text-[#892DF0] font-medium text-[36px] mt-[37px]">
+              <p className="text-[#892DF0] dark:text-white font-medium text-[36px] mt-[37px]">
                 {title}
               </p>
               <p className="text-2xl mt-2 text-black dark:text-white">

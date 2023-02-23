@@ -197,12 +197,15 @@ const NFT = () => {
                 </Link>
               </div>
             )}
-            <div className="bg-white border shadow dark:bg-gray-800 p-6 rounded-[20px] flex items-center justify-between mt-6">
+            <div className="bg-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] flex items-center justify-between mt-6">
               {nftData?.saleStatus ? (
                 <div className="text-black dark:text-white">
                   <p className="text-[20px]">Current Price :</p>
                   <p className="text-[24px] font-bold">
-                    {Number(nftData.saleStatus.price).toLocaleString()} SUI
+                    {Number(nftData.saleStatus.price).toLocaleString()} SUI{" "}
+                    {`(~ $${Number(
+                      nftData.saleStatus.usdPrice
+                    ).toLocaleString()})`}
                   </p>
                 </div>
               ) : (
@@ -268,7 +271,7 @@ const NFT = () => {
               <p className="text-[20px] font-bold text-black dark:text-white">
                 Details
               </p>
-              <hr className="border-none bg-black dark:bg-white h-[1px]" />
+              <hr className="border-none bg-black dark:bg-[#C9C6C6] h-[1px]" />
 
               {nftData?.owner && (
                 <div className="text-black dark:text-white flex items-center justify-between">
@@ -302,12 +305,12 @@ const NFT = () => {
                     return (
                       <div
                         key={i.name}
-                        className="bg-white text-black flex justify-center items-center space-y-1 flex-col px-4 py-[10px] rounded-[10px] border border-[#892DF0]"
+                        className="bg-white text-black dark:bg-[#2B294F] flex justify-center items-center space-y-1 flex-col px-4 py-[10px] rounded-[10px] border border-[#892DF0]"
                       >
                         <p className="text-[#842DF1] text-sm font-semibold">
                           {i.name.toUpperCase()}
                         </p>
-                        <p className="text-[#827E7E] font-semibold">
+                        <p className="text-[#827E7E] dark:text-white font-semibold">
                           {i.value.toUpperCase()}
                         </p>
                         {/* <p className="text-[#464646] text-[12px]">

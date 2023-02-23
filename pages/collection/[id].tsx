@@ -1,5 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import { useRouter } from "next/router";
 import React from "react";
 import Sort from "../../src/components/atoms/Sort";
@@ -67,7 +69,7 @@ const Collection = () => {
                   </p>
                 </div>
                 <div className=" hidden lg:flex items-center space-x-3 md:space-x-6">
-                  <SocialView response={undefined} />
+                  <SocialView response={collectionData} />
                 </div>
               </div>
 
@@ -75,15 +77,21 @@ const Collection = () => {
                 Items {Number(collectionData?.totalNfts).toLocaleString()}
               </div>
               <div className="flex lg:hidden items-center space-x-3 mt-[28px]">
-                <SocialView response={undefined} />
+                <SocialView response={collectionData} />
               </div>
             </div>
           </div>
         </div>
         <div className="mt-[30px] space-y-10">
-          <p className="text-black dark:text-white">
-            {collectionData.description}
-          </p>
+          <p className="text-black dark:text-white"></p>
+          <div className="text-black dark:text-white">
+            <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
+              remarkPlugins={[remarkGfm]}
+            >
+              {collectionData.description}
+            </ReactMarkdown>
+          </div>
           <Image
             src={collectionData.banner}
             width={200}
@@ -120,7 +128,7 @@ const Collection = () => {
                       setCurrentPage(response?.meta.currentPage + 1);
                     }
                   }}
-                  className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]"
+                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
                 >
                   Load more
                 </button>

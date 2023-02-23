@@ -2,70 +2,39 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { TelegramIcon, TwitterIcon } from "react-share";
+import { Collection } from "../../../api/types";
+import DiscordIcon from "../../atoms/Icons/DiscordIcon";
+import WebsiteIcon from "../../atoms/Icons/WebsiteICon";
 // import { Launchpad } from "../../../api/types";
 import ShareItem from "../../atoms/ShareItem";
 
 interface Props {
-  response?: any;
+  response?: Collection;
 }
 const SocialView: React.FC<Props> = ({ response }) => {
   const { theme } = useTheme();
+  console.log("=response", response);
   return (
     <>
-      {typeof window !== "undefined" && window.location.href && (
-        <ShareItem
-          shareUrl={window.location.href}
-          title={response?.name || ""}
-        />
-      )}
-      {response?.website_link && (
-        <Link href={response?.website_link} target="_blank">
-          <Image
-            width={24}
-            height={24}
-            src={theme === "dark" ? "/ic-website.svg" : "/ic-website-l.svg"}
-            alt="ic-website"
-          />
+      {response?.website_url && (
+        <Link href={response?.website_url} target="_blank">
+          <WebsiteIcon />
         </Link>
       )}
-      {response?.twitter_link && (
-        <Link href={response.twitter_link} target="_blank">
-          <Image
-            width={24}
-            height={24}
-            src={theme === "dark" ? "/ic-twitter.svg" : "/ic-twitter-l2.svg"}
-            alt="ic-twitter"
-          />
+      {response?.twitter_url && (
+        <Link href={response.twitter_url} target="_blank">
+          <TwitterIcon />
         </Link>
       )}
-      {response?.telegram_link && (
-        <Link href={response.telegram_link} target="_blank">
-          <Image
-            width={24}
-            height={24}
-            src={theme === "dark" ? "/ic-telegram.svg" : "/ic-telegram-l.svg"}
-            alt="ic-telegram"
-          />
+      {response?.telegram_url && (
+        <Link href={response.telegram_url} target="_blank">
+          <TelegramIcon />
         </Link>
       )}
-      {response?.discord_link && (
-        <Link href={response.discord_link} target="_blank">
-          <Image
-            width={24}
-            height={24}
-            src={theme === "dark" ? "/ic-discord.svg" : "/ic-discord-l.svg"}
-            alt="ic-discord"
-          />
-        </Link>
-      )}
-      {response?.medium_link && (
-        <Link href={response.medium_link} target="_blank">
-          <Image
-            width={24}
-            height={24}
-            src={theme === "dark" ? "/ic-medium.svg" : "/ic-medium-l.svg"}
-            alt="ic-medium"
-          />
+      {response?.discord_url && (
+        <Link href={response.discord_url} target="_blank">
+          <DiscordIcon />
         </Link>
       )}
     </>

@@ -52,7 +52,7 @@ span.externalSP:after {
 .modal-content {
   --tw-bg-opacity: 1;
   background-clip: padding-box;
-  @apply bg-[#F2F2F2] dark:bg-gray-800 px-10;
+  @apply bg-[#F2F2F2] dark:bg-[#2B294F] px-10;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;

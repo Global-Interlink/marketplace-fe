@@ -153,7 +153,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
             router.push(`/nft/${data?.id}`);
           }}
         />
-        <div className="flex p-5 space-x-[14px] bg-white rounded-b-[20px]">
+        <div className="flex p-5 space-x-[14px] bg-white dark:bg-linearItem  backdrop-blur-[12.5px]  rounded-b-[20px]">
           <div className="w-full">
             <div
               onClick={(e: any) => {
@@ -161,20 +161,20 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
               }}
               className="cursor-pointer"
             >
-              <p className="text-[24px] text-primary font-medium">
+              <p className="text-[24px] text-primary font-medium dark:text-white">
                 {data?.name}
               </p>
               {data?.collection?.name ? (
-                <span className="text-primary">{data?.collection?.name}</span>
+                <span className="text-primary dark:text-white">{data?.collection?.name}</span>
               ) : (
                 <div className="h-[24px]" />
               )}
             </div>
 
-            <div className="flex items-center mt-[18px] space-x-[30px]">
+            <div className="flex items-center mt-[18px] space-x-[30px] ">
               {data?.saleStatus ? (
-                <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] border rounded-[5px] border-black">
-                  {Number(data.saleStatus.price).toLocaleString()} SUI
+                <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] dark:border-[#897DBC] dark:bg-[#71659C] dark:text-white border rounded-[5px] border-black">
+                  Price {Number(data.saleStatus.price).toLocaleString()} SUI
                 </div>
               ) : (
                 <div className="flex-1" />
@@ -184,7 +184,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                   !data?.saleStatus &&
                   data.owner?.address?.address === address && (
                     <button
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={() => {
                         setOpenListing(true);
                       }}
@@ -196,7 +196,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                   data.saleStatus.onSale &&
                   data.owner?.address?.address !== address && (
                     <button
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={() => {
                         if (data) {
                           handleBuyNow(
@@ -220,7 +220,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                   data.owner?.address?.address === address &&
                   data.saleStatus.onSale && (
                     <button
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border rounded-[5px] "
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={(e: any) => {
                         setOpenDelist(true);
                       }}

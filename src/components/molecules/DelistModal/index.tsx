@@ -134,7 +134,7 @@ const DelistModal: React.FC<Props> = ({
                   close && close();
                 }}
                 disabled={isLoading}
-                className="border hoverCommon bg-white text-[#892DF0] border-[#892DF0] font-medium rounded-full w-1/2 h-12"
+                className="border dark:text-white dark:bg-[#A6A1FA] dark:border-[#CDC2FF] hoverCommon bg-white text-[#892DF0] border-[#892DF0] font-medium rounded-full w-1/2 h-12"
               >
                 No
               </button>

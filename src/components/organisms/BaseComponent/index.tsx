@@ -19,7 +19,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   const { isOpenMenu } = useAppSelector((store) => store.app);
   const { disconnect } = useWallet();
   const dispatch = useAppDispatch();
-  
+
   const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
   React.useEffect(() => {
     if (accessToken) {
@@ -38,7 +38,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   return (
     <div
       className={`
-    bg-gray-50 dark:bg-black min-h-[100vh] relative
+    bg-gray-50 min-h-[100vh] relative dark:bg-bgLinear
     `}
     >
       <Header />

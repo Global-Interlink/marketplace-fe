@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
+import Empty from "../../src/components/molecules/EmptyView";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import { formatLongString } from "../../src/contract-abi/consts";
@@ -11,12 +12,13 @@ import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
 import {
   fetchMyListingNFTs,
   fetchMyNFTs,
+  fetchUser,
 } from "../../src/redux/profile/profileSlice";
-import LocalStorage, { LocalStorageKey } from "../../src/utils/localStorage";
 
 const Collection = () => {
   const dispatch = useAppDispatch();
   const { response } = useAppSelector((store) => store.profie.profileData);
+  const user = useAppSelector((store) => store.profie.userData.response);
   const { response: listed } = useAppSelector(
     (store) => store.profie.listedData
   );
@@ -27,6 +29,10 @@ const Collection = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [currentPageItems, setCurrentPageItems] = React.useState(1);
 
+  console.log("=user", user);
+  React.useEffect(() => {
+    dispatch(fetchUser());
+  }, []);
   React.useEffect(() => {
     if (address && connected) {
       dispatch(
@@ -71,11 +77,15 @@ const Collection = () => {
       ),
       children: (
         <div>
-          <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {response?.data?.map((i) => {
-              return <ListNFTItem key={i.onChainId} data={i} />;
-            })}
-          </div>
+          {response?.data && response.data.length > 0 ? (
+            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+              {response?.data?.map((i) => {
+                return <ListNFTItem key={i.onChainId} data={i} />;
+              })}
+            </div>
+          ) : (
+            <Empty />
+          )}
           {response &&
             response.data &&
             currentPage < response.meta.totalPages && (
@@ -88,7 +98,7 @@ const Collection = () => {
                       setCurrentPageItems(response?.meta.currentPage + 1);
                     }
                   }}
-                  className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]"
+                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
                 >
                   Load more
                 </button>
@@ -109,11 +119,15 @@ const Collection = () => {
       ),
       children: (
         <div>
-          <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {listed?.data?.map((i) => {
-              return <ListNFTItem key={i.onChainId} data={i} />;
-            })}
-          </div>
+          {listed?.data && listed?.data.length > 0 ? (
+            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+              {listed?.data?.map((i) => {
+                return <ListNFTItem key={i.onChainId} data={i} />;
+              })}
+            </div>
+          ) : (
+            <Empty />
+          )}
           {listed && listed.data && currentPage < listed.meta.totalPages && (
             <div className="mt-[70px] flex justify-center">
               <button
@@ -122,7 +136,7 @@ const Collection = () => {
                     setCurrentPage(listed?.meta.currentPage + 1);
                   }
                 }}
-                className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]"
+                className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
               >
                 Load more
               </button>
@@ -168,14 +182,14 @@ const Collection = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-white text-black dark:text-white border shadow dark:bg-gray-800 p-6 rounded-[20px] justify-between flex mt-6">
+              <div className="bg-white text-black dark:text-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] justify-between flex mt-6">
                 <div>
                   <p>Total Items</p>
-                  <p>{response?.data?.length || 0}</p>
+                  <p>{user?.totalItems}</p>
                 </div>
                 <div>
                   <p>Listed Items</p>
-                  <p>{(listed?.data && listed?.data?.length) || 0}</p>
+                  <p>{user?.listedItems}</p>
                 </div>
                 <div>
                   <p>Total Volume</p>

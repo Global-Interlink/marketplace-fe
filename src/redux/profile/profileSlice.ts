@@ -18,7 +18,11 @@ export type FetchMyNFTSuccess = {
   data?: NFT[];
   meta: Meta;
 };
-
+interface User {
+  listedItems: number;
+  totalInMyWallet: number;
+  totalItems: number;
+}
 export interface DetailNFTState {
   profileData: {
     status: FetchStatus;
@@ -27,6 +31,10 @@ export interface DetailNFTState {
   listedData: {
     status: FetchStatus;
     response?: FetchMyNFTSuccess;
+  };
+  userData: {
+    status: FetchStatus;
+    response?: User;
   };
 }
 
@@ -43,6 +51,18 @@ export const fetchMyNFTs = createAsyncThunk(
       const response = await APIFunctions.get<FetchMyNFTSuccess>(
         `/nft?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
       );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchUser = createAsyncThunk(
+  "profile/user",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await APIFunctions.get<User>(`/user`);
       return response.data;
     } catch (err: any) {
       return rejectWithValue(err.response.data);
@@ -69,6 +89,9 @@ const initialState: DetailNFTState = {
     status: FetchStatus.idle,
   },
   listedData: {
+    status: FetchStatus.idle,
+  },
+  userData: {
     status: FetchStatus.idle,
   },
 };
@@ -105,6 +128,21 @@ export const profileSlice = createSlice({
       })
       .addCase(fetchMyListingNFTs.rejected, (state, action) => {
         state.listedData.status = FetchStatus.failed;
+        const error = action.payload as CommonError;
+        toast.error(error?.message);
+      });
+
+    builder
+      .addCase(fetchUser.pending, (state) => {
+        state.userData.status = FetchStatus.pending;
+        state.userData.response = undefined;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.userData.status = FetchStatus.succeeded;
+        state.userData.response = action.payload;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.userData.status = FetchStatus.failed;
         const error = action.payload as CommonError;
         toast.error(error?.message);
       });

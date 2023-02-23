@@ -6,7 +6,7 @@ import Link from "next/link";
 const Footer = () => {
   const { theme } = useTheme();
   return (
-    <div className="border-t rounded-t-[20px] lg:rounded-t-[40px] border-inputBg lg:pt-[28px] pt-4  px-4 md:px-20 dark:backdrop-blur shadow-footer">
+    <div className="border-t rounded-t-[20px] lg:rounded-t-[40px] border-inputBg lg:pt-[28px] pt-4  px-4 md:px-20  shadow-footer bg-white dark:bg-footer">
       <div className="container mx-auto flex flex-col space-y-10 lg:space-y-0 lg:flex-row justify-between">
         <div>
           <Image src="/logo.svg" alt="logo" width={175} height={71} />

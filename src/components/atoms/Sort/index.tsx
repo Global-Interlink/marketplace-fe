@@ -15,7 +15,7 @@ const Sort: React.FC<Props> = ({ onChange }) => {
   return (
     <div className="relative" ref={ref}>
       <div
-        className="border flex text-[#5B5B5B] dark:text-white bg-white items-center justify-between dark:bg-gray-800 w-[155px] h-10 px-5 rounded-full cursor-pointer"
+        className="border flex text-[#5B5B5B] dark:text-white bg-white border-primaryDark items-center justify-between dark:bg-[#514E89] w-[155px] h-10 px-5 rounded-full cursor-pointer"
         onClick={() => {
           setOpen(true);
         }}
@@ -24,7 +24,7 @@ const Sort: React.FC<Props> = ({ onChange }) => {
         <ArrowDown />
       </div>
       {open && (
-        <div className="absolute mt-2 bg-white dark:bg-gray-800 border shadow w-full rounded-[10px] z-10">
+        <div className="absolute mt-2 bg-white dark:bg-[#514E89] border border-primaryDark shadow w-full rounded-[10px] z-10">
           <p
             onClick={() => {
               setOpen(false);

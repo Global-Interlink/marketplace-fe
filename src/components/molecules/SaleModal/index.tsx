@@ -18,7 +18,7 @@ import {
 interface Props {
   close?: () => void;
   onSuccess: () => void;
-  item: NFT;
+  item?: NFT;
   collectionId?: string;
 }
 
@@ -110,14 +110,14 @@ const SaleModal: React.FC<Props> = ({
     <div className="text-black dark:text-white">
       <div className={"modal fade show block"}>
         <div className="modal-dialog max-w-2xl">
-          <div className="modal-content relative w-[572px]">
+          <div className="modal-content relative w-[734px]">
             <div className="mt-8 space-y-2">
-              <p className="text-[24px] font-bold text-left">{item.name}</p>
+              <p className="text-[24px] font-bold text-left">{item?.name}</p>
               <div className="flex w-full items-center space-x-2">
                 <div className="">
                   <Image
                     alt="logo-lp"
-                    src={item.collection?.logo || ""}
+                    src={item?.collection?.logo || ""}
                     width={36}
                     height={36}
                     className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
@@ -125,7 +125,7 @@ const SaleModal: React.FC<Props> = ({
                 </div>
                 <Link href={"/collection/1"}>
                   <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
-                    {item.collection?.name}
+                    {item?.collection?.name}
                   </span>
                 </Link>
               </div>
@@ -134,18 +134,18 @@ const SaleModal: React.FC<Props> = ({
             <div className="mt-10 mb-10 space-y-5">
               <p className="text-xl font-bold">Price</p>
               <div className="flex items-center space-x-10">
-                <div className="flex items-center space-x-3 bg-white w-[140px] rounded-md h-12 justify-center">
+                <div className="flex items-center space-x-3 bg-white dark:bg-[#514E89] w-[146px] rounded-md h-12 justify-center">
                   <Image
-                    src={"/ic-sui.jpeg"}
+                    src={"/ic-sui.svg"}
                     alt="sui"
                     width={18}
                     height={28}
                   />
-                  <p className="text-black font-medium">SUI</p>
+                  <p className="text-black dark:text-white font-medium">SUI</p>
                 </div>
                 <div className="w-full">
                   <input
-                    className="h-12 w-full bg-white px-5 rounded-md text-black"
+                    className="h-12 w-full bg-white dark:bg-[#514E89] dark:text-white px-5 rounded-md text-black"
                     placeholder="0.0"
                     value={price}
                     type="number"
@@ -158,7 +158,7 @@ const SaleModal: React.FC<Props> = ({
                 </div>
               </div>
               <p className="text-xl font-bold">Fee</p>
-              <div className="bg-white dark:bg-gray-800 border py-[10px] px-[28px] rounded-[20px]">
+              <div className="bg-white dark:bg-[#514E89] border dark:border-[#897DBC] py-[10px] px-[28px] rounded-[20px]">
                 <div className="flex items-center justify-between">
                   <p>Service Fee</p>
                   <p className="font-bold text-lg">0%</p>
@@ -177,10 +177,10 @@ const SaleModal: React.FC<Props> = ({
                 disabled={!connected || isLoading}
                 onClick={() => {
                   handleListing(
-                    item.onChainId,
+                    item?.onChainId || "",
                     Number(price),
-                    item.nftType,
-                    item.id
+                    item?.nftType || "",
+                    item?.id || ""
                   );
                 }}
               >
@@ -197,7 +197,7 @@ const SaleModal: React.FC<Props> = ({
                   close && close();
                 }}
                 disabled={isLoading}
-                className="border hoverCommon text-[#892DF0] border-[#892DF0] font-medium rounded-full w-1/2 h-12"
+                className="border hoverCommon text-[#892DF0] dark:text-white dark:bg-[#A6A1FA] dark:border-[#CDC2FF] border-[#892DF0] font-medium rounded-full w-1/2 h-12"
               >
                 Cancel
               </button>

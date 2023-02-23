@@ -51,7 +51,7 @@ const Home = () => {
                     setCurrentPage(response?.meta.currentPage + 1);
                   }
                 }}
-                className="bg-white text-primary font-bold rounded-lg border w-[189px] h-[49px]"
+                className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
               >
                 Load more
               </button>

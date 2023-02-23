@@ -29,6 +29,13 @@ export interface Collection {
       };
     };
   };
+  facebook_url?: string;
+  discord_url?: string;
+  reddit_url?: string;
+  telegram_url?: string;
+  twitter_url?: string;
+  website_url?: string;
+  youtube_url?: string;
 }
 
 export interface Meta {
@@ -74,6 +81,7 @@ export interface NFT {
     buyType: string;
     auction?: any;
     hasExpired: boolean;
+    usdPrice?: number;
   };
   owner: Owner;
   collection?: Collection;
