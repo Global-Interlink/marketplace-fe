@@ -16,25 +16,27 @@ import {
 } from "../../../redux/profile/profileSlice";
 import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
-import SuccessModal from "../SuccessModal";
 import { useRouter } from "next/router";
 import { fetchListNFTOfCollection } from "../../../redux/collection/collectionSlice";
+import { setSuccess } from "../../../redux/app/appSlice";
 interface Props {
   data?: NFT;
-  collectionId?: string;
+  onListSuccess: () => void;
+  onBuySuccess: () => void;
+  onDelistSuccess: () => void;
 }
-const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
-  const { signAndExecuteTransaction, connected, address } = useWallet();
+const ListNFTItem: React.FC<Props> = ({
+  data,
+  onListSuccess,
+  onBuySuccess,
+  onDelistSuccess,
+}) => {
+  const { signAndExecuteTransaction, address, connected } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
-  const [success, setSuccess] = React.useState({
-    title: "",
-    message: "",
-    isOpen: false,
-  });
   const handleBuyNow = async (
     nftId: string,
     nftType: string,
@@ -116,19 +118,14 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
           })
         );
         setTimeout(() => {
-          if (collectionId) {
-            dispatch(
-              fetchListNFTOfCollection({
-                id: collectionId,
-                page: 1,
-                limit: 20,
-                sort: "DESC",
-              })
-            );
-          } else {
-            dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
-            dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
-          }
+          onBuySuccess();
+          dispatch(
+            setSuccess({
+              isOpen: true,
+              title: "Congratulations !",
+              message: "This item has been added to your wallet",
+            })
+          );
           setLoading(false);
         }, 3000);
       } else {
@@ -142,7 +139,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
   };
   return (
     <div>
-      <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white hover:scale-101 shadow">
+      <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white shadow hover:-translate-y-1 transition ease-in-out delay-150">
         <Image
           src={data?.image || "/img-mock-1.png"}
           width={200}
@@ -165,7 +162,9 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                 {data?.name}
               </p>
               {data?.collection?.name ? (
-                <span className="text-primary dark:text-white">{data?.collection?.name}</span>
+                <span className="text-primary dark:text-white">
+                  {data?.collection?.name}
+                </span>
               ) : (
                 <div className="h-[24px]" />
               )}
@@ -184,6 +183,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                   !data?.saleStatus &&
                   data.owner?.address?.address === address && (
                     <button
+                      disabled={!connected || isLoading}
                       className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={() => {
                         setOpenListing(true);
@@ -196,6 +196,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                   data.saleStatus.onSale &&
                   data.owner?.address?.address !== address && (
                     <button
+                      disabled={!connected || isLoading}
                       className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={() => {
                         if (data) {
@@ -220,6 +221,7 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
                   data.owner?.address?.address === address &&
                   data.saleStatus.onSale && (
                     <button
+                      disabled={!connected || isLoading}
                       className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={(e: any) => {
                         setOpenDelist(true);
@@ -247,13 +249,15 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
           item={data}
           onSuccess={() => {
             setOpenListing(false);
-            setSuccess({
-              isOpen: true,
-              title: "Delist Success",
-              message: "Your item has been delisted!",
-            });
+            onListSuccess();
+            dispatch(
+              setSuccess({
+                isOpen: true,
+                title: "List Success",
+                message: "Your item has been listed!",
+              })
+            );
           }}
-          collectionId={collectionId}
         />
       )}
       {openDelist && data && (
@@ -266,26 +270,15 @@ const ListNFTItem: React.FC<Props> = ({ data, collectionId }) => {
           id={data.id}
           onSuccess={() => {
             setOpenDelist(false);
-            setSuccess({
-              isOpen: true,
-              title: "Delist Success",
-              message: "Your item has been delisted!",
-            });
+            onDelistSuccess();
+            dispatch(
+              setSuccess({
+                isOpen: true,
+                title: "Delist Success",
+                message: "Your item has been delisted!",
+              })
+            );
           }}
-          collectionId={collectionId}
-        />
-      )}
-      {success.isOpen && (
-        <SuccessModal
-          close={() => {
-            setSuccess({
-              isOpen: false,
-              title: "",
-              message: "",
-            });
-          }}
-          title={success.title}
-          message={success.message}
         />
       )}
     </div>

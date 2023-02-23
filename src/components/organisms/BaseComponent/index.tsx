@@ -2,13 +2,14 @@ import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
-import { toggleMenu } from "../../../redux/app/appSlice";
+import { clearSuccess, toggleMenu } from "../../../redux/app/appSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hook";
 import LocalStorage, { LocalStorageKey } from "../../../utils/localStorage";
 import Footer from "../Footer";
 import Header from "../Header";
 import jwt_decode from "jwt-decode";
 import SearchForm from "../../molecules/Search";
+import SuccessModal from "../../molecules/SuccessModal";
 
 interface Props {
   children: React.ReactNode;
@@ -16,7 +17,7 @@ interface Props {
   showBg404?: boolean;
 }
 const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
-  const { isOpenMenu } = useAppSelector((store) => store.app);
+  const { isOpenMenu, success } = useAppSelector((store) => store.app);
   const { disconnect } = useWallet();
   const dispatch = useAppDispatch();
 
@@ -90,6 +91,15 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
       <div className="absolute bottom-0 w-full">
         <Footer />
       </div>
+      {success.isOpen && (
+        <SuccessModal
+          close={() => {
+            dispatch(clearSuccess());
+          }}
+          title={success.title}
+          message={success.message}
+        />
+      )}
     </div>
   );
 };

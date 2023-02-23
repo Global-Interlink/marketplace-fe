@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { FetchStatus } from "../src/api/APIFunctions";
 import ImgIcon from "../src/components/atoms/Icons/ImgIcon";
 import Sort from "../src/components/atoms/Sort";
+import CollectionListSkeleton from "../src/components/molecules/CollectionListSkeleton";
 import Empty from "../src/components/molecules/EmptyView";
 import ListCollectionItem from "../src/components/molecules/ListCollectionItem";
 import BaseComponent from "../src/components/organisms/BaseComponent";
@@ -11,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "../src/redux/hook";
 
 const Home = () => {
   const dispatch = useAppDispatch();
-  const { response } = useAppSelector((store) => store.home.homeData);
+  const { response, status } = useAppSelector((store) => store.home.homeData);
   const LIMIT = 20;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -26,7 +28,13 @@ const Home = () => {
     );
   }, [currentPage, dispatch, sort]);
 
-  return (
+  return status === FetchStatus.idle || status === FetchStatus.pending ? (
+    <BaseComponent>
+      <div className="py-4 md:py-8">
+        <CollectionListSkeleton />
+      </div>
+    </BaseComponent>
+  ) : (
     <BaseComponent>
       <div className="py-4 md:py-8">
         <div className="flex items-center justify-end mt-10">

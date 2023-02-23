@@ -14,6 +14,7 @@ import { formatLongString } from "../../src/contract-abi/consts";
 
 import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
 import {
+  clear,
   fetchListNFTOfNFT,
   fetchNFTDetail,
 } from "../../src/redux/nft/nftSlice";
@@ -26,29 +27,30 @@ import { Spin } from "antd";
 import { SUI_DECIMAL, SUI_TESTNET } from "../../src/api/constants";
 import DelistModal from "../../src/components/molecules/DelistModal";
 import SuccessModal from "../../src/components/molecules/SuccessModal";
+import { clearSuccess, setSuccess } from "../../src/redux/app/appSlice";
+import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
+import { FetchStatus } from "../../src/api/APIFunctions";
+import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 
 const NFT = () => {
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useAppDispatch();
-  const nftData = useAppSelector((store) => store.nft.nftData.response);
-  const { response } = useAppSelector((store) => store.nft.listNFTData);
+  const { response: nftData, status: nftStatus } = useAppSelector(
+    (store) => store.nft.nftData
+  );
+  const { response, status } = useAppSelector((store) => store.nft.listNFTData);
   const { signAndExecuteTransaction, connected, address } = useWallet();
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState({
-    title: "",
-    message: "",
-    isOpen: false,
-  });
   React.useEffect(() => {
     if (id) {
       dispatch(fetchNFTDetail({ id: String(id) }));
     }
   }, [id]);
 
-  React.useEffect(() => {
+  const handleFetchData = () => {
     if (id) {
       dispatch(
         fetchListNFTOfNFT({
@@ -56,6 +58,16 @@ const NFT = () => {
         })
       );
     }
+  };
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(clear());
+    };
+  }, []);
+
+  React.useEffect(() => {
+    handleFetchData();
   }, [id]);
 
   const handleBuyNow = async (
@@ -141,11 +153,13 @@ const NFT = () => {
         setTimeout(() => {
           dispatch(fetchNFTDetail({ id: String(id) }));
           setLoading(false);
-          setSuccess({
-            isOpen: true,
-            title: "Congratulations !",
-            message: "This item has been added to your wallet",
-          });
+          dispatch(
+            setSuccess({
+              isOpen: true,
+              title: "Congratulations !",
+              message: "This item has been added to your wallet",
+            })
+          );
         }, 3000);
       } else {
         toast.error(error);
@@ -165,180 +179,197 @@ const NFT = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
-          <div className="w-full md:w-[40%] min-w-[40%]">
-            <Image
-              src={nftData?.image || ""}
-              width={200}
-              height={200}
-              className="flex w-full aspect-square rounded-[20px] object-cover"
-              alt="mock"
-            />
-          </div>
-          <div className="w-full">
-            <p className="text-black dark:text-white text-[24px] mt-4 md:mt-[26px] md:text-[36px] font-medium">
-              {nftData?.name}
-            </p>
-            {nftData?.collection && (
-              <div className="flex w-full items-center space-x-2">
-                <div className="">
-                  <Image
-                    alt="logo-lp"
-                    src={nftData?.collection?.logo || ""}
-                    width={36}
-                    height={26}
-                    className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
-                  />
-                </div>
-                <Link href={"/collection/1"}>
-                  <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
-                    {nftData?.collection?.name}
-                  </p>
-                </Link>
-              </div>
-            )}
-            <div className="bg-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] flex items-center justify-between mt-6">
-              {nftData?.saleStatus ? (
-                <div className="text-black dark:text-white">
-                  <p className="text-[20px]">Current Price :</p>
-                  <p className="text-[24px] font-bold">
-                    {Number(nftData.saleStatus.price).toLocaleString()} SUI{" "}
-                    {`(~ $${Number(
-                      nftData.saleStatus.usdPrice
-                    ).toLocaleString()})`}
-                  </p>
-                </div>
-              ) : (
-                <div />
-              )}
-              {nftData &&
-                !nftData?.saleStatus &&
-                nftData.owner.address.address === address && (
-                  <button
-                    className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
-                    onClick={() => {
-                      setOpenListing(true);
-                    }}
-                  >
-                    List Now
-                  </button>
-                )}
-              {nftData?.saleStatus &&
-                nftData.saleStatus.onSale &&
-                nftData.owner.address.address !== address && (
-                  <button
-                    disabled={isLoading}
-                    className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
-                    onClick={() => {
-                      if (nftData) {
-                        handleBuyNow(
-                          nftData?.onChainId,
-                          nftData?.nftType,
-                          Number(nftData.saleStatus?.price) * SUI_DECIMAL
-                        );
-                      }
-                    }}
-                  >
-                    {isLoading ? (
-                      <Spin
-                        indicator={<LoadingOutlined className="text-white" />}
-                      />
-                    ) : (
-                      "Buy Now"
-                    )}
-                  </button>
-                )}
-              {nftData?.saleStatus &&
-                nftData.owner.address.address === address &&
-                nftData.saleStatus.onSale && (
-                  <button
-                    className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
-                    onClick={() => {
-                      setOpenDelist(true);
-                    }}
-                  >
-                    {isLoading ? (
-                      <Spin
-                        indicator={<LoadingOutlined className="text-white" />}
-                      />
-                    ) : (
-                      "Delist"
-                    )}
-                  </button>
-                )}
+        {nftStatus === FetchStatus.idle || nftStatus === FetchStatus.pending ? (
+          <NFTDetailTopSkeleton />
+        ) : (
+          <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
+            <div className="w-full md:w-[40%] min-w-[40%]">
+              <Image
+                src={nftData?.image || ""}
+                width={200}
+                height={200}
+                className="flex w-full aspect-square rounded-[20px] object-cover"
+                alt="mock"
+              />
             </div>
-            <div className="mt-[36px] space-y-[10px]">
-              <p className="text-[20px] font-bold text-black dark:text-white">
-                Details
+            <div className="w-full">
+              <p className="text-black dark:text-white text-[24px] mt-4 md:mt-[26px] md:text-[36px] font-medium">
+                {nftData?.name}
               </p>
-              <hr className="border-none bg-black dark:bg-[#C9C6C6] h-[1px]" />
-
-              {nftData?.owner && (
-                <div className="text-black dark:text-white flex items-center justify-between">
-                  <span>Owner Address</span>
-                  <span className="text-[18px] font-bold ">
-                    {formatLongString(nftData.owner.address.address)}
-                  </span>
+              {nftData?.collection && (
+                <div className="flex w-full items-center space-x-2">
+                  <div className="">
+                    <Image
+                      alt="logo-lp"
+                      src={nftData?.collection?.logo || ""}
+                      width={36}
+                      height={26}
+                      className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
+                    />
+                  </div>
+                  <Link href={"/collection/1"}>
+                    <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
+                      {nftData?.collection?.name}
+                    </p>
+                  </Link>
                 </div>
               )}
-              <div className="text-black dark:text-white flex items-center justify-between">
-                <span>Transaction Fee</span>
-                <span className="text-[18px] font-bold ">0%</span>
+              <div className="bg-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] flex items-center justify-between mt-6">
+                {nftData?.saleStatus ? (
+                  <div className="text-black dark:text-white">
+                    <p className="text-[20px]">Current Price :</p>
+                    <p className="text-[24px] font-bold">
+                      {Number(nftData.saleStatus.price).toLocaleString()} SUI{" "}
+                      {`(~ $${Number(
+                        nftData.saleStatus.usdPrice
+                      ).toLocaleString()})`}
+                    </p>
+                  </div>
+                ) : (
+                  <div />
+                )}
+                {nftData &&
+                  !nftData?.saleStatus &&
+                  nftData.owner.address.address === address && (
+                    <button
+                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                      onClick={() => {
+                        setOpenListing(true);
+                      }}
+                    >
+                      List Now
+                    </button>
+                  )}
+                {nftData?.saleStatus &&
+                  nftData.saleStatus.onSale &&
+                  nftData.owner.address.address !== address && (
+                    <button
+                      disabled={isLoading}
+                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                      onClick={() => {
+                        if (nftData) {
+                          handleBuyNow(
+                            nftData?.onChainId,
+                            nftData?.nftType,
+                            Number(nftData.saleStatus?.price) * SUI_DECIMAL
+                          );
+                        }
+                      }}
+                    >
+                      {isLoading ? (
+                        <Spin
+                          indicator={<LoadingOutlined className="text-white" />}
+                        />
+                      ) : (
+                        "Buy Now"
+                      )}
+                    </button>
+                  )}
+                {nftData?.saleStatus &&
+                  nftData.owner.address.address === address &&
+                  nftData.saleStatus.onSale && (
+                    <button
+                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                      onClick={() => {
+                        setOpenDelist(true);
+                      }}
+                    >
+                      {isLoading ? (
+                        <Spin
+                          indicator={<LoadingOutlined className="text-white" />}
+                        />
+                      ) : (
+                        "Delist"
+                      )}
+                    </button>
+                  )}
               </div>
-              <div className="text-black dark:text-white flex items-center justify-between">
-                <span>Royalties Fee</span>
-                <span className="text-[18px] font-bold ">0%</span>
-              </div>
-              <div className="text-black dark:text-white flex items-center justify-between">
-                <span>Listing/Bidding/Cancel</span>
-                <span className="text-[18px] font-bold ">Free</span>
-              </div>
-            </div>
-            {nftData?.properties && nftData.properties.length > 0 && (
               <div className="mt-[36px] space-y-[10px]">
                 <p className="text-[20px] font-bold text-black dark:text-white">
-                  Properties
+                  Details
                 </p>
-                <hr className="border-none bg-black dark:bg-white h-[1px]" />
-                <div className="grid gap-5 grid-cols-2 lg:grid-cols-3 pt-1">
-                  {nftData.properties.map((i) => {
+                <hr className="border-none bg-black dark:bg-[#C9C6C6] h-[1px]" />
+
+                {nftData?.owner && (
+                  <div className="text-black dark:text-white flex items-center justify-between">
+                    <span>Owner Address</span>
+                    <span className="text-[18px] font-bold ">
+                      {formatLongString(nftData.owner.address.address)}
+                    </span>
+                  </div>
+                )}
+                <div className="text-black dark:text-white flex items-center justify-between">
+                  <span>Transaction Fee</span>
+                  <span className="text-[18px] font-bold ">0%</span>
+                </div>
+                <div className="text-black dark:text-white flex items-center justify-between">
+                  <span>Royalties Fee</span>
+                  <span className="text-[18px] font-bold ">0%</span>
+                </div>
+                <div className="text-black dark:text-white flex items-center justify-between">
+                  <span>Listing/Bidding/Cancel</span>
+                  <span className="text-[18px] font-bold ">Free</span>
+                </div>
+              </div>
+              {nftData?.properties && nftData.properties.length > 0 && (
+                <div className="mt-[36px] space-y-[10px]">
+                  <p className="text-[20px] font-bold text-black dark:text-white">
+                    Properties
+                  </p>
+                  <hr className="border-none bg-black dark:bg-white h-[1px]" />
+                  <div className="grid gap-5 grid-cols-2 lg:grid-cols-3 pt-1">
+                    {nftData.properties.map((i) => {
+                      return (
+                        <div
+                          key={i.name}
+                          className="bg-white text-black dark:bg-[#2B294F] flex justify-center items-center space-y-1 flex-col px-4 py-[10px] rounded-[10px] border border-[#892DF0]"
+                        >
+                          <p className="text-[#842DF1] text-sm font-semibold">
+                            {i.name.toUpperCase()}
+                          </p>
+                          <p className="text-[#827E7E] dark:text-white font-semibold">
+                            {i.value.toUpperCase()}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-10 md:mt-20">
+          {status === FetchStatus.idle || status === FetchStatus.pending ? (
+            <NFTListSkeleton hideSort />
+          ) : (
+            <>
+              <div className="flex items-center justify-between">
+                <p className="text-black dark:text-white font-bold">
+                  More from this collection
+                </p>
+              </div>
+              {response && response.data ? (
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                  {response?.data?.map((i) => {
                     return (
-                      <div
-                        key={i.name}
-                        className="bg-white text-black dark:bg-[#2B294F] flex justify-center items-center space-y-1 flex-col px-4 py-[10px] rounded-[10px] border border-[#892DF0]"
-                      >
-                        <p className="text-[#842DF1] text-sm font-semibold">
-                          {i.name.toUpperCase()}
-                        </p>
-                        <p className="text-[#827E7E] dark:text-white font-semibold">
-                          {i.value.toUpperCase()}
-                        </p>
-                        {/* <p className="text-[#464646] text-[12px]">
-                          11.00% has this trait
-                        </p> */}
-                      </div>
+                      <ListNFTItem
+                        key={i.id}
+                        data={i}
+                        onBuySuccess={handleFetchData}
+                        onDelistSuccess={handleFetchData}
+                        onListSuccess={handleFetchData}
+                      />
                     );
                   })}
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="mt-10 md:mt-20">
-          <div className="flex items-center justify-between">
-            <p className="text-black dark:text-white font-bold">
-              More from this collection
-            </p>
-          </div>
-          {response && response.data ? (
-            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-              {response?.data?.map((i) => {
-                return <ListNFTItem key={i.id} data={i} />;
-              })}
-            </div>
-          ) : (
-            <Empty />
+              ) : (
+                <Empty />
+              )}
+            </>
           )}
+
           {openListing && nftData && (
             <SaleModal
               close={() => {
@@ -346,11 +377,13 @@ const NFT = () => {
               }}
               onSuccess={() => {
                 setOpenListing(false);
-                setSuccess({
-                  isOpen: true,
-                  title: "Congratulations !",
-                  message: "Your item has been activated for sale",
-                });
+                dispatch(
+                  setSuccess({
+                    isOpen: true,
+                    title: "Congratulations !",
+                    message: "Your item has been activated for sale",
+                  })
+                );
               }}
               item={nftData}
             />
@@ -365,25 +398,14 @@ const NFT = () => {
               id={nftData.id}
               onSuccess={() => {
                 setOpenDelist(false);
-                setSuccess({
-                  isOpen: true,
-                  title: "Delist Success",
-                  message: "Your item has been delisted!",
-                });
+                dispatch(
+                  setSuccess({
+                    isOpen: true,
+                    title: "Delist Success",
+                    message: "Your item has been delisted!",
+                  })
+                );
               }}
-            />
-          )}
-          {success.isOpen && (
-            <SuccessModal
-              close={() => {
-                setSuccess({
-                  isOpen: false,
-                  title: "",
-                  message: "",
-                });
-              }}
-              title={success.title}
-              message={success.message}
             />
           )}
         </div>

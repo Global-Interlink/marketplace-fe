@@ -3,9 +3,12 @@ import { Tabs } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { FetchStatus } from "../../src/api/APIFunctions";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
 import Empty from "../../src/components/molecules/EmptyView";
 import ListNFTItem from "../../src/components/molecules/ListNFTItem";
+import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
+import ProfileTopSkeleton from "../../src/components/molecules/ProfileTopSkeleton";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import { formatLongString } from "../../src/contract-abi/consts";
 import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
@@ -17,9 +20,13 @@ import {
 
 const Collection = () => {
   const dispatch = useAppDispatch();
-  const { response } = useAppSelector((store) => store.profie.profileData);
-  const user = useAppSelector((store) => store.profie.userData.response);
-  const { response: listed } = useAppSelector(
+  const { response, status } = useAppSelector(
+    (store) => store.profie.profileData
+  );
+  const { response: user, status: userStatus } = useAppSelector(
+    (store) => store.profie.userData
+  );
+  const { response: listed, status: listedStatus } = useAppSelector(
     (store) => store.profie.listedData
   );
   const { push } = useRouter();
@@ -29,6 +36,10 @@ const Collection = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [currentPageItems, setCurrentPageItems] = React.useState(1);
 
+  const handleFetchData = () => {
+    dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
+    dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
+  };
   console.log("=user", user);
   React.useEffect(() => {
     dispatch(fetchUser());
@@ -77,14 +88,28 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {response?.data && response.data.length > 0 ? (
-            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-              {response?.data?.map((i) => {
-                return <ListNFTItem key={i.onChainId} data={i} />;
-              })}
-            </div>
+          {status === FetchStatus.idle || status === FetchStatus.pending ? (
+            <NFTListSkeleton hideHeader />
           ) : (
-            <Empty />
+            <>
+              {response?.data && response.data.length > 0 ? (
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                  {response?.data?.map((i) => {
+                    return (
+                      <ListNFTItem
+                        key={i.onChainId}
+                        data={i}
+                        onBuySuccess={handleFetchData}
+                        onDelistSuccess={handleFetchData}
+                        onListSuccess={handleFetchData}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <Empty />
+              )}
+            </>
           )}
           {response &&
             response.data &&
@@ -119,14 +144,29 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {listed?.data && listed?.data.length > 0 ? (
-            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-              {listed?.data?.map((i) => {
-                return <ListNFTItem key={i.onChainId} data={i} />;
-              })}
-            </div>
+          {listedStatus === FetchStatus.idle ||
+          listedStatus === FetchStatus.pending ? (
+            <NFTListSkeleton hideHeader />
           ) : (
-            <Empty />
+            <>
+              {listed?.data && listed.data.length > 0 ? (
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                  {listed?.data?.map((i) => {
+                    return (
+                      <ListNFTItem
+                        key={i.onChainId}
+                        data={i}
+                        onBuySuccess={handleFetchData}
+                        onDelistSuccess={handleFetchData}
+                        onListSuccess={handleFetchData}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <Empty />
+              )}
+            </>
           )}
           {listed && listed.data && currentPage < listed.meta.totalPages && (
             <div className="mt-[70px] flex justify-center">
@@ -153,53 +193,61 @@ const Collection = () => {
         <div className="py-4 md:py-8">
           <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
             <div className="w-full">
-              <div className="flex items-center justify-between">
-                <div className="flex w-full items-center space-x-6">
-                  <div className="">
-                    <Image
-                      alt="logo-lp"
-                      src={"/img-default-acc.svg"}
-                      width={78}
-                      height={78}
-                      className="w-[44px] h-[44px] min-w-[44px] md:w-[78px] md:h-[78px] mt-2 md:mt-0 object-contain rounded-full"
-                    />
-                  </div>
-                  <div className="text-black dark:text-white">
-                    {/* <p className="external text-[36px]">Sayaka CollectionNFT</p> */}
-                    {address && (
-                      <div className="border px-2 py-[2px] w-[140px] rounded border-black dark:border-white items-center flex space-x-[6px]">
-                        <p>{formatLongString(address)}</p>
-                        <div
-                          className="cursor-pointer"
-                          onClick={() => {
-                            navigator.clipboard.writeText(address);
-                          }}
-                        >
-                          <CopyIcon />
-                        </div>
+              {userStatus === FetchStatus.idle ||
+              userStatus === FetchStatus.pending ? (
+                <ProfileTopSkeleton />
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="flex w-full items-center space-x-6">
+                      <div className="">
+                        <Image
+                          alt="logo-lp"
+                          src={"/img-default-acc.svg"}
+                          width={78}
+                          height={78}
+                          className="w-[44px] h-[44px] min-w-[44px] md:w-[78px] md:h-[78px] mt-2 md:mt-0 object-contain rounded-full"
+                        />
                       </div>
-                    )}
+                      <div className="text-black dark:text-white">
+                        {/* <p className="external text-[36px]">Sayaka CollectionNFT</p> */}
+                        {address && (
+                          <div className="border px-2 py-[2px] w-[140px] rounded border-black dark:border-white items-center flex space-x-[6px]">
+                            <p>{formatLongString(address)}</p>
+                            <div
+                              className="cursor-pointer"
+                              onClick={() => {
+                                navigator.clipboard.writeText(address);
+                              }}
+                            >
+                              <CopyIcon />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="bg-white text-black dark:text-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] justify-between flex mt-6">
-                <div>
-                  <p>Total Items</p>
-                  <p>{user?.totalItems}</p>
-                </div>
-                <div>
-                  <p>Listed Items</p>
-                  <p>{user?.listedItems}</p>
-                </div>
-                <div>
-                  <p>Total Volume</p>
-                  <p>-</p>
-                </div>
-                <div>
-                  <p>Estimated Value</p>
-                  <p>-</p>
-                </div>
-              </div>
+                  <div className="bg-white text-black dark:text-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] justify-between flex mt-6">
+                    <div>
+                      <p>Total Items</p>
+                      <p>{user?.totalItems}</p>
+                    </div>
+                    <div>
+                      <p>Listed Items</p>
+                      <p>{user?.listedItems}</p>
+                    </div>
+                    <div>
+                      <p>Total Volume</p>
+                      <p>-</p>
+                    </div>
+                    <div>
+                      <p>Estimated Value</p>
+                      <p>-</p>
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="mt-[36px] space-y-[10px]">
                 <Tabs
                   items={tabs}

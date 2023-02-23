@@ -19,15 +19,9 @@ interface Props {
   close?: () => void;
   onSuccess: () => void;
   item?: NFT;
-  collectionId?: string;
 }
 
-const SaleModal: React.FC<Props> = ({
-  close,
-  item,
-  onSuccess,
-  collectionId,
-}) => {
+const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
   const dispatch = useAppDispatch();
   const { signAndExecuteTransaction, connected } = useWallet();
   const [price, setPrice] = React.useState("0");
@@ -62,7 +56,6 @@ const SaleModal: React.FC<Props> = ({
           },
         },
       })) as any;
-      console.log("===tx", tx);
       const { status, error } = tx.effects.status;
       if (status === "success") {
         dispatch(
@@ -76,22 +69,6 @@ const SaleModal: React.FC<Props> = ({
         );
         setTimeout(() => {
           setLoading(false);
-
-          if (collectionId) {
-            dispatch(
-              fetchListNFTOfCollection({
-                id: collectionId,
-                page: 1,
-                limit: 20,
-                sort: "DESC",
-              })
-            );
-          } else {
-            dispatch(fetchNFTDetail({ id: String(id) }));
-            dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
-            dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
-          }
-          toast.success("Listed success!");
           onSuccess();
         }, 3000);
       } else {
@@ -113,34 +90,31 @@ const SaleModal: React.FC<Props> = ({
           <div className="modal-content relative w-[734px]">
             <div className="mt-8 space-y-2">
               <p className="text-[24px] font-bold text-left">{item?.name}</p>
-              <div className="flex w-full items-center space-x-2">
-                <div className="">
-                  <Image
-                    alt="logo-lp"
-                    src={item?.collection?.logo || ""}
-                    width={36}
-                    height={36}
-                    className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
-                  />
+              {item?.collection && (
+                <div className="flex w-full items-center space-x-2">
+                  <div className="">
+                    <Image
+                      alt="logo-lp"
+                      src={item?.collection?.logo || ""}
+                      width={36}
+                      height={36}
+                      className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
+                    />
+                  </div>
+                  <Link href={"/collection/1"}>
+                    <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
+                      {item?.collection?.name}
+                    </span>
+                  </Link>
                 </div>
-                <Link href={"/collection/1"}>
-                  <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
-                    {item?.collection?.name}
-                  </span>
-                </Link>
-              </div>
+              )}
             </div>
 
             <div className="mt-10 mb-10 space-y-5">
               <p className="text-xl font-bold">Price</p>
               <div className="flex items-center space-x-10">
                 <div className="flex items-center space-x-3 bg-white dark:bg-[#514E89] w-[146px] rounded-md h-12 justify-center">
-                  <Image
-                    src={"/ic-sui.svg"}
-                    alt="sui"
-                    width={18}
-                    height={28}
-                  />
+                  <Image src={"/ic-sui.svg"} alt="sui" width={18} height={28} />
                   <p className="text-black dark:text-white font-medium">SUI</p>
                 </div>
                 <div className="w-full">
