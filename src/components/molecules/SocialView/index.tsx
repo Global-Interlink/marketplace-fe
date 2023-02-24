@@ -5,7 +5,7 @@ import React from "react";
 import { TelegramIcon, TwitterIcon } from "react-share";
 import { Collection } from "../../../api/types";
 import DiscordIcon from "../../atoms/Icons/DiscordIcon";
-import WebsiteIcon from "../../atoms/Icons/WebsiteICon";
+import WebsiteIcon from "../../atoms/Icons/WebsiteIcon";
 // import { Launchpad } from "../../../api/types";
 import ShareItem from "../../atoms/ShareItem";
 
