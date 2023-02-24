@@ -5,7 +5,7 @@ const Empty = () => {
     <div className="flex items-center justify-center mt-12 flex-col">
       <Image src="/not-found.svg" alt="not-found" width={280} height={226} />
       <p className="text-base md:text-lg font-medium text-gray-400 mt-[36px]">
-        There are curently no data.
+        There are currently no data.
       </p>
     </div>
   );

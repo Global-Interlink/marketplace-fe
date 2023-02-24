@@ -1,22 +1,10 @@
 import { Spin } from "antd";
-import Image from "next/image";
 import React from "react";
 import { LoadingOutlined } from "@ant-design/icons";
-import Link from "next/link";
-import { SUI_DECIMAL } from "../../../api/constants";
 import { useWallet } from "@suiet/wallet-kit";
 import { toast } from "react-toastify";
-import {
-  verifyDelistTransaction,
-  verifySaleTransaction,
-} from "../../../redux/verify/verifySlice";
+import { verifyDelistTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
-import { fetchNFTDetail } from "../../../redux/nft/nftSlice";
-import { fetchListNFTOfCollection } from "../../../redux/collection/collectionSlice";
-import {
-  fetchMyListingNFTs,
-  fetchMyNFTs,
-} from "../../../redux/profile/profileSlice";
 interface Props {
   close?: () => void;
   nftId: string;
@@ -35,6 +23,13 @@ const DelistModal: React.FC<Props> = ({
   const dispatch = useAppDispatch();
   const { signAndExecuteTransaction, connected } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  });
 
   const handleDelist = async (nftId: string, nftType: string, id: string) => {
     setLoading(true);

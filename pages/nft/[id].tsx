@@ -72,6 +72,14 @@ const NFT = () => {
     handleFetchData();
   }, [id]);
 
+
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  });
+
   const handleBuyNow = async (
     nftId: string,
     nftType: string,
@@ -213,7 +221,7 @@ const NFT = () => {
                       className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
                     />
                   </div>
-                  <Link href={"/collection/1"}>
+                  <Link href={`/collection/${nftData.collection.id}`}>
                     <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
                       {nftData?.collection?.name}
                     </p>

@@ -1,7 +1,6 @@
 import { useWallet } from "@suiet/wallet-kit";
 import { Spin } from "antd";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import { NFT } from "../../../api/types";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -10,14 +9,9 @@ import { toast } from "react-toastify";
 import { SUI_DECIMAL, SUI_TESTNET } from "../../../api/constants";
 import { verifyBuyTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
-import {
-  fetchMyListingNFTs,
-  fetchMyNFTs,
-} from "../../../redux/profile/profileSlice";
 import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
 import { useRouter } from "next/router";
-import { fetchListNFTOfCollection } from "../../../redux/collection/collectionSlice";
 import { setSuccess } from "../../../redux/app/appSlice";
 interface Props {
   data?: NFT;
@@ -152,7 +146,7 @@ const ListNFTItem: React.FC<Props> = ({
   };
   return (
     <div>
-      <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
+      <div className="flex flex-col w-full rounded-[20px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
         <Image
           src={
             data?.image && validURL(data?.image) ? data?.image : "/default.jpeg"
@@ -168,7 +162,7 @@ const ListNFTItem: React.FC<Props> = ({
             console.log("==error");
           }}
         />
-        <div className="flex p-5 space-x-[14px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  rounded-b-[20px]">
+        <div className="flex p-5 space-x-[14px]  rounded-b-[20px]">
           <div className="w-full">
             <div
               onClick={(e: any) => {

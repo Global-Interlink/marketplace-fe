@@ -1,13 +1,11 @@
 import { useTheme } from "next-themes";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { TelegramIcon, TwitterIcon } from "react-share";
 import { Collection } from "../../../api/types";
 import DiscordIcon from "../../atoms/Icons/DiscordIcon";
+import TelegramIcon from "../../atoms/Icons/TelegramIcon";
+import TwitterIcon from "../../atoms/Icons/TwitterIcon";
 import WebsiteIcon from "../../atoms/Icons/WebsiteIcon";
-// import { Launchpad } from "../../../api/types";
-import ShareItem from "../../atoms/ShareItem";
 
 interface Props {
   response?: Collection;
