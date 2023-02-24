@@ -9,7 +9,7 @@ interface Props {
 const ListCollectionItem: React.FC<Props> = ({ data }) => {
   return (
     <Link href={`/collection/${data.id}`}>
-      <div className="flex flex-col w-full bg-transparent rounded-[20px] shadow hover:-translate-y-1 transition ease-in-out delay-150">
+      <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] hover:-translate-y-1 transition duration-300 ease-in-out">
         <Image
           src={data.featuredImage}
           width={200}
@@ -17,7 +17,7 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
           className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover"
           alt="mock"
         />
-        <div className="flex p-5 space-x-[14px] bg-white/60 border-[2px] border-white dark:bg-linearItem  backdrop-blur-[12.5px] dark:border-none rounded-b-[20px]">
+        <div className="flex p-5 space-x-[14px] bg-bgLinearLight dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px] dark:border-none rounded-b-[20px]">
           <Image
             src={data.logo}
             width={52}

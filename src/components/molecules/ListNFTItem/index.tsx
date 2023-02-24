@@ -129,6 +129,7 @@ const ListNFTItem: React.FC<Props> = ({
           setLoading(false);
         }, 3000);
       } else {
+        setLoading(false);
         toast.error(error);
       }
     } catch (e: any) {
@@ -139,7 +140,7 @@ const ListNFTItem: React.FC<Props> = ({
   };
   return (
     <div>
-      <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white shadow hover:-translate-y-1 transition ease-in-out delay-150">
+      <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
         <Image
           src={data?.image || "/img-mock-1.png"}
           width={200}
@@ -150,7 +151,7 @@ const ListNFTItem: React.FC<Props> = ({
             router.push(`/nft/${data?.id}`);
           }}
         />
-        <div className="flex p-5 space-x-[14px] bg-white dark:bg-linearItem  backdrop-blur-[12.5px]  rounded-b-[20px]">
+        <div className="flex p-5 space-x-[14px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  rounded-b-[20px]">
           <div className="w-full">
             <div
               onClick={(e: any) => {

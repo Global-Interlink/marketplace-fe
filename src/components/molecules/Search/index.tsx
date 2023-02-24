@@ -41,7 +41,7 @@ const SearchForm = () => {
       <div
         className={` ${
           isFocus ? "border" : ""
-        } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-gray-900 rounded-full`}
+        } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
       >
         <Image src="/ic_search.svg" width={24} height={24} alt="ic-search"/>
         <input
@@ -73,7 +73,7 @@ const SearchForm = () => {
         )}
       </div>
       {showBottom && response && response.data.length > 0 && (
-        <div className="absolute z-20 shadow-2xl text-white w-full lg:w-[300px] xl:w-[380px] max-h-[428px] bg-white dark:bg-[#2B294F] mt-14 py-3 overflow-y-auto rounded-xl">
+        <div className="absolute z-20 shadow-2xl text-white w-full lg:w-[300px] xl:w-[380px] max-h-[428px] bg-white dark:bg-bgProperty mt-14 py-3 overflow-y-auto rounded-xl">
           <p className="px-6 text-gray-400">Collections</p>
           <hr className="border-gray-300 dark:border-gray-800 mt-3" />
           {response.data.map((i, idx) => {
@@ -81,7 +81,7 @@ const SearchForm = () => {
               <Link key={idx} href={`/collection/${i.id}`}>
                 <div
                   key={idx}
-                  className="flex items-center space-x-3 px-6 pt-3 pb-3 cursor-pointer bg-white dark:bg-[#2B294F] hover:bg-gray-400 dark:hover:bg-[#2B294A]"
+                  className="flex items-center space-x-3 px-6 pt-3 pb-3 cursor-pointer bg-white dark:bg-bgProperty hover:bg-gray-400"
                   onClick={() => {
                     setShowBottom(false);
                   }}

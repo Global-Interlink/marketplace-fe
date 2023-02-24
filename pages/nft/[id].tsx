@@ -193,7 +193,7 @@ const NFT = () => {
               />
             </div>
             <div className="w-full">
-              <p className="text-black dark:text-white text-[24px] mt-4 md:mt-[26px] md:text-[36px] font-medium">
+              <p className="text-black dark:text-white text-[24px] md:text-[36px] font-medium">
                 {nftData?.name}
               </p>
               {nftData?.collection && (
@@ -214,7 +214,7 @@ const NFT = () => {
                   </Link>
                 </div>
               )}
-              <div className="bg-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] flex items-center justify-between mt-6">
+              <div className="bg-white border shadow dark:bg-[#2B294F] dark:border-[#3D2662] p-6 rounded-[20px] flex items-center justify-between mt-6">
                 {nftData?.saleStatus ? (
                   <div className="text-black dark:text-white">
                     <p className="text-[20px]">Current Price :</p>
@@ -288,7 +288,7 @@ const NFT = () => {
                 <p className="text-[20px] font-bold text-black dark:text-white">
                   Details
                 </p>
-                <hr className="border-none bg-black dark:bg-[#C9C6C6] h-[1px]" />
+                <hr className="border-none bg-[#C9C6C6] h-[1px]" />
 
                 {nftData?.owner && (
                   <div className="text-black dark:text-white flex items-center justify-between">
@@ -316,7 +316,7 @@ const NFT = () => {
                   <p className="text-[20px] font-bold text-black dark:text-white">
                     Properties
                   </p>
-                  <hr className="border-none bg-black dark:bg-white h-[1px]" />
+                  <hr className="border-none bg-[#969696] h-[1px]" />
                   <div className="grid gap-5 grid-cols-2 lg:grid-cols-3 pt-1">
                     {nftData.properties.map((i) => {
                       return (
@@ -324,11 +324,11 @@ const NFT = () => {
                           key={i.name}
                           className="bg-white text-black dark:bg-[#2B294F] flex justify-center items-center space-y-1 flex-col px-4 py-[10px] rounded-[10px] border border-[#892DF0]"
                         >
-                          <p className="text-[#842DF1] text-sm font-semibold">
+                          <p className="text-[#F626D1] text-sm font-semibold">
                             {i.name.toUpperCase()}
                           </p>
                           <p className="text-[#827E7E] dark:text-white font-semibold">
-                            {i.value.toUpperCase()}
+                            {i.value.toUpperCase() || "-"}
                           </p>
                         </div>
                       );
@@ -408,6 +408,13 @@ const NFT = () => {
               }}
             />
           )}
+        </div>
+        <div className="mt-[70px] flex justify-center">
+          <Link href={`/collection/${nftData?.collection?.id}`}>
+            <button className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]">
+              View Collection
+            </button>
+          </Link>
         </div>
       </div>
     </BaseComponent>

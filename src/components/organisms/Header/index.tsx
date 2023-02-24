@@ -72,9 +72,9 @@ const Header = () => {
   }, [address]);
 
   return (
-    <div className="md:h-[84px] w-full flex md:border-b border-gray-700 px-4 md:px-20 2xl:px-0">
+    <div className="md:h-[84px] w-full flex md:border-b-[0.5px] md:border-[#cfcece] px-4 md:px-20 2xl:px-0">
       <div className="container mx-auto flex pt-4 md:pt-0 items-center">
-        <div className="flex flex-1 items-center space-x-24">
+        <div className="flex flex-1 items-center space-x-14 lg:space-x-24">
           <Link href="/">
             <div className="hidden md:block">
               <Image

@@ -4,7 +4,12 @@ const NFTListSkeleton: React.FC<{
 }> = ({ hideSort, hideHeader }) => {
   return (
     <div>
-      {!hideHeader && (
+      {hideHeader ? (
+        <div className="flex items-center mt-[36px] space-x-6 pb-6 border-b">
+          <div className="flex h-10 animate-pulse w-40 rounded-lg  bg-slate-400 dark:bg-purple-500" />
+          <div className="flex h-10 w-32 animate-pulse rounded-lg  bg-slate-400 dark:bg-purple-500" />
+        </div>
+      ) : (
         <div
           className={`flex items-center ${
             hideSort ? "justify-start" : "justify-between"
@@ -27,11 +32,11 @@ const NFTListSkeleton: React.FC<{
                 <div className="flex w-full aspect-[310/216] animate-pulse rounded-t-[20px] object-cover bg-slate-400 dark:bg-purple-500" />
               </div>
               <div className="flex flex-col p-5 space-y-4 border-[2px] dark:border-[#3D2662]  bg-slate-300 dark:bg-[#2B294F] rounded-b-[20px]">
-                <div className="flex h-6 rounded-full  bg-slate-400 dark:bg-purple-500" />
-                <div className="flex h-4 rounded-full  bg-slate-400 dark:bg-purple-500" />
+                <div className="flex h-6 rounded-full  animate-pulse bg-slate-400 dark:bg-purple-500" />
+                <div className="flex h-4 rounded-full animate-pulse  bg-slate-400 dark:bg-purple-500" />
                 <div className="flex items-center mt-[18px] space-x-[30px]">
-                  <div className="flex w-full h-[36px] rounded-md  bg-slate-400 dark:bg-purple-500" />
-                  <div className="flex w-full h-[36px] rounded-md  bg-slate-400 dark:bg-purple-500" />
+                  <div className="flex w-full h-[36px] rounded-md animate-pulse bg-slate-400 dark:bg-purple-500" />
+                  <div className="flex w-full h-[36px] rounded-md animate-pulse bg-slate-400 dark:bg-purple-500" />
                 </div>
               </div>
             </div>

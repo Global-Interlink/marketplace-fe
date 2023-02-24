@@ -37,8 +37,10 @@ const Collection = () => {
   const [currentPageItems, setCurrentPageItems] = React.useState(1);
 
   const handleFetchData = () => {
-    dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
-    dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
+    setTimeout(() => {
+      dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
+      dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
+    }, 2000);
   };
   console.log("=user", user);
   React.useEffect(() => {
@@ -88,28 +90,22 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {status === FetchStatus.idle || status === FetchStatus.pending ? (
-            <NFTListSkeleton hideHeader />
+          {response?.data && response.data.length > 0 ? (
+            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+              {response?.data?.map((i) => {
+                return (
+                  <ListNFTItem
+                    key={i.onChainId}
+                    data={i}
+                    onBuySuccess={handleFetchData}
+                    onDelistSuccess={handleFetchData}
+                    onListSuccess={handleFetchData}
+                  />
+                );
+              })}
+            </div>
           ) : (
-            <>
-              {response?.data && response.data.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {response?.data?.map((i) => {
-                    return (
-                      <ListNFTItem
-                        key={i.onChainId}
-                        data={i}
-                        onBuySuccess={handleFetchData}
-                        onDelistSuccess={handleFetchData}
-                        onListSuccess={handleFetchData}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <Empty />
-              )}
-            </>
+            <Empty />
           )}
           {response &&
             response.data &&
@@ -144,29 +140,22 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {listedStatus === FetchStatus.idle ||
-          listedStatus === FetchStatus.pending ? (
-            <NFTListSkeleton hideHeader />
+          {listed?.data && listed.data.length > 0 ? (
+            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+              {listed?.data?.map((i) => {
+                return (
+                  <ListNFTItem
+                    key={i.onChainId}
+                    data={i}
+                    onBuySuccess={handleFetchData}
+                    onDelistSuccess={handleFetchData}
+                    onListSuccess={handleFetchData}
+                  />
+                );
+              })}
+            </div>
           ) : (
-            <>
-              {listed?.data && listed.data.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {listed?.data?.map((i) => {
-                    return (
-                      <ListNFTItem
-                        key={i.onChainId}
-                        data={i}
-                        onBuySuccess={handleFetchData}
-                        onDelistSuccess={handleFetchData}
-                        onListSuccess={handleFetchData}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <Empty />
-              )}
-            </>
+            <Empty />
           )}
           {listed && listed.data && currentPage < listed.meta.totalPages && (
             <div className="mt-[70px] flex justify-center">
@@ -210,7 +199,6 @@ const Collection = () => {
                         />
                       </div>
                       <div className="text-black dark:text-white">
-                        {/* <p className="external text-[36px]">Sayaka CollectionNFT</p> */}
                         {address && (
                           <div className="border px-2 py-[2px] w-[140px] rounded border-black dark:border-white items-center flex space-x-[6px]">
                             <p>{formatLongString(address)}</p>
@@ -227,7 +215,7 @@ const Collection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white text-black dark:text-white border shadow dark:bg-[#474474] dark:border-[#3D2662] p-6 rounded-[20px] justify-between flex mt-6">
+                  <div className="bg-white text-black dark:text-white border shadow dark:bg-bgProperty dark:border-[#3D2662] p-6 rounded-[20px] justify-between flex mt-6">
                     <div>
                       <p>Total Items</p>
                       <p>{user?.totalItems}</p>
@@ -247,13 +235,19 @@ const Collection = () => {
                   </div>
                 </>
               )}
-
-              <div className="mt-[36px] space-y-[10px]">
-                <Tabs
-                  items={tabs}
-                  className="dark:text-gray-500 text-primary"
-                />
-              </div>
+              {status === FetchStatus.idle ||
+              status === FetchStatus.pending ||
+              listedStatus === FetchStatus.idle ||
+              listedStatus === FetchStatus.pending ? (
+                <NFTListSkeleton hideHeader />
+              ) : (
+                <div className="mt-[36px] space-y-[10px]">
+                  <Tabs
+                    items={tabs}
+                    className="dark:text-gray-500 text-primary"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
