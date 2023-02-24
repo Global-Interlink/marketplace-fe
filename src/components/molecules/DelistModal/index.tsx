@@ -24,12 +24,12 @@ const DelistModal: React.FC<Props> = ({
   const { signAndExecuteTransaction, connected } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  });
+  // React.useEffect(() => {
+  //   document.body.style.overflow = "hidden";
+  //   return () => {
+  //     document.body.style.overflow = "unset";
+  //   };
+  // });
 
   const handleDelist = async (nftId: string, nftType: string, id: string) => {
     setLoading(true);

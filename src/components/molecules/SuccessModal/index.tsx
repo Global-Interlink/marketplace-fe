@@ -14,12 +14,12 @@ interface Props {
 const SuccessModal: React.FC<Props> = ({ close, title, message }) => {
   const { theme } = useTheme();
 
-  React.useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  });
+  // React.useEffect(() => {
+  //   document.body.style.overflow = "hidden";
+  //   return () => {
+  //     document.body.style.overflow = "unset";
+  //   };
+  // });
   return (
     <div>
       <div className={"modal fade show block"}>

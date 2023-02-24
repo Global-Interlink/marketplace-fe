@@ -73,13 +73,6 @@ const NFT = () => {
   }, [id]);
 
 
-  React.useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  });
-
   const handleBuyNow = async (
     nftId: string,
     nftType: string,
