@@ -8,7 +8,9 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Sort from "../../src/components/atoms/Sort";
 import SaleModal from "../../src/components/molecules/SaleModal";
 import Empty from "../../src/components/molecules/EmptyView";
-import ListNFTItem from "../../src/components/molecules/ListNFTItem";
+import ListNFTItem, {
+  validURL,
+} from "../../src/components/molecules/ListNFTItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import { formatLongString } from "../../src/contract-abi/consts";
 
@@ -185,7 +187,11 @@ const NFT = () => {
           <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
             <div className="w-full md:w-[40%] min-w-[40%]">
               <Image
-                src={nftData?.image || ""}
+                src={
+                  nftData?.image && validURL(nftData?.image)
+                    ? nftData?.image
+                    : "/default.jpeg"
+                }
                 width={200}
                 height={200}
                 className="flex w-full aspect-square rounded-[20px] object-cover"
@@ -234,7 +240,11 @@ const NFT = () => {
                     <button
                       className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
                       onClick={() => {
-                        setOpenListing(true);
+                        if (nftData.collection) {
+                          setOpenListing(true);
+                        } else {
+                          toast.error("This NFT isn't supported on SAKAYA");
+                        }
                       }}
                     >
                       List Now
@@ -350,7 +360,7 @@ const NFT = () => {
                   More from this collection
                 </p>
               </div>
-              {response && response.data ? (
+              {response && response.data && response.data.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
                   {response?.data?.map((i) => {
                     return (

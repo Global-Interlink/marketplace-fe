@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Collection } from "../../../api/types";
 import ImgIcon from "../../atoms/Icons/ImgIcon";
+import { validURL } from "../ListNFTItem";
 
 interface Props {
   data: Collection;
@@ -11,7 +12,11 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
     <Link href={`/collection/${data.id}`}>
       <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] hover:-translate-y-1 transition duration-300 ease-in-out">
         <Image
-          src={data.featuredImage}
+          src={
+            data?.featuredImage && validURL(data?.featuredImage)
+              ? data?.featuredImage
+              : "/default.jpeg"
+          }
           width={200}
           height={200}
           className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover"

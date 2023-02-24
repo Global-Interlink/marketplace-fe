@@ -101,11 +101,9 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
                       className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
                     />
                   </div>
-                  <Link href={"/collection/1"}>
-                    <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
-                      {item?.collection?.name}
-                    </span>
-                  </Link>
+                  <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
+                    {item?.collection?.name}
+                  </span>
                 </div>
               )}
             </div>
@@ -150,12 +148,16 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
                 className="hoverCommon primaryButton  text-white font-medium w-1/2 h-12 rounded-full"
                 disabled={!connected || isLoading}
                 onClick={() => {
-                  handleListing(
-                    item?.onChainId || "",
-                    Number(price),
-                    item?.nftType || "",
-                    item?.id || ""
-                  );
+                  if (item?.collection) {
+                    handleListing(
+                      item?.onChainId || "",
+                      Number(price),
+                      item?.nftType || "",
+                      item?.id || ""
+                    );
+                  } else {
+                    toast.error("This NFT isn't supported on SAKAYA");
+                  }
                 }}
               >
                 {isLoading ? (

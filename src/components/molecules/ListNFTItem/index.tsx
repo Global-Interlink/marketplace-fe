@@ -25,6 +25,18 @@ interface Props {
   onBuySuccess: () => void;
   onDelistSuccess: () => void;
 }
+export function validURL(url: string) {
+  var pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return !!pattern.test(url);
+}
 const ListNFTItem: React.FC<Props> = ({
   data,
   onListSuccess,
@@ -142,13 +154,18 @@ const ListNFTItem: React.FC<Props> = ({
     <div>
       <div className="flex flex-col w-full bg-transparent rounded-[20px] bg-white shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
         <Image
-          src={data?.image || "/img-mock-1.png"}
+          src={
+            data?.image && validURL(data?.image) ? data?.image : "/default.jpeg"
+          }
           width={200}
           height={200}
           className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover cursor-pointer"
           alt="mock"
           onClick={(e: any) => {
             router.push(`/nft/${data?.id}`);
+          }}
+          onErrorCapture={() => {
+            console.log("==error");
           }}
         />
         <div className="flex p-5 space-x-[14px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  rounded-b-[20px]">
@@ -187,7 +204,11 @@ const ListNFTItem: React.FC<Props> = ({
                       disabled={!connected || isLoading}
                       className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
                       onClick={() => {
-                        setOpenListing(true);
+                        if (data.collection) {
+                          setOpenListing(true);
+                        } else {
+                          toast.error("This NFT isn't supported on SAKAYA");
+                        }
                       }}
                     >
                       List Now

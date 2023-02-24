@@ -6,7 +6,9 @@ import { useRouter } from "next/router";
 import React from "react";
 import Sort from "../../src/components/atoms/Sort";
 import Empty from "../../src/components/molecules/EmptyView";
-import ListNFTItem from "../../src/components/molecules/ListNFTItem";
+import ListNFTItem, {
+  validURL,
+} from "../../src/components/molecules/ListNFTItem";
 import SocialView from "../../src/components/molecules/SocialView";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import {
@@ -123,9 +125,13 @@ const Collection = () => {
                 </ReactMarkdown>
               </div>
               <Image
-                src={collectionData.banner}
-                width={200}
-                height={200}
+                src={
+                  collectionData.banner && validURL(collectionData.banner)
+                    ? collectionData.banner
+                    : "/default.jpeg"
+                }
+                width={1280}
+                height={1024}
                 className="flex w-full aspect-[1300/500] rounded-t-[20px] object-cover"
                 alt="banner"
               />
@@ -142,7 +148,7 @@ const Collection = () => {
                 <p className="text-black dark:text-white font-bold">Items</p>
                 <Sort onChange={setSort} />
               </div>
-              {response && response.data ? (
+              {response && response.data && response.data.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
                   {response?.data.map((i) => {
                     return (
