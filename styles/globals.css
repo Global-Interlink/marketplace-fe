@@ -154,3 +154,7 @@ div.footerC {
 .ant-tabs-top > .ant-tabs-nav::before {
   @apply !border-b-[#D1D5DB] dark:!border-b-gray-700;
 }
+
+.ant-modal-content {
+  @apply !bg-[#F2F2F2] dark:!bg-[#2B294F] dark:text-white !rounded-3xl !px-10;
+}
