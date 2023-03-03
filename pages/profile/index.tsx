@@ -42,7 +42,6 @@ const Collection = () => {
       dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
     }, 2000);
   };
-  console.log("=user", user);
   React.useEffect(() => {
     dispatch(fetchUser());
   }, []);

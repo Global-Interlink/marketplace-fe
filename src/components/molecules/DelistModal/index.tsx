@@ -56,7 +56,6 @@ const DelistModal: React.FC<Props> = ({
           },
         },
       })) as any;
-      console.log("===tx", tx);
       const { status, error } = tx.effects.status;
       if (status === "success") {
         dispatch(
@@ -77,7 +76,6 @@ const DelistModal: React.FC<Props> = ({
         setLoading(false);
       }
     } catch (e: any) {
-      console.log("=e", e);
       setLoading(false);
       toast.error(e.message);
       close && close();

@@ -12,7 +12,6 @@ interface Props {
 }
 const SocialView: React.FC<Props> = ({ response }) => {
   const { theme } = useTheme();
-  console.log("=response", response);
   return (
     <>
       {response?.website_url && (

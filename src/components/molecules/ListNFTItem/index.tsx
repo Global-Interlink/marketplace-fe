@@ -65,7 +65,6 @@ const ListNFTItem: React.FC<Props> = ({
     const filteredData = userBalance.filter(
       (i: any) => i.details.data.type === "0x2::coin::Coin<0x2::sui::SUI>"
     );
-    console.log("==userBalance", filteredData);
     const params = [] as string[];
     let prevAmount = 0;
     filteredData.forEach((i: any) => {
@@ -73,7 +72,6 @@ const ListNFTItem: React.FC<Props> = ({
         return;
       }
       const newAmount = prevAmount + Number(i.details.data.fields.balance);
-      console.log("==newAmount", newAmount);
       if (newAmount > price) {
         prevAmount = newAmount;
         params.push(i.details.data.fields.id.id);
@@ -98,7 +96,6 @@ const ListNFTItem: React.FC<Props> = ({
           },
         },
       };
-      console.log("=payload", payload);
       const tx = (await signAndExecuteTransaction({
         transaction: {
           kind: "moveCall",
@@ -139,7 +136,6 @@ const ListNFTItem: React.FC<Props> = ({
         toast.error(error);
       }
     } catch (e: any) {
-      console.log("=e", e);
       setLoading(false);
       toast.error(e.message);
     }

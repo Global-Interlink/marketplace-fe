@@ -89,7 +89,7 @@ const Collection = () => {
                     src={collectionData?.logo}
                     width={64}
                     height={64}
-                    className="w-8 h-8 mt-2 md:mt-0 md:w-[64px] md:h-[64px] object-contain rounded-full"
+                    className="w-8 h-8 mt-2 md:mt-0 md:w-[64px] md:h-[64px] object-cover rounded-full"
                   />
                 </div>
 
@@ -132,7 +132,7 @@ const Collection = () => {
                 }
                 width={1280}
                 height={1024}
-                className="flex w-full aspect-[1300/500] rounded-t-[20px] object-cover"
+                className="flex w-full aspect-[1300/500] rounded-[20px] object-cover"
                 alt="banner"
               />
             </div>
@@ -146,7 +146,13 @@ const Collection = () => {
             <>
               <div className="flex items-center justify-between">
                 <p className="text-black dark:text-white font-bold">Items</p>
-                <Sort onChange={setSort} />
+                <Sort
+                  onChange={(sort) => {
+                    console.log("=sort", sort);
+                    setSort(sort);
+                  }}
+                  sort={sort}
+                />
               </div>
               {response && response.data && response.data.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">

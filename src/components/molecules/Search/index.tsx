@@ -18,7 +18,6 @@ const SearchForm = () => {
   const dispatch = useAppDispatch();
   const [isFocus, setFocus] = React.useState(false);
   const { response } = useAppSelector((store) => store.search.searchData);
-  console.log("==search", response);
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
       if (nextValue.length === 0) {

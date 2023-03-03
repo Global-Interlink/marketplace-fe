@@ -66,7 +66,6 @@ const Header = () => {
     if (address) {
       setOldAddress(address);
     } else if (!address && oldAddress) {
-      console.log("===remove");
       LocalStorage.remove(LocalStorageKey.ACCESS_TOKEN);
     }
   }, [address]);
