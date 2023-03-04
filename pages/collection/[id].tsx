@@ -87,8 +87,8 @@ const Collection = () => {
                   <Image
                     alt="logo-lp"
                     src={collectionData?.logo}
-                    width={64}
-                    height={64}
+                    width={1000}
+                    height={1000}
                     className="w-8 h-8 mt-2 md:mt-0 md:w-[64px] md:h-[64px] object-cover rounded-full"
                   />
                 </div>

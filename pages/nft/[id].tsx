@@ -33,6 +33,7 @@ import { clearSuccess, setSuccess } from "../../src/redux/app/appSlice";
 import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
+import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
 
 const NFT = () => {
   const router = useRouter();
@@ -71,7 +72,6 @@ const NFT = () => {
   React.useEffect(() => {
     handleFetchData();
   }, [id]);
-
 
   const handleBuyNow = async (
     nftId: string,
@@ -208,7 +208,7 @@ const NFT = () => {
                       src={nftData?.collection?.logo || ""}
                       width={36}
                       height={26}
-                      className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
+                      className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-cover rounded-full"
                     />
                   </div>
                   <Link href={`/collection/${nftData.collection.id}`}>
@@ -301,9 +301,22 @@ const NFT = () => {
                 {nftData?.owner && (
                   <div className="text-black dark:text-white flex items-center justify-between">
                     <span>Owner Address</span>
-                    <span className="text-[18px] font-bold ">
-                      {formatLongString(nftData.owner.address.address)}
-                    </span>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-[18px] font-bold ">
+                        {formatLongString(nftData.owner.address.address)}
+                      </span>
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            nftData.owner.address.address
+                          );
+                          toast.info("Copied to clipboard!");
+                        }}
+                      >
+                        <CopyIcon />
+                      </div>
+                    </div>
                   </div>
                 )}
                 <div className="text-black dark:text-white flex items-center justify-between">

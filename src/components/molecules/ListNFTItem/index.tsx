@@ -166,13 +166,19 @@ const ListNFTItem: React.FC<Props> = ({
               }}
               className="cursor-pointer"
             >
-              <p className="text-[24px] text-primary font-medium dark:text-white">
+              <p
+                title={data?.name}
+                className="text-[24px] truncate text-primary font-medium dark:text-white"
+              >
                 {data?.name}
               </p>
               {data?.collection?.name ? (
-                <span className="text-primary dark:text-white">
+                <p
+                  title={data.collection.name}
+                  className="text-primary truncate dark:text-white"
+                >
                   {data?.collection?.name}
-                </span>
+                </p>
               ) : (
                 <div className="h-[24px]" />
               )}
