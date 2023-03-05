@@ -10,5 +10,5 @@ export const getSignatureFromString = (signature: string) => {
 
 
 export const formatLongString = (longString: string) => {
-  return `${longString?.slice(0, 6)}...${longString?.slice(longString?.length - 4, longString?.length)}`
+  return `${longString?.slice(0, 6)}...${longString?.slice(longString?.length - 6, longString?.length)}`
 }

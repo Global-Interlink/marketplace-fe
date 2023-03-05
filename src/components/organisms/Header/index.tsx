@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { toggleMenu } from "../../../redux/app/appSlice";
 import { useAppDispatch } from "../../../redux/hook";
-import jwt_decode from "jwt-decode";
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import React from "react";
 import axios from "axios";
@@ -10,6 +9,9 @@ import LocalStorage, { LocalStorageKey } from "../../../utils/localStorage";
 import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
 import SearchForm from "../../molecules/Search";
+import DarkIcon from "../../atoms/Icons/DarkIcon";
+import LightIcon from "../../atoms/Icons/LightIcon";
+import WalletInfo from "../../molecules/WalletInfo";
 const Header = () => {
   const { connected, address, signMessage, disconnect } = useWallet();
   const [oldAddress, setOldAddress] = React.useState("");
@@ -93,10 +95,14 @@ const Header = () => {
           </div>
         </div>
         <div className="text-white items-center space-x-4 xl:space-x-5 2xl:space-x-[30px] hidden md:flex">
-          <ConnectButton
-            label="Connect Wallet"
-            className="primaryButton !rounded-md"
-          />
+          {connected ? (
+            <WalletInfo />
+          ) : (
+            <ConnectButton
+              label="Connect Wallet"
+              className="primaryButton !rounded-md"
+            />
+          )}
           {connected && (
             <Link href="/profile">
               <Image
@@ -109,66 +115,56 @@ const Header = () => {
             </Link>
           )}
           {theme && (
-            <div className="flex text-white ml-4 bg-gray-400 rounded">
+            <div className="flex text-white ml-4 bg-white rounded">
               <button
                 className={`p-4 rounded min-w-[52px] ${
-                  theme === "light" ? "primaryButton" : "bg-gray-400"
+                  theme === "light" ? "primaryButton" : "white"
                 }`}
                 onClick={() => {
                   // TODO
                   setTheme("light");
                 }}
               >
-                <Image
-                  src="/ic-light.svg"
-                  alt="light"
-                  className="min-w-5 w-5 h-5"
-                  width={20}
-                  height={20}
-                />
+                <LightIcon />
               </button>
               <button
                 className={`p-4 rounded min-w-[52px] ${
-                  theme === "dark" ? "primaryButton" : "bg-gray-400"
+                  theme === "dark" ? "primaryButton" : "bg-white"
                 }`}
                 onClick={() => {
                   setTheme("dark");
                 }}
               >
-                <Image
-                  src="/ic-dark.svg"
-                  alt="light"
-                  className="min-w-5 w-5 h-5"
-                  width={20}
-                  height={20}
-                />
+                <DarkIcon />
               </button>
             </div>
           )}
         </div>
         <div className="flex items-center space-x-6 md:hidden">
           {theme && (
-            <div className="flex text-white ml-4 bg-gray-400 rounded">
+            <div className="flex text-white ml-4 bg-white rounded">
               <button
                 className={`p-2 rounded ${
-                  theme === "light" ? "primaryButton" : "bg-gray-400"
+                  theme === "light" ? "primaryButton" : "bg-white"
                 }`}
                 onClick={() => {
                   // TODO
                   setTheme("light");
                 }}
               >
-                <Image src="/ic-light.svg" alt="light" width={20} height={20} />
+                {/* <Image src="/ic-light.svg" alt="light" width={20} height={20} /> */}
+                <LightIcon />
               </button>
               <button
                 className={`p-2 rounded ${
-                  theme === "dark" ? "primaryButton" : "bg-gray-400"
+                  theme === "dark" ? "primaryButton" : "bg-white"
                 }`}
                 onClick={() => {
                   setTheme("dark");
                 }}
               >
-                <Image src="/ic-dark.svg" alt="light" width={20} height={20} />
+                {/* <Image src="/ic-dark.svg" alt="light" width={20} height={20} /> */}
+                <DarkIcon />
               </button>
             </div>
           )}

@@ -158,3 +158,11 @@ div.footerC {
 .ant-modal-content {
   @apply !bg-[#F2F2F2] dark:!bg-[#2B294F] dark:text-white !rounded-3xl !px-10;
 }
+
+.commonGradientText {
+  @apply text-transparent bg-clip-text bg-gradient-to-b from-[#FA98E8] to-[#A466F4];
+}
+
+.commonGradientTextBold {
+  @apply text-transparent bg-clip-text bg-gradient-to-b from-[#F626D1] to-[#822CF1] font-bold;
+}
