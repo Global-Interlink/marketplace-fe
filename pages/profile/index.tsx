@@ -3,6 +3,7 @@ import { Tabs } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "react-toastify";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
 import Empty from "../../src/components/molecules/EmptyView";
@@ -205,6 +206,7 @@ const Collection = () => {
                               className="cursor-pointer"
                               onClick={() => {
                                 navigator.clipboard.writeText(address);
+                                toast.info("Copied to clipboard!")
                               }}
                             >
                               <CopyIcon />
