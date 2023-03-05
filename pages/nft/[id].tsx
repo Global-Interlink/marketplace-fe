@@ -223,10 +223,10 @@ const NFT = () => {
                   <div className="text-black dark:text-white">
                     <p className="text-[20px]">Current Price :</p>
                     <p className="text-[24px] font-bold">
-                      {Number(nftData.saleStatus.price)} SUI{" "}
+                      {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
                       {`(~ $${Number(
                         nftData.saleStatus.usdPrice
-                      ).toLocaleString()})`}
+                      ).toPrecision()})`}
                     </p>
                   </div>
                 ) : (
