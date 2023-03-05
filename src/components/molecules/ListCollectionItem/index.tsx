@@ -17,8 +17,8 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
               ? data?.featuredImage
               : "/default.jpeg"
           }
-          width={200}
-          height={200}
+          width={500}
+          height={500}
           className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover"
           alt="mock"
         />
@@ -33,7 +33,7 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
           <div className="truncate">
             <span
               title={data.name}
-              className="text-primary truncate dark:text-white"
+              className="text-primary truncate dark:text-white external"
             >
               {data.name}
             </span>

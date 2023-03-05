@@ -147,8 +147,8 @@ const ListNFTItem: React.FC<Props> = ({
           src={
             data?.image && validURL(data?.image) ? data?.image : "/default.jpeg"
           }
-          width={200}
-          height={200}
+          width={500}
+          height={500}
           className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover cursor-pointer"
           alt="mock"
           onClick={(e: any) => {
@@ -172,7 +172,7 @@ const ListNFTItem: React.FC<Props> = ({
               >
                 {data?.name}
               </p>
-              {data?.collection?.name ? (
+              {/* {data?.collection?.name ? (
                 <p
                   title={data.collection.name}
                   className="text-primary truncate dark:text-white"
@@ -181,13 +181,13 @@ const ListNFTItem: React.FC<Props> = ({
                 </p>
               ) : (
                 <div className="h-[24px]" />
-              )}
+              )} */}
             </div>
 
             <div className="flex items-center mt-[18px] space-x-[30px] ">
               {data?.saleStatus ? (
                 <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] dark:border-[#897DBC] dark:bg-[#71659C] dark:text-white border rounded-[5px] border-black">
-                  Price {Number(data.saleStatus.price).toLocaleString()} SUI
+                  Price {Number(data.saleStatus.price)} SUI
                 </div>
               ) : (
                 <div className="flex-1" />
