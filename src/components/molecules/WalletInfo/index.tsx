@@ -1,7 +1,7 @@
 import { useAccountBalance, useWallet } from "@suiet/wallet-kit";
 import { Popover } from "antd";
 import { SUI_DECIMAL } from "../../../api/constants";
-import { formatLongString } from "../../../contract-abi/consts";
+import { formatLongString, toFixed } from "../../../contract-abi/consts";
 
 const WalletInfo = () => {
   const { address, disconnect } = useWallet();
@@ -28,7 +28,7 @@ const WalletInfo = () => {
       <div className="bg-white border border-[#BD28E0] py-2 px-3 rounded-md select-none cursor-pointer">
         <p className="commonGradientText">{formatLongString(address || "")}</p>
         <p className="commonGradientTextBold text-right">
-          {Number(Number(suiBalance.balance) / SUI_DECIMAL).toFixed(4)} SUI
+          {toFixed(Number(Number(suiBalance.balance) / SUI_DECIMAL), 4)} SUI
         </p>
       </div>
     </Popover>

@@ -199,7 +199,7 @@ const Collection = () => {
                       </div>
                       <div className="text-black dark:text-white">
                         {address && (
-                          <div className="border px-2 py-[2px] w-[140px] rounded border-black dark:border-white items-center flex space-x-[6px]">
+                          <div className="border px-2 py-[2px] w-[150px] rounded border-black dark:border-white items-center flex space-x-[6px]">
                             <p>{formatLongString(address)}</p>
                             <div
                               className="cursor-pointer"

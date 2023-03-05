@@ -12,3 +12,8 @@ export const getSignatureFromString = (signature: string) => {
 export const formatLongString = (longString: string) => {
   return `${longString?.slice(0, 6)}...${longString?.slice(longString?.length - 6, longString?.length)}`
 }
+
+export function toFixed(num: any, fixed: any) {
+  var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+  return num.toString().match(re)[0];
+}
