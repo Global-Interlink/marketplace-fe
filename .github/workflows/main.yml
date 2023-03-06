@@ -26,5 +26,7 @@ jobs:
           key: ${{ secrets.DEV_SSH_KEY }}
           port: ${{ vars.DEV_PORT }}
           script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             cd marketplace-fe
             ./deploy
