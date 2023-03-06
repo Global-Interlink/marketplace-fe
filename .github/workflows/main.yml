@@ -26,5 +26,5 @@ jobs:
           key: ${{ secrets.DEV_SSH_KEY }}
           port: ${{ vars.DEV_PORT }}
           script: |
-            cd /home/ubuntu/marketplace-fe
+            cd marketplace-fe
             ./deploy
