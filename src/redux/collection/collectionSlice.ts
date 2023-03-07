@@ -53,7 +53,7 @@ export const fetchListNFTOfCollection = createAsyncThunk(
   async (params: FetchListCollectionNFTPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListCollectionNFTSuccess>(
-        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=createdDate:${params.sort}`
       );
       return response.data;
     } catch (err: any) {
