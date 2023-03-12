@@ -1,10 +1,11 @@
 const NFTListSkeleton: React.FC<{
   hideSort?: boolean;
   hideHeader?: boolean;
-}> = ({ hideSort, hideHeader }) => {
+  hideTab?: boolean;
+}> = ({ hideSort, hideHeader, hideTab }) => {
   return (
     <div>
-      {hideHeader ? (
+      {!hideTab&&(hideHeader ? (
         <div className="flex items-center mt-[36px] space-x-6 pb-6 border-b">
           <div className="flex h-10 animate-pulse w-40 rounded-lg  bg-slate-400 dark:bg-purple-500" />
           <div className="flex h-10 w-32 animate-pulse rounded-lg  bg-slate-400 dark:bg-purple-500" />
@@ -20,7 +21,7 @@ const NFTListSkeleton: React.FC<{
             <div className="w-[155px] h-10 bg-slate-300 dark:bg-purple-500 rounded-full animate-pulse" />
           )}
         </div>
-      )}
+      ))}
       <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
         {Array.from(Array(4).keys()).map((i) => {
           return (

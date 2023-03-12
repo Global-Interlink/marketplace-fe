@@ -106,28 +106,37 @@ export const profileSlice = createSlice({
     builder
       .addCase(fetchMyNFTs.pending, (state) => {
         state.profileData.status = FetchStatus.pending;
-        state.profileData.response = undefined;
       })
       .addCase(fetchMyNFTs.fulfilled, (state, action) => {
+        const currentProfiles = [...(state.profileData.response?.data || [])];
         state.profileData.status = FetchStatus.succeeded;
-        state.profileData.response = action.payload;
+        state.profileData.response = {
+          ...action.payload,
+          data: currentProfiles.concat(action.payload.data || []),
+        };
       })
       .addCase(fetchMyNFTs.rejected, (state, action) => {
         state.profileData.status = FetchStatus.failed;
+        state.listedData.response = undefined;
         const error = action.payload as CommonError;
         toast.error(error?.message);
       });
     builder
       .addCase(fetchMyListingNFTs.pending, (state) => {
         state.listedData.status = FetchStatus.pending;
-        state.listedData.response = undefined;
       })
       .addCase(fetchMyListingNFTs.fulfilled, (state, action) => {
         state.listedData.status = FetchStatus.succeeded;
-        state.listedData.response = action.payload;
+        state.listedData.response = {
+          ...action.payload,
+          data: (state.listedData.response?.data || []).concat(
+            action.payload.data || []
+          ),
+        };
       })
       .addCase(fetchMyListingNFTs.rejected, (state, action) => {
         state.listedData.status = FetchStatus.failed;
+        state.listedData.response = undefined;
         const error = action.payload as CommonError;
         toast.error(error?.message);
       });

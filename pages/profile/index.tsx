@@ -2,7 +2,7 @@ import { useWallet } from "@suiet/wallet-kit";
 import { Tabs } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
@@ -32,21 +32,23 @@ const Collection = () => {
   );
   const { push } = useRouter();
   const { address, connected } = useWallet();
-  const LIMIT = 20;
-  const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [currentPageItems, setCurrentPageItems] = React.useState(1);
+  const LIMIT = 12;
+  const [sort, setSort] = useState<"ASC" | "DESC">("DESC");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageItems, setCurrentPageItems] = useState(1);
 
   const handleFetchData = () => {
     setTimeout(() => {
-      dispatch(fetchMyListingNFTs({ page: 1, limit: 20, sort: "DESC" }));
-      dispatch(fetchMyNFTs({ page: 1, limit: 20, sort: "DESC" }));
+      dispatch(fetchMyListingNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
+      dispatch(fetchMyNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
     }, 2000);
   };
-  React.useEffect(() => {
+
+  useEffect(() => {
     dispatch(fetchUser());
-  }, []);
-  React.useEffect(() => {
+  }, [dispatch]);
+
+  useEffect(() => {
     if (address && connected) {
       dispatch(
         fetchMyNFTs({
@@ -56,9 +58,10 @@ const Collection = () => {
         })
       );
     }
-  }, [address, connected]);
-  const [oldAddress, setOldAddress] = React.useState("");
-  React.useEffect(() => {
+  }, [address, connected, currentPageItems, dispatch, sort]);
+
+  const [oldAddress, setOldAddress] = useState("");
+  useEffect(() => {
     if (address) {
       setOldAddress(address);
     } else if (!address && oldAddress) {
@@ -66,7 +69,9 @@ const Collection = () => {
     }
   }, [address]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log(currentPage);
+
     if (address) {
       dispatch(
         fetchMyListingNFTs({
@@ -76,7 +81,7 @@ const Collection = () => {
         })
       );
     }
-  }, [currentPage, sort, address, connected]);
+  }, [currentPage, sort, address, connected, dispatch]);
 
   const tabs = [
     {
@@ -107,9 +112,12 @@ const Collection = () => {
           ) : (
             <Empty />
           )}
-          {response &&
+          {status === FetchStatus.pending ? (
+            <NFTListSkeleton hideTab />
+          ) : (
+            response &&
             response.data &&
-            currentPage < response.meta.totalPages && (
+            currentPageItems < response?.meta.totalPages && (
               <div className="mt-[70px] flex justify-center">
                 <button
                   onClick={() => {
@@ -124,7 +132,8 @@ const Collection = () => {
                   Load more
                 </button>
               </div>
-            )}
+            )
+          )}
         </div>
       ),
       key: "1",
@@ -157,19 +166,25 @@ const Collection = () => {
           ) : (
             <Empty />
           )}
-          {listed && listed.data && currentPage < listed.meta.totalPages && (
-            <div className="mt-[70px] flex justify-center">
-              <button
-                onClick={() => {
-                  if (listed?.meta.currentPage < listed?.meta.totalPages) {
-                    setCurrentPage(listed?.meta.currentPage + 1);
-                  }
-                }}
-                className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-              >
-                Load more
-              </button>
-            </div>
+          {listedStatus === FetchStatus.pending ? (
+            <NFTListSkeleton hideTab />
+          ) : (
+            listed &&
+            listed.data &&
+            currentPage < listed?.meta.totalPages && (
+              <div className="mt-[70px] flex justify-center">
+                <button
+                  onClick={() => {
+                    if (listed?.meta.currentPage < listed?.meta.totalPages) {
+                      setCurrentPage(listed?.meta.currentPage + 1);
+                    }
+                  }}
+                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
+                >
+                  Load more
+                </button>
+              </div>
+            )
           )}
         </div>
       ),
@@ -206,7 +221,7 @@ const Collection = () => {
                               className="cursor-pointer"
                               onClick={() => {
                                 navigator.clipboard.writeText(address);
-                                toast.info("Copied to clipboard!")
+                                toast.info("Copied to clipboard!");
                               }}
                             >
                               <CopyIcon />
@@ -236,19 +251,19 @@ const Collection = () => {
                   </div>
                 </>
               )}
-              {status === FetchStatus.idle ||
-              status === FetchStatus.pending ||
-              listedStatus === FetchStatus.idle ||
-              listedStatus === FetchStatus.pending ? (
-                <NFTListSkeleton hideHeader />
-              ) : (
+              {response?.data?.length || listed?.data?.length ? (
                 <div className="mt-[36px] space-y-[10px]">
                   <Tabs
                     items={tabs}
                     className="dark:text-gray-500 text-primary"
                   />
                 </div>
-              )}
+              ) : status === FetchStatus.idle ||
+                status === FetchStatus.pending ||
+                listedStatus === FetchStatus.idle ||
+                listedStatus === FetchStatus.pending ? (
+                <NFTListSkeleton hideHeader />
+              ) : null}
             </div>
           </div>
         </div>
