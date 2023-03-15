@@ -56,7 +56,7 @@ const DelistModal: React.FC<Props> = ({
           },
         },
       })) as any;
-      const { status, error } = tx.effects.status;
+      const { status, error } = tx.effects?.status;
       if (status === "success") {
         dispatch(
           verifyDelistTransaction({
