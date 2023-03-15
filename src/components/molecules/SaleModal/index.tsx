@@ -57,7 +57,7 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
           },
         },
       })) as any;
-      const { status, error } = tx.effects.status;
+      const { status, error } = tx.effects?.status;
       if (status === "success") {
         dispatch(
           verifySaleTransaction({

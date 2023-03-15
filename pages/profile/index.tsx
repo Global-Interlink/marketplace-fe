@@ -39,6 +39,7 @@ const Collection = () => {
 
   const handleFetchData = () => {
     setTimeout(() => {
+      dispatch(fetchUser());
       dispatch(fetchMyListingNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
       dispatch(fetchMyNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
     }, 2000);
@@ -154,7 +155,7 @@ const Collection = () => {
               {listed?.data?.map((i) => {
                 return (
                   <ListNFTItem
-                    key={i.onChainId}
+                    key={'listed_' + i.onChainId}
                     data={i}
                     onBuySuccess={handleFetchData}
                     onDelistSuccess={handleFetchData}

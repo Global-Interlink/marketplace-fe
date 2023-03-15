@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 
 import { APIFunctions, FetchStatus } from "../../api/APIFunctions";
 import { NFT, Meta } from "../../api/types";
+import { unionBy } from "lodash";
 
 export type FetchNFTDetailPrams = {
   id: string;
@@ -112,7 +113,11 @@ export const profileSlice = createSlice({
         state.profileData.status = FetchStatus.succeeded;
         state.profileData.response = {
           ...action.payload,
-          data: currentProfiles.concat(action.payload.data || []),
+          data: unionBy(
+            currentProfiles,
+            action.payload.data || [],
+            "onChainId"
+          ),
         };
       })
       .addCase(fetchMyNFTs.rejected, (state, action) => {
@@ -129,8 +134,10 @@ export const profileSlice = createSlice({
         state.listedData.status = FetchStatus.succeeded;
         state.listedData.response = {
           ...action.payload,
-          data: (state.listedData.response?.data || []).concat(
-            action.payload.data || []
+          data: unionBy(
+            state.listedData.response?.data || [],
+            action.payload.data || [],
+            "onChainId"
           ),
         };
       })
