@@ -90,7 +90,7 @@ const Collection = () => {
         <div className="flex items-center space-x-[6px]">
           <p>My items</p>
           <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
-            {user?.totalItems}
+            {user?.totalInMyWallet}
           </span>
         </div>
       ),
@@ -155,7 +155,7 @@ const Collection = () => {
               {listed?.data?.map((i) => {
                 return (
                   <ListNFTItem
-                    key={'listed_' + i.onChainId}
+                    key={"listed_" + i.onChainId}
                     data={i}
                     onBuySuccess={handleFetchData}
                     onDelistSuccess={handleFetchData}
@@ -164,7 +164,8 @@ const Collection = () => {
                 );
               })}
             </div>
-          ) : listedStatus !== FetchStatus.pending && listedStatus !== FetchStatus.idle ? (
+          ) : listedStatus !== FetchStatus.pending &&
+            listedStatus !== FetchStatus.idle ? (
             <Empty />
           ) : null}
           {listedStatus === FetchStatus.pending ? (
@@ -198,8 +199,7 @@ const Collection = () => {
         <div className="py-4 md:py-8">
           <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
             <div className="w-full">
-              {userStatus === FetchStatus.idle ||
-              userStatus === FetchStatus.pending ? (
+              {!address ? (
                 <ProfileTopSkeleton />
               ) : (
                 <>
