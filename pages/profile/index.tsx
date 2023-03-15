@@ -89,7 +89,7 @@ const Collection = () => {
         <div className="flex items-center space-x-[6px]">
           <p>My items</p>
           <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
-            {(response?.data && response?.data.length) || 0}
+            {user?.totalItems}
           </span>
         </div>
       ),
@@ -109,9 +109,9 @@ const Collection = () => {
                 );
               })}
             </div>
-          ) : (
+          ) : status !== FetchStatus.pending && status !== FetchStatus.idle ? (
             <Empty />
-          )}
+          ) : null}
           {status === FetchStatus.pending ? (
             <NFTListSkeleton hideTab />
           ) : (
@@ -143,7 +143,7 @@ const Collection = () => {
         <div className="flex items-center space-x-[6px]">
           <p>Listing</p>
           <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
-            {(listed?.data && listed?.data.length) || 0}
+            {user?.listedItems}
           </span>
         </div>
       ),
@@ -163,9 +163,9 @@ const Collection = () => {
                 );
               })}
             </div>
-          ) : (
+          ) : listedStatus !== FetchStatus.pending && listedStatus !== FetchStatus.idle ? (
             <Empty />
-          )}
+          ) : null}
           {listedStatus === FetchStatus.pending ? (
             <NFTListSkeleton hideTab />
           ) : (
@@ -231,39 +231,20 @@ const Collection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-white text-black dark:text-white border shadow dark:bg-bgProperty dark:border-[#3D2662] p-6 rounded-[20px] justify-between flex mt-6">
-                    <div>
-                      <p>Total Items</p>
-                      <p>{user?.totalItems}</p>
-                    </div>
-                    <div>
-                      <p>Listed Items</p>
-                      <p>{user?.listedItems}</p>
-                    </div>
-                    <div>
-                      <p>Total Volume</p>
-                      <p>-</p>
-                    </div>
-                    <div>
-                      <p>Estimated Value</p>
-                      <p>-</p>
-                    </div>
-                  </div>
                 </>
               )}
-              {response?.data?.length || listed?.data?.length ? (
-                <div className="mt-[36px] space-y-[10px]">
-                  <Tabs
-                    items={tabs}
-                    className="dark:text-gray-500 text-primary"
-                  />
-                </div>
-              ) : status === FetchStatus.idle ||
+              <div className="mt-[36px] space-y-[10px]">
+                <Tabs
+                  items={tabs}
+                  className="dark:text-gray-500 text-primary"
+                />
+              </div>
+              {(status === FetchStatus.idle ||
                 status === FetchStatus.pending ||
                 listedStatus === FetchStatus.idle ||
-                listedStatus === FetchStatus.pending ? (
-                <NFTListSkeleton hideHeader />
-              ) : null}
+                listedStatus === FetchStatus.pending) && (
+                <NFTListSkeleton hideTab />
+              )}
             </div>
           </div>
         </div>
