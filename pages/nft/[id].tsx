@@ -34,6 +34,7 @@ import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
+import { readTransactionObject } from "../../src/utils/readTransactionObject";
 
 const NFT = () => {
   const router = useRouter();
@@ -139,13 +140,13 @@ const NFT = () => {
           },
         },
       })) as any;
-      const { status, error } = tx.effects?.status;
+      const { status, error, txhash } = readTransactionObject(tx);
       if (status === "success") {
         dispatch(
           verifyBuyTransaction({
             id: nftData?.id || "",
             params: {
-              txhash: tx.certificate.transactionDigest,
+              txhash,
               chain: "SUI",
             },
           })
