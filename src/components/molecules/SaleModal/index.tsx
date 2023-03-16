@@ -16,6 +16,7 @@ import {
   fetchMyNFTs,
 } from "../../../redux/profile/profileSlice";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
+import { readTransactionObject } from "../../../utils/readTransactionObject";
 interface Props {
   close?: () => void;
   onSuccess: () => void;
@@ -57,13 +58,13 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
           },
         },
       })) as any;
-      const { status, error } = tx.effects?.status;
+      const { status, error, txhash } = readTransactionObject(tx);
       if (status === "success") {
         dispatch(
           verifySaleTransaction({
             id: id,
             params: {
-              txhash: tx.certificate.transactionDigest,
+              txhash,
               chain: "SUI",
             },
           })
