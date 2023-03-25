@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark">
       {isNetworkMaintaining && (
-        <div className="w-full bg-[#ffda17] text-center sm:font-bold text-[#150502] sm:p-0 px-2 sm:text-inherit text-sm">
+        <div className="w-full bg-[#ffda17] text-center sm:font-bold text-[#150502] sm:p-0 px-2 text-sm">
           Notice: SUI is currently down for maintenance. <br />
           We expect to be back in a couple hours. Thanks for your patience.
         </div>
