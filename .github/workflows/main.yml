@@ -6,8 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        type: environment
+        description: 'environment'
         required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - staging
 
 run-name: Triggered to deploy on ${{ inputs.environment || 'development' }} by ${{ github.actor }}
 
