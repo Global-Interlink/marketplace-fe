@@ -1,15 +1,10 @@
-import {
-  devnetConnection,
-  JsonRpcProvider,
-  TransactionBlock,
-} from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js";
 import { useWallet } from "@suiet/wallet-kit";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { LoadingOutlined } from "@ant-design/icons";
-import Sort from "../../src/components/atoms/Sort";
 import SaleModal from "../../src/components/molecules/SaleModal";
 import Empty from "../../src/components/molecules/EmptyView";
 import ListNFTItem, {
@@ -27,13 +22,11 @@ import {
 import { toast } from "react-toastify";
 import {
   verifyBuyTransaction,
-  verifyDelistTransaction,
 } from "../../src/redux/verify/verifySlice";
 import { Spin } from "antd";
-import { SUI_DECIMAL, SUI_TESTNET } from "../../src/api/constants";
+import { SUI_DECIMAL } from "../../src/api/constants";
 import DelistModal from "../../src/components/molecules/DelistModal";
-import SuccessModal from "../../src/components/molecules/SuccessModal";
-import { clearSuccess, setSuccess } from "../../src/redux/app/appSlice";
+import { setSuccess } from "../../src/redux/app/appSlice";
 import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";

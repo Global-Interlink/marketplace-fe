@@ -4,11 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { NFT } from "../../../api/types";
 import { LoadingOutlined } from "@ant-design/icons";
-import {
-  devnetConnection,
-  JsonRpcProvider,
-  TransactionBlock,
-} from "@mysten/sui.js";
+import { TransactionBlock } from "@mysten/sui.js";
 import { toast } from "react-toastify";
 import { SUI_DECIMAL } from "../../../api/constants";
 import { verifyBuyTransaction } from "../../../redux/verify/verifySlice";
@@ -62,7 +58,7 @@ const ListNFTItem: React.FC<Props> = ({
       setLoading(false);
       return;
     }
-    const provider = getRPCConnection()
+    const provider = getRPCConnection();
     const userBalance = (await provider.getAllCoins({
       owner: address,
     })) as any;
