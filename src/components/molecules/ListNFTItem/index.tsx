@@ -18,6 +18,7 @@ import DelistModal from "../DelistModal";
 import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
 import { readTransactionObject } from "../../../utils/readTransactionObject";
+import { getRPCConnection } from "../../../utils/common";
 interface Props {
   data?: NFT;
   onListSuccess: () => void;
@@ -61,7 +62,7 @@ const ListNFTItem: React.FC<Props> = ({
       setLoading(false);
       return;
     }
-    const provider = new JsonRpcProvider(devnetConnection);
+    const provider = getRPCConnection()
     const userBalance = (await provider.getAllCoins({
       owner: address,
     })) as any;
