@@ -4,9 +4,13 @@ import Image from "next/image";
 import React from "react";
 import { NFT } from "../../../api/types";
 import { LoadingOutlined } from "@ant-design/icons";
-import { JsonRpcProvider } from "@mysten/sui.js";
+import {
+  devnetConnection,
+  JsonRpcProvider,
+  TransactionBlock,
+} from "@mysten/sui.js";
 import { toast } from "react-toastify";
-import { SUI_DECIMAL, SUI_TESTNET } from "../../../api/constants";
+import { SUI_DECIMAL } from "../../../api/constants";
 import { verifyBuyTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import SaleModal from "../SaleModal";
@@ -38,7 +42,7 @@ const ListNFTItem: React.FC<Props> = ({
   onBuySuccess,
   onDelistSuccess,
 }) => {
-  const { signAndExecuteTransaction, address, connected } = useWallet();
+  const { signAndExecuteTransactionBlock, address, connected } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -57,14 +61,12 @@ const ListNFTItem: React.FC<Props> = ({
       setLoading(false);
       return;
     }
-    const provider = new JsonRpcProvider(
-      process.env.NEXT_PUBLIC_SUI_NETWORK_RPC || SUI_TESTNET
-    );
-    const userBalance = (await provider.getCoinBalancesOwnedByAddress(
-      address
-    )) as any;
+    const provider = new JsonRpcProvider(devnetConnection);
+    const userBalance = (await provider.getAllCoins({
+      owner: address,
+    })) as any;
     const filteredData = userBalance.filter(
-      (i: any) => i.details.data.type === "0x2::coin::Coin<0x2::sui::SUI>"
+      (i: any) => i.coinType === "0x2::sui::SUI"
     );
     const params = [] as string[];
     let prevAmount = 0;
@@ -72,42 +74,28 @@ const ListNFTItem: React.FC<Props> = ({
       if (prevAmount > price) {
         return;
       }
-      const newAmount = prevAmount + Number(i.details.data.fields.balance);
+      const newAmount = prevAmount + Number(i.balance);
       if (newAmount > price) {
         prevAmount = newAmount;
-        params.push(i.details.data.fields.id.id);
+        params.push(i.coinObjectId);
         return;
       } else {
-        params.push(i.details.data.fields.id.id);
+        params.push(i.coinObjectId);
         prevAmount = newAmount;
       }
     });
 
     try {
-      const payload = {
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "buy",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId, params],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
-        },
-      };
-      const tx = (await signAndExecuteTransaction({
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "buy",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId, params],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
+      const txb = new TransactionBlock();
+      txb.moveCall({
+        target: `${packageObjectId}::${contractModule}::buy`,
+        arguments: [txb.pure(marketId), txb.pure(nftId), txb.pure(params)],
+        typeArguments: [nftType],
+      });
+      const tx = (await signAndExecuteTransactionBlock({
+        transactionBlock: txb,
+        options: {
+          showEffects: true,
         },
       })) as any;
       const { status, error, txhash } = readTransactionObject(tx);

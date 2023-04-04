@@ -1,4 +1,8 @@
-import { JsonRpcProvider } from "@mysten/sui.js";
+import {
+  devnetConnection,
+  JsonRpcProvider,
+  TransactionBlock,
+} from "@mysten/sui.js";
 import { useWallet } from "@suiet/wallet-kit";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,7 +48,7 @@ const NFT = () => {
     (store) => store.nft.nftData
   );
   const { response, status } = useAppSelector((store) => store.nft.listNFTData);
-  const { signAndExecuteTransaction, connected, address } = useWallet();
+  const { signAndExecuteTransactionBlock, connected, address } = useWallet();
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -87,12 +91,10 @@ const NFT = () => {
       setLoading(false);
       return;
     }
-    const provider = new JsonRpcProvider(
-      process.env.NEXT_PUBLIC_SUI_NETWORK_RPC || SUI_TESTNET
-    );
-    const userBalance = (await provider.getCoinBalancesOwnedByAddress(
-      address
-    )) as any;
+    const provider = new JsonRpcProvider(devnetConnection);
+    const userBalance = (await provider.getAllBalances({
+      owner: address,
+    })) as any;
     const filteredData = userBalance.filter(
       (i: any) => i.details.data.type === "0x2::coin::Coin<0x2::sui::SUI>"
     );
@@ -114,30 +116,16 @@ const NFT = () => {
     });
 
     try {
-      const payload = {
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "buy",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId, params],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
-        },
-      };
-      const tx = (await signAndExecuteTransaction({
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "buy",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId, params],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
+      const txb = new TransactionBlock();
+      txb.moveCall({
+        target: `${packageObjectId}::${contractModule}::buy`,
+        arguments: [txb.pure(marketId), txb.pure(nftId), txb.pure(params)],
+        typeArguments: [nftType],
+      });
+      const tx = (await signAndExecuteTransactionBlock({
+        transactionBlock: txb,
+        options: {
+          showEffects: true,
         },
       })) as any;
       const { status, error, txhash } = readTransactionObject(tx);
