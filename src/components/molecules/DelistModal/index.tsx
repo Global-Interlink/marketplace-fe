@@ -7,6 +7,7 @@ import { verifyDelistTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
 import { readTransactionObject } from "../../../utils/readTransactionObject";
+import { TransactionBlock } from "@mysten/sui.js";
 interface Props {
   close?: () => void;
   nftId: string;
@@ -23,7 +24,7 @@ const DelistModal: React.FC<Props> = ({
   onSuccess,
 }) => {
   const dispatch = useAppDispatch();
-  const { signAndExecuteTransaction, connected } = useWallet();
+  const { signAndExecuteTransactionBlock, connected } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
 
   // React.useEffect(() => {
@@ -44,19 +45,22 @@ const DelistModal: React.FC<Props> = ({
     }
 
     try {
-      const tx = (await signAndExecuteTransaction({
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "delist",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
+      const txb = new TransactionBlock();
+      txb.moveCall({
+        target: `${packageObjectId}::${contractModule}::delist`,
+        arguments: [txb.pure(marketId), txb.pure(nftId)],
+        typeArguments: [nftType],
+      });
+      txb.setGasBudget(
+        Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000
+      );
+      const tx = (await signAndExecuteTransactionBlock({
+        transactionBlock: txb,
+        options: {
+          showEffects: true,
         },
       })) as any;
+
       const { status, error, txhash } = readTransactionObject(tx);
       if (status === "success") {
         dispatch(
