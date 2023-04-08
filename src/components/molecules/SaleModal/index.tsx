@@ -17,6 +17,7 @@ import {
 } from "../../../redux/profile/profileSlice";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
 import { readTransactionObject } from "../../../utils/readTransactionObject";
+import { TransactionBlock } from "@mysten/sui.js";
 interface Props {
   close?: () => void;
   onSuccess: () => void;
@@ -25,7 +26,7 @@ interface Props {
 
 const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
   const dispatch = useAppDispatch();
-  const { signAndExecuteTransaction, connected } = useWallet();
+  const { signAndExecuteTransactionBlock, connected } = useWallet();
   const [price, setPrice] = React.useState("0");
   const [isLoading, setLoading] = React.useState(false);
 
@@ -45,17 +46,19 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
     }
 
     try {
-      const tx = (await signAndExecuteTransaction({
-        transaction: {
-          kind: "moveCall",
-          data: {
-            packageObjectId: packageObjectId,
-            module: contractModule,
-            function: "list",
-            typeArguments: [nftType],
-            arguments: [marketId, nftId, String(price * SUI_DECIMAL)],
-            gasBudget: Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000,
-          },
+      const txb = new TransactionBlock();
+      txb.moveCall({
+        target: `${packageObjectId}::${contractModule}::list`,
+        arguments: [txb.pure(marketId), txb.pure(nftId), txb.pure(String(price * SUI_DECIMAL))],
+        typeArguments: [nftType],
+      });
+      txb.setGasBudget(
+        Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000
+      );
+      const tx = (await signAndExecuteTransactionBlock({
+        transactionBlock: txb,
+        options: {
+          showEffects: true,
         },
       })) as any;
       const { status, error, txhash } = readTransactionObject(tx);
