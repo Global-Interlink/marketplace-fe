@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { verifyDelistTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
-import { readTransactionObject } from "../../../utils/readTransactionObject";
 import { TransactionBlock } from "@mysten/sui.js";
 interface Props {
   close?: () => void;
@@ -61,13 +60,14 @@ const DelistModal: React.FC<Props> = ({
         },
       })) as any;
 
-      const { status, error, txhash } = readTransactionObject(tx);
+      const { digest } = tx;
+      const { status, error } = tx.effects.status;
       if (status === "success") {
         dispatch(
           verifyDelistTransaction({
             id: id,
             params: {
-              txhash,
+              txhash: digest,
               chain: "SUI",
             },
           })

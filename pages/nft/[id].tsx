@@ -20,9 +20,7 @@ import {
   fetchNFTDetail,
 } from "../../src/redux/nft/nftSlice";
 import { toast } from "react-toastify";
-import {
-  verifyBuyTransaction,
-} from "../../src/redux/verify/verifySlice";
+import { verifyBuyTransaction } from "../../src/redux/verify/verifySlice";
 import { Spin } from "antd";
 import { SUI_DECIMAL } from "../../src/api/constants";
 import DelistModal from "../../src/components/molecules/DelistModal";
@@ -31,7 +29,6 @@ import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
-import { readTransactionObject } from "../../src/utils/readTransactionObject";
 import { getRPCConnection } from "../../src/utils/common";
 
 const NFT = () => {
@@ -85,35 +82,18 @@ const NFT = () => {
       setLoading(false);
       return;
     }
-    const provider = getRPCConnection();
-    const userBalance = (await provider.getAllCoins({
-      owner: address,
-    })) as any;
-    const filteredData = userBalance.filter(
-      (i: any) => i.coinType === "0x2::sui::SUI"
-    );
-    const params = [] as string[];
-    let prevAmount = 0;
-    filteredData.forEach((i: any) => {
-      if (prevAmount > price) {
-        return;
-      }
-      const newAmount = prevAmount + Number(i.balance);
-      if (newAmount > price) {
-        prevAmount = newAmount;
-        params.push(i.coinObjectId);
-        return;
-      } else {
-        params.push(i.coinObjectId);
-        prevAmount = newAmount;
-      }
-    });
 
     try {
       const txb = new TransactionBlock();
       txb.moveCall({
         target: `${packageObjectId}::${contractModule}::buy`,
-        arguments: [txb.pure(marketId), txb.pure(nftId), txb.pure(params)],
+        arguments: [
+          txb.pure(marketId),
+          txb.pure(nftId),
+          txb.makeMoveVec({
+            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price))])],
+          }),
+        ],
         typeArguments: [nftType],
       });
       const tx = (await signAndExecuteTransactionBlock({
@@ -122,13 +102,14 @@ const NFT = () => {
           showEffects: true,
         },
       })) as any;
-      const { status, error, txhash } = readTransactionObject(tx);
+      const { digest } = tx;
+      const { status, error } = tx.effects.status;
       if (status === "success") {
         dispatch(
           verifyBuyTransaction({
             id: nftData?.id || "",
             params: {
-              txhash,
+              txhash: digest,
               chain: "SUI",
             },
           })

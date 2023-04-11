@@ -2,21 +2,13 @@ import { Modal, Spin } from "antd";
 import Image from "next/image";
 import React from "react";
 import { LoadingOutlined } from "@ant-design/icons";
-import Link from "next/link";
 import { SUI_DECIMAL } from "../../../api/constants";
 import { useWallet } from "@suiet/wallet-kit";
 import { toast } from "react-toastify";
 import { verifySaleTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
-import { fetchNFTDetail } from "../../../redux/nft/nftSlice";
 import { NFT } from "../../../api/types";
-import { fetchListNFTOfCollection } from "../../../redux/collection/collectionSlice";
-import {
-  fetchMyListingNFTs,
-  fetchMyNFTs,
-} from "../../../redux/profile/profileSlice";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
-import { readTransactionObject } from "../../../utils/readTransactionObject";
 import { TransactionBlock } from "@mysten/sui.js";
 interface Props {
   close?: () => void;
@@ -61,13 +53,14 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
           showEffects: true,
         },
       })) as any;
-      const { status, error, txhash } = readTransactionObject(tx);
+      const { digest } = tx;
+      const { status, error } = tx.effects.status;
       if (status === "success") {
         dispatch(
           verifySaleTransaction({
             id: id,
             params: {
-              txhash,
+              txhash: digest,
               chain: "SUI",
             },
           })

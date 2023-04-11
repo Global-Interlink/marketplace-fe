@@ -13,7 +13,6 @@ import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
 import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
-import { readTransactionObject } from "../../../utils/readTransactionObject";
 import { getRPCConnection } from "../../../utils/common";
 interface Props {
   data?: NFT;
@@ -95,13 +94,14 @@ const ListNFTItem: React.FC<Props> = ({
           showEffects: true,
         },
       })) as any;
-      const { status, error, txhash } = readTransactionObject(tx);
+      const { digest } = tx;
+      const { status, error } = tx.effects.status;
       if (status === "success") {
         dispatch(
           verifyBuyTransaction({
             id: data?.id || "",
             params: {
-              txhash: txhash,
+              txhash: digest,
               chain: "SUI",
             },
           })
