@@ -57,35 +57,18 @@ const ListNFTItem: React.FC<Props> = ({
       setLoading(false);
       return;
     }
-    const provider = getRPCConnection();
-    const userBalance = (await provider.getAllCoins({
-      owner: address,
-    })) as any;
-    const filteredData = userBalance.filter(
-      (i: any) => i.coinType === "0x2::sui::SUI"
-    );
-    const params = [] as string[];
-    let prevAmount = 0;
-    filteredData.forEach((i: any) => {
-      if (prevAmount > price) {
-        return;
-      }
-      const newAmount = prevAmount + Number(i.balance);
-      if (newAmount > price) {
-        prevAmount = newAmount;
-        params.push(i.coinObjectId);
-        return;
-      } else {
-        params.push(i.coinObjectId);
-        prevAmount = newAmount;
-      }
-    });
 
     try {
       const txb = new TransactionBlock();
       txb.moveCall({
         target: `${packageObjectId}::${contractModule}::buy`,
-        arguments: [txb.pure(marketId), txb.pure(nftId), txb.pure(params)],
+        arguments: [
+          txb.pure(marketId),
+          txb.pure(nftId),
+          txb.makeMoveVec({
+            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price))])],
+          }),
+        ],
         typeArguments: [nftType],
       });
       const tx = (await signAndExecuteTransactionBlock({

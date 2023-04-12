@@ -26,7 +26,7 @@ import { SUI_DECIMAL } from "../../src/api/constants";
 import DelistModal from "../../src/components/molecules/DelistModal";
 import { setSuccess } from "../../src/redux/app/appSlice";
 import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
-import { FetchStatus } from "../../src/api/APIFunctions";
+import { APIFunctions, FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
 import { getRPCConnection } from "../../src/utils/common";
@@ -114,6 +114,7 @@ const NFT = () => {
             },
           })
         );
+
         setTimeout(() => {
           dispatch(fetchNFTDetail({ id: String(id) }));
           setLoading(false);
@@ -362,6 +363,7 @@ const NFT = () => {
               }}
               onSuccess={() => {
                 setOpenListing(false);
+                dispatch(fetchNFTDetail({ id: String(id) }));
                 dispatch(
                   setSuccess({
                     isOpen: true,
@@ -383,6 +385,7 @@ const NFT = () => {
               id={nftData.id}
               onSuccess={() => {
                 setOpenDelist(false);
+                dispatch(fetchNFTDetail({ id: String(id) }));
                 dispatch(
                   setSuccess({
                     isOpen: true,

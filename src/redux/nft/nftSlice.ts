@@ -42,6 +42,7 @@ export const fetchNFTDetail = createAsyncThunk(
       const response = await APIFunctions.get<NFT>(`/nft/${params.id}`);
       return response.data;
     } catch (err: any) {
+      console.log("=eeeeee", err);
       return rejectWithValue(err.response.data);
     }
   }
