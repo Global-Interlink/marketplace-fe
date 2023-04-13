@@ -55,9 +55,11 @@ const createAxios = () => {
     },
     validateStatus: function (status) {
       if (status === 401) {
-        // LocalStorage.remove(LocalStorageKey.ACCESS_TOKEN);
-        // window.location.href = "/";
-        toast.error("Token is expired. Login again!");
+        LocalStorage.remove(LocalStorageKey.ACCESS_TOKEN);
+        window.location.href = "/";
+        toast.error("Token is expired. Login again!", {
+          toastId: "token-expired",
+        });
       } else if (status >= 400) {
         return false;
       }

@@ -141,16 +141,6 @@ const ListNFTItem: React.FC<Props> = ({
               >
                 {data?.name}
               </p>
-              {/* {data?.collection?.name ? (
-                <p
-                  title={data.collection.name}
-                  className="text-primary truncate dark:text-white"
-                >
-                  {data?.collection?.name}
-                </p>
-              ) : (
-                <div className="h-[24px]" />
-              )} */}
             </div>
 
             <div className="flex items-center mt-[18px] space-x-[30px] ">
@@ -184,7 +174,7 @@ const ListNFTItem: React.FC<Props> = ({
                   data.owner?.address?.address !== address && (
                     <button
                       disabled={!connected || isLoading}
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
+                      className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
                       onClick={() => {
                         if (data) {
                           handleBuyNow(
@@ -196,9 +186,7 @@ const ListNFTItem: React.FC<Props> = ({
                       }}
                     >
                       {isLoading ? (
-                        <Spin
-                          indicator={<LoadingOutlined className="text-white" />}
-                        />
+                        <LoadingOutlined className="text-white" size={20} />
                       ) : (
                         "Buy Now"
                       )}
@@ -209,15 +197,13 @@ const ListNFTItem: React.FC<Props> = ({
                   data.saleStatus.onSale && (
                     <button
                       disabled={!connected || isLoading}
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
+                      className="primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
                       onClick={(e: any) => {
                         setOpenDelist(true);
                       }}
                     >
                       {isLoading ? (
-                        <Spin
-                          indicator={<LoadingOutlined className="text-white" />}
-                        />
+                        <LoadingOutlined className="text-white" size={20} />
                       ) : (
                         "Delist"
                       )}

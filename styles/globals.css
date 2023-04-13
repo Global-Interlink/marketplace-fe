@@ -166,3 +166,73 @@ div.footerC {
 .commonGradientTextBold {
   @apply text-transparent bg-clip-text bg-gradient-to-b from-[#F626D1] to-[#822CF1] font-bold;
 }
+
+/* connect button */
+
+.connect-wallet-btn {
+  width: fit-content !important;
+  padding: 0 30px !important;
+  height: 40px;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin-right: 40px;
+  border-radius: 100px !important;
+}
+
+.wkit-connected-container {
+  width: fit-content !important;
+  border-radius: 100px !important;
+}
+
+.wkit-connected-button {
+  flex-direction: column-reverse;
+  align-items: end !important;
+  padding: 3px 16px !important;
+  background-color: #fff !important;
+  border-radius: 100px !important;
+  border: 1px solid #bd28e0 !important;
+  height: 40px;
+  max-width: 160px;
+}
+
+.dark .wkit-connected-button {
+  background-color: #2b294b !important;
+}
+
+.wkit-connected-button .wkit-address-select__address,
+.wkit-connected-button .wkit-connected-button__balance {
+  font-size: 12px;
+  line-height: 16px;
+  background: linear-gradient(91.82deg, #f727d2 22.38%, #a52cef 108.71%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 160px;
+  display: flex !important;
+  justify-content: flex-end;
+}
+
+.wkit-connected-button .wkit-address-select__address {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+.wkit-connected-button .wkit-connected-button__divider,
+.wkit-connected-button .wkit-address-select__right-arrow {
+  display: none;
+}
+
+.wkit-disconnect-button__container {
+  display: none !important;
+  border-radius: 8px !important;
+}
+
+.wkit-disconnect-button {
+  background-color: #fff !important;
+}

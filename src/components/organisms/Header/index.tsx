@@ -4,66 +4,43 @@ import { toggleMenu } from "../../../redux/app/appSlice";
 import { useAppDispatch } from "../../../redux/hook";
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import React from "react";
-import axios from "axios";
 import LocalStorage, { LocalStorageKey } from "../../../utils/localStorage";
-import { toast } from "react-toastify";
 import { useTheme } from "next-themes";
+import { BiChevronDown } from "react-icons/bi";
+import { AiOutlineMenu } from "react-icons/ai";
+import { Dropdown, Popover } from "antd";
 import SearchForm from "../../molecules/Search";
-import DarkIcon from "../../atoms/Icons/DarkIcon";
-import LightIcon from "../../atoms/Icons/LightIcon";
-import WalletInfo from "../../molecules/WalletInfo";
+
 const Header = () => {
-  const { connected, address, signMessage, disconnect } = useWallet();
+  const { connected, address, chain, disconnect } = useWallet();
+  const { theme, setTheme } = useTheme();
   const [oldAddress, setOldAddress] = React.useState("");
   const dispatch = useAppDispatch();
-  const { theme, setTheme } = useTheme();
-  const handleLogin = async () => {
-    try {
-      const resultGetNonce = await axios
-        .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/get-nonce`, {
-          walletAddress: address,
-          chain: "SUI",
-        })
-        .catch((error) => {
-          throw error;
-        });
-      if (resultGetNonce.data.nonce) {
-        const nonce = resultGetNonce.data.nonce;
-        const signature = await signMessage({
-          message: new TextEncoder().encode(nonce),
-        }).catch((error) => {
-          throw error;
-        });
-        const resultLogin = await axios
-          .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
-            walletAddress: address,
-            chain: "SUI",
-            signature: signature,
-          })
-          .catch((error) => {
-            throw error;
-          });
-        if (!resultLogin.data.accessToken) {
-          throw "Cannot login";
-        }
-        LocalStorage.set(
-          LocalStorageKey.ACCESS_TOKEN,
-          resultLogin.data.accessToken
-        );
-      }
-    } catch (e: any) {
-      toast.error(e.message);
-      disconnect();
+  const items = [
+    {
+      label: "IDO",
+      key: "IDO",
+    },
+    {
+      label: "INO",
+      key: "INO",
+    },
+  ];
+
+  const handleMenuClick = (e: any) => {
+    if (e.key === "IDO") {
+      window.open("https://token-launchpad.gil.eco/", "_blank");
+    } else if (e.key === "INO") {
+      window.open("https://launchpad.gil.eco/", "_blank");
     }
   };
 
   React.useEffect(() => {
     const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
     if (connected && !accessToken) {
-      handleLogin();
+      LocalStorage.set(LocalStorageKey.ACCESS_TOKEN, "accessToken");
     }
   }, [connected]);
-
   React.useEffect(() => {
     if (address) {
       setOldAddress(address);
@@ -73,124 +50,170 @@ const Header = () => {
   }, [address]);
 
   return (
-    <div className="md:h-[84px] w-full flex md:border-b-[0.5px] md:border-[#cfcece] px-4 md:px-20 2xl:px-0">
-      <div className="container mx-auto flex pt-4 md:pt-0 items-center">
-        <div className="flex flex-1 items-center space-x-14 lg:space-x-24">
+    <div className="bg-transparent md:h-[84px] w-full flex px-4 md:px-20 backdrop-blur-[10px] z-20 shadow">
+      <div className="w-full mx-auto flex pt-4 md:pt-0 items-center justify-between">
+        <div className="flex items-center lg:space-x-5 xl:space-x-10 2xl:space-x-14">
           <Link href="/">
             <div className="hidden md:block">
-              <Image
-                src="/logo.svg"
-                alt="logo"
-                width={127}
-                height={52}
-                className="min-w-[127px]"
-              />
+              <Image src="/logo.svg" alt="logo" width={127} height={52} />
             </div>
-            <div className="block md:hidden">
+            <div className="block md:hidden w-[127px] h-[52px] object-cover">
               <Image src="/logo.svg" alt="logo" width={103} height={23} />
             </div>
           </Link>
-          <div className="hidden lg:block">
+        </div>
+        <div className="flex">
+          <div className="relative mr-16 hidden md:block">
             <SearchForm />
           </div>
-        </div>
-        <div className="text-white items-center space-x-4 xl:space-x-5 2xl:space-x-[30px] hidden md:flex">
-          {connected ? (
-            <WalletInfo />
-          ) : (
-            <ConnectButton
-              label="Connect Wallet"
-              className="primaryButton !rounded-md"
-            />
-          )}
-          {connected && (
-            <Link href="/profile">
-              <Image
-                width={32}
-                height={32}
-                alt="ic-profile"
-                src="/ic-profile.svg"
-                className="min-w-[32px] w-8 h-8"
-              />
-            </Link>
-          )}
-          {theme && (
-            <div className="flex text-white ml-4 bg-white rounded">
-              <button
-                className={`p-4 rounded min-w-[52px] ${
-                  theme === "light" ? "primaryButton" : "white"
-                }`}
-                onClick={() => {
-                  // TODO
-                  setTheme("light");
-                }}
-              >
-                <LightIcon />
-              </button>
-              <button
-                className={`p-4 rounded min-w-[52px] ${
-                  theme === "dark" ? "primaryButton" : "bg-white"
-                }`}
-                onClick={() => {
-                  setTheme("dark");
-                }}
-              >
-                <DarkIcon />
-              </button>
-            </div>
-          )}
-        </div>
-        <div className="flex items-center space-x-6 md:hidden">
-          {theme && (
-            <div className="flex text-white ml-4 bg-white rounded">
-              <button
-                className={`p-2 rounded ${
-                  theme === "light" ? "primaryButton" : "bg-white"
-                }`}
-                onClick={() => {
-                  // TODO
-                  setTheme("light");
-                }}
-              >
-                {/* <Image src="/ic-light.svg" alt="light" width={20} height={20} /> */}
-                <LightIcon />
-              </button>
-              <button
-                className={`p-2 rounded ${
-                  theme === "dark" ? "primaryButton" : "bg-white"
-                }`}
-                onClick={() => {
-                  setTheme("dark");
-                }}
-              >
-                {/* <Image src="/ic-dark.svg" alt="light" width={20} height={20} /> */}
-                <DarkIcon />
-              </button>
-            </div>
-          )}
-          {connected && (
-            <Link href="/profile">
-              <Image
-                width={24}
-                height={24}
-                alt="ic-profile"
-                src="/ic-profile.svg"
-              />
-            </Link>
-          )}
-          <button
-            onClick={() => {
-              dispatch(toggleMenu());
+          <Dropdown
+            menu={{
+              items,
+              onClick: handleMenuClick,
             }}
-            className="text-white block lg:hidden"
+            className="hidden md:flex"
           >
-            <Image
-              src={theme === "dark" ? "/ic-menu.svg" : "/ic-menu-l.svg"}
-              width={24}
-              height={24}
-              alt="ic-menu"
-            />
-          </button>
+            <div className="text-gray-400 flex items-center gap-1 cursor-pointer text-sm">
+              <span className="block">Launchpad</span>
+              <BiChevronDown />
+            </div>
+          </Dropdown>
+        </div>
+        <div className="flex items-center">
+          <div className="text-black dark:text-white items-center hidden lg:flex">
+            {connected && (
+              <>
+                <div className="mr-12 flex items-center space-x-2">
+                  <Image
+                    src="/ic-sui.svg"
+                    alt="sui"
+                    width={24}
+                    height={24}
+                    className="w-[24px] h-[24px]"
+                  />
+                  <p className="text-gray-400 text-sm">{chain?.name}</p>
+                </div>
+                <Popover
+                  placement="bottom"
+                  className="bg-transparent"
+                  content={
+                    <div className="">
+                      <button
+                        className="w-full font-bold"
+                        onClick={() => {
+                          disconnect();
+                        }}
+                      >
+                        Disconnect
+                      </button>
+                    </div>
+                  }
+                  showArrow={false}
+                >
+                  <div>
+                    <ConnectButton
+                      label="Connect wallet"
+                      className="primaryButton connect-wallet-btn"
+                    />
+                  </div>
+                </Popover>
+              </>
+            )}
+            {!connected && (
+              <ConnectButton
+                label="Connect wallet"
+                className="primaryButton connect-wallet-btn"
+              />
+            )}
+          </div>
+          {connected && (
+            <Link href="/profile">
+              {theme === "dark" ? (
+                <Image
+                  width={40}
+                  height={40}
+                  alt="ic-profile"
+                  src="/ic-profile-dark.svg"
+                  className="w-[40px] h-[40px] mx-5"
+                />
+              ) : (
+                <Image
+                  width={40}
+                  height={40}
+                  alt="ic-profile"
+                  src="/ic-profile.svg"
+                  className="w-[40px] h-[40px] mx-5"
+                />
+              )}
+            </Link>
+          )}
+          <div className="flex items-center">
+            <button
+              onClick={() => {
+                dispatch(toggleMenu());
+              }}
+              className="block md:hidden"
+            >
+              <AiOutlineMenu size={24} />
+            </button>
+          </div>
+          {theme && (
+            <div className="hidden md:flex items-center h-[40px] gap-1 px-1 text-white bg-white dark:bg-[#4F2A8A]/25 rounded-[52px]">
+              <button
+                className={`flex justify-center items-center w-[32px] h-[32px] rounded-full ${
+                  theme === "light" ? "primaryButton" : "bg-transparent"
+                }`}
+                onClick={() => {
+                  // TODO
+                  setTheme("light");
+                }}
+              >
+                {theme === "dark" ? (
+                  <Image
+                    className="change-theme-img"
+                    src="/ic-light-dark.svg"
+                    alt="light"
+                    width={18}
+                    height={18}
+                  />
+                ) : (
+                  <Image
+                    className="change-theme-img"
+                    src="/ic-light.svg"
+                    alt="light"
+                    width={18}
+                    height={18}
+                  />
+                )}
+              </button>
+              <button
+                className={`flex justify-center items-center w-[32px] h-[32px] rounded-full ${
+                  theme === "dark" ? "primaryButton" : "bg-white"
+                }`}
+                onClick={() => {
+                  setTheme("dark");
+                }}
+              >
+                {theme === "dark" ? (
+                  <Image
+                    className="change-theme-img"
+                    src="/ic-dark.svg"
+                    alt="light"
+                    width={18}
+                    height={18}
+                  />
+                ) : (
+                  <Image
+                    className="change-theme-img"
+                    src="/ic-dark-light.svg"
+                    alt="light"
+                    width={18}
+                    height={18}
+                  />
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
