@@ -89,7 +89,7 @@ const Collection = () => {
                     src={collectionData?.logo}
                     width={1000}
                     height={1000}
-                    className="w-8 h-8 mt-2 md:mt-0 md:w-[64px] md:h-[64px] object-cover rounded-full"
+                    className="w-8 h-8 mt-2 md:mt-0 md:min-w-[64px] md:w-[64px] md:h-[64px] object-cover rounded-full"
                   />
                 </div>
 
@@ -130,8 +130,8 @@ const Collection = () => {
                     ? collectionData.banner
                     : "/default.jpeg"
                 }
-                width={1280}
-                height={1024}
+                width={2000}
+                height={2000}
                 className="flex w-full aspect-[1300/500] rounded-[20px] object-cover"
                 alt="banner"
               />

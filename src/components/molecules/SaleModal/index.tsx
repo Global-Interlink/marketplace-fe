@@ -99,9 +99,9 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
                 <Image
                   alt="logo-lp"
                   src={item?.collection?.logo || ""}
-                  width={36}
-                  height={36}
-                  className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-contain rounded-full"
+                  width={512}
+                  height={512}
+                  className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-cover rounded-full"
                 />
               </div>
               <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
