@@ -96,44 +96,46 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {response?.data && response.data.length > 0 ? (
-            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-              {response?.data?.map((i) => {
-                return (
-                  <ListNFTItem
-                    key={i.onChainId}
-                    data={i}
-                    onBuySuccess={handleFetchData}
-                    onDelistSuccess={handleFetchData}
-                    onListSuccess={handleFetchData}
-                  />
-                );
-              })}
-            </div>
-          ) : status !== FetchStatus.pending && status !== FetchStatus.idle ? (
-            <Empty />
-          ) : null}
           {status === FetchStatus.pending ? (
             <NFTListSkeleton hideTab />
           ) : (
-            response &&
-            response.data &&
-            currentPageItems < response?.meta.totalPages && (
-              <div className="mt-[70px] flex justify-center">
-                <button
-                  onClick={() => {
-                    if (
-                      response?.meta.currentPage < response?.meta.totalPages
-                    ) {
-                      setCurrentPageItems(response?.meta.currentPage + 1);
-                    }
-                  }}
-                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                >
-                  Load more
-                </button>
-              </div>
-            )
+            <div>
+              {response?.data && response.data.length > 0 ? (
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                  {response?.data?.map((i) => {
+                    return (
+                      <ListNFTItem
+                        key={i.onChainId}
+                        data={i}
+                        onBuySuccess={handleFetchData}
+                        onDelistSuccess={handleFetchData}
+                        onListSuccess={handleFetchData}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <Empty />
+              )}
+              {response &&
+                response.data &&
+                currentPageItems < response?.meta.totalPages && (
+                  <div className="mt-[70px] flex justify-center">
+                    <button
+                      onClick={() => {
+                        if (
+                          response?.meta.currentPage < response?.meta.totalPages
+                        ) {
+                          setCurrentPageItems(response?.meta.currentPage + 1);
+                        }
+                      }}
+                      className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
+                    >
+                      Load more
+                    </button>
+                  </div>
+                )}
+            </div>
           )}
         </div>
       ),
@@ -150,43 +152,46 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {listed?.data && listed.data.length > 0 ? (
-            <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-              {listed?.data?.map((i) => {
-                return (
-                  <ListNFTItem
-                    key={"listed_" + i.onChainId}
-                    data={i}
-                    onBuySuccess={handleFetchData}
-                    onDelistSuccess={handleFetchData}
-                    onListSuccess={handleFetchData}
-                  />
-                );
-              })}
-            </div>
-          ) : listedStatus !== FetchStatus.pending &&
-            listedStatus !== FetchStatus.idle ? (
-            <Empty />
-          ) : null}
           {listedStatus === FetchStatus.pending ? (
             <NFTListSkeleton hideTab />
           ) : (
-            listed &&
-            listed.data &&
-            currentPage < listed?.meta.totalPages && (
-              <div className="mt-[70px] flex justify-center">
-                <button
-                  onClick={() => {
-                    if (listed?.meta.currentPage < listed?.meta.totalPages) {
-                      setCurrentPage(listed?.meta.currentPage + 1);
-                    }
-                  }}
-                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                >
-                  Load more
-                </button>
-              </div>
-            )
+            <div>
+              {listed?.data && listed.data.length > 0 ? (
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                  {listed?.data?.map((i) => {
+                    return (
+                      <ListNFTItem
+                        key={"listed_" + i.onChainId}
+                        data={i}
+                        onBuySuccess={handleFetchData}
+                        onDelistSuccess={handleFetchData}
+                        onListSuccess={handleFetchData}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <Empty />
+              )}
+              {listed &&
+                listed.data &&
+                currentPage < listed?.meta.totalPages && (
+                  <div className="mt-[70px] flex justify-center">
+                    <button
+                      onClick={() => {
+                        if (
+                          listed?.meta.currentPage < listed?.meta.totalPages
+                        ) {
+                          setCurrentPage(listed?.meta.currentPage + 1);
+                        }
+                      }}
+                      className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
+                    >
+                      Load more
+                    </button>
+                  </div>
+                )}
+            </div>
           )}
         </div>
       ),

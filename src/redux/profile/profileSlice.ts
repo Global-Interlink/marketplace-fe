@@ -109,16 +109,8 @@ export const profileSlice = createSlice({
         state.profileData.status = FetchStatus.pending;
       })
       .addCase(fetchMyNFTs.fulfilled, (state, action) => {
-        const currentProfiles = [...(state.profileData.response?.data || [])];
         state.profileData.status = FetchStatus.succeeded;
-        state.profileData.response = {
-          ...action.payload,
-          data: unionBy(
-            currentProfiles,
-            action.payload.data || [],
-            "onChainId"
-          ),
-        };
+        state.profileData.response = action.payload;
       })
       .addCase(fetchMyNFTs.rejected, (state, action) => {
         state.profileData.status = FetchStatus.failed;
@@ -132,14 +124,7 @@ export const profileSlice = createSlice({
       })
       .addCase(fetchMyListingNFTs.fulfilled, (state, action) => {
         state.listedData.status = FetchStatus.succeeded;
-        state.listedData.response = {
-          ...action.payload,
-          data: unionBy(
-            state.listedData.response?.data || [],
-            action.payload.data || [],
-            "onChainId"
-          ),
-        };
+        state.listedData.response = action.payload
       })
       .addCase(fetchMyListingNFTs.rejected, (state, action) => {
         state.listedData.status = FetchStatus.failed;
