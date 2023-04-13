@@ -10,9 +10,11 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Dropdown, Popover } from "antd";
 import SearchForm from "../../molecules/Search";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Header = () => {
-  const { connected, address, chain, disconnect } = useWallet();
+  const { connected, address, chain, disconnect, signMessage } = useWallet();
   const { theme, setTheme } = useTheme();
   const [oldAddress, setOldAddress] = React.useState("");
   const dispatch = useAppDispatch();
@@ -35,12 +37,52 @@ const Header = () => {
     }
   };
 
+  const handleLogin = async () => {
+    try {
+      const resultGetNonce = await axios
+        .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/get-nonce`, {
+          walletAddress: address,
+          chain: "SUI",
+        })
+        .catch((error) => {
+          throw error;
+        });
+      if (resultGetNonce.data.nonce) {
+        const nonce = resultGetNonce.data.nonce;
+        const signature = await signMessage({
+          message: new TextEncoder().encode(nonce),
+        }).catch((error) => {
+          throw error;
+        });
+        const resultLogin = await axios
+          .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
+            walletAddress: address,
+            chain: "SUI",
+            signature: signature,
+          })
+          .catch((error) => {
+            throw error;
+          });
+        if (!resultLogin.data.accessToken) {
+          throw "Cannot login";
+        }
+        LocalStorage.set(
+          LocalStorageKey.ACCESS_TOKEN,
+          resultLogin.data.accessToken
+        );
+      }
+    } catch (e: any) {
+      toast.error(e.message);
+      disconnect();
+    }
+  };
   React.useEffect(() => {
     const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
     if (connected && !accessToken) {
-      LocalStorage.set(LocalStorageKey.ACCESS_TOKEN, "accessToken");
+      handleLogin();
     }
   }, [connected]);
+
   React.useEffect(() => {
     if (address) {
       setOldAddress(address);
