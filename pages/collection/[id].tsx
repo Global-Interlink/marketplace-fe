@@ -89,7 +89,7 @@ const Collection = () => {
                     src={collectionData?.logo}
                     width={1000}
                     height={1000}
-                    className="w-8 h-8 mt-2 md:mt-0 md:min-w-[64px] md:w-[64px] md:h-[64px] object-cover rounded-full"
+                    className="w-8 min-w-[32px] h-8 mt-2 md:mt-0 md:min-w-[64px] md:w-[64px] md:h-[64px] object-cover rounded-full"
                   />
                 </div>
 
@@ -100,7 +100,7 @@ const Collection = () => {
                         {collectionData?.name}
                       </p>
                     </div>
-                    <div className=" hidden lg:flex items-center space-x-3 md:space-x-6">
+                    <div className="hidden lg:flex items-center space-x-3 md:space-x-6">
                       <SocialView response={collectionData} />
                     </div>
                   </div>

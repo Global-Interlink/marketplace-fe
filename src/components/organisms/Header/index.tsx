@@ -92,7 +92,7 @@ const Header = () => {
   }, [address]);
 
   return (
-    <div className="bg-transparent md:h-[84px] w-full flex px-4 md:px-20 backdrop-blur-[10px] z-20 shadow">
+    <div className="bg-transparent fixed md:h-[84px] w-full flex px-4 md:px-20 backdrop-blur-[10px] z-20 shadow">
       <div className="w-full mx-auto flex pt-4 md:pt-0 items-center justify-between">
         <div className="flex items-center lg:space-x-5 xl:space-x-10 2xl:space-x-14">
           <Link href="/">
