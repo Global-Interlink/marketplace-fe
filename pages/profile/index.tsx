@@ -123,10 +123,8 @@ const Collection = () => {
                   <div className="mt-[70px] flex justify-center">
                     <button
                       onClick={() => {
-                        if (
-                          response?.meta.currentPage < response?.meta.totalPages
-                        ) {
-                          setCurrentPageItems(response?.meta.currentPage + 1);
+                        if (currentPageItems < response?.meta.totalPages) {
+                          setCurrentPageItems(currentPageItems + 1);
                         }
                       }}
                       className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
@@ -179,10 +177,8 @@ const Collection = () => {
                   <div className="mt-[70px] flex justify-center">
                     <button
                       onClick={() => {
-                        if (
-                          listed?.meta.currentPage < listed?.meta.totalPages
-                        ) {
-                          setCurrentPage(listed?.meta.currentPage + 1);
+                        if (currentPage < listed?.meta.totalPages) {
+                          setCurrentPage(currentPage + 1);
                         }
                       }}
                       className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"

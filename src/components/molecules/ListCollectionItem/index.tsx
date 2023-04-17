@@ -25,12 +25,12 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
         <div className="flex p-5 w-full space-x-[14px] bg-bgLinearLight dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px] dark:border-none rounded-b-[20px]">
           <Image
             src={data.logo}
-            width={52}
-            height={52}
+            width={500}
+            height={500}
             alt="logo"
             className="rounded-full w-[52px] h-[52px] min-w-[52px] object-cover"
           />
-          <div className="truncate">
+          <div className="truncate text-primary dark:text-white">
             <span
               title={data.name}
               className="text-primary truncate dark:text-white external"
