@@ -70,12 +70,21 @@ const Header = () => {
           LocalStorageKey.ACCESS_TOKEN,
           resultLogin.data.accessToken
         );
+        LocalStorage.set(LocalStorageKey.CURRENT_ADDRESS, address || "");
       }
     } catch (e: any) {
       toast.error(e.message);
       disconnect();
     }
   };
+
+  React.useEffect(() => {
+    const prevAddress = LocalStorage.get(LocalStorageKey.CURRENT_ADDRESS);
+    if (prevAddress && address && prevAddress !== address) {
+      LocalStorage.remove(LocalStorageKey.CURRENT_ADDRESS);
+      handleLogin();
+    }
+  }, [address]);
   React.useEffect(() => {
     const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
     if (connected && !accessToken) {
@@ -88,6 +97,7 @@ const Header = () => {
       setOldAddress(address);
     } else if (!address && oldAddress) {
       LocalStorage.remove(LocalStorageKey.ACCESS_TOKEN);
+      console.log("===clear");
     }
   }, [address]);
 
