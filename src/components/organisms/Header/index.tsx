@@ -82,7 +82,7 @@ const Header = () => {
     const prevAddress = LocalStorage.get(LocalStorageKey.CURRENT_ADDRESS);
     if (prevAddress && address && prevAddress !== address) {
       LocalStorage.remove(LocalStorageKey.CURRENT_ADDRESS);
-      handleLogin();
+      disconnect();
     }
   }, [address]);
   React.useEffect(() => {
@@ -97,7 +97,6 @@ const Header = () => {
       setOldAddress(address);
     } else if (!address && oldAddress) {
       LocalStorage.remove(LocalStorageKey.ACCESS_TOKEN);
-      console.log("===clear");
     }
   }, [address]);
 
