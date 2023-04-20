@@ -54,7 +54,7 @@ const Collection = () => {
       dispatch(
         fetchMyNFTs({
           page: currentPageItems,
-          limit: LIMIT,
+          limit: LIMIT * currentPageItems,
           sort: sort,
         })
       );
@@ -77,7 +77,7 @@ const Collection = () => {
       dispatch(
         fetchMyListingNFTs({
           page: currentPage,
-          limit: LIMIT,
+          limit: LIMIT * currentPage,
           sort: sort,
         })
       );

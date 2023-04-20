@@ -236,3 +236,11 @@ div.footerC {
 .wkit-disconnect-button {
   background-color: #fff !important;
 }
+
+.ellipsis-multi {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 80px;
+}

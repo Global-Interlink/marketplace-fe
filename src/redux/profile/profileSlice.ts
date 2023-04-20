@@ -45,12 +45,26 @@ export type FetchPrams = {
   sort: "DESC" | "ASC";
 };
 
+// export const fetchMyNFTs = createAsyncThunk(
+//   "profile/my-nft",
+//   async (params: FetchPrams, { rejectWithValue }) => {
+//     try {
+//       const response = await APIFunctions.get<FetchMyNFTSuccess>(
+//         `/nft?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+//       );
+//       return response.data;
+//     } catch (err: any) {
+//       return rejectWithValue(err.response.data);
+//     }
+//   }
+// );
+
 export const fetchMyNFTs = createAsyncThunk(
   "profile/my-nft",
   async (params: FetchPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchMyNFTSuccess>(
-        `/nft?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+        `/nft?page=1&limit=${params.limit}&sortBy=id:${params.sort}`
       );
       return response.data;
     } catch (err: any) {
@@ -71,12 +85,26 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
+// export const fetchMyListingNFTs = createAsyncThunk(
+//   "profile/my-listing-nft",
+//   async (params: FetchPrams, { rejectWithValue }) => {
+//     try {
+//       const response = await APIFunctions.get<FetchMyNFTSuccess>(
+//         `/nft/listed-on-market?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+//       );
+//       return response.data;
+//     } catch (err: any) {
+//       return rejectWithValue(err.response.data);
+//     }
+//   }
+// );
+
 export const fetchMyListingNFTs = createAsyncThunk(
   "profile/my-listing-nft",
   async (params: FetchPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchMyNFTSuccess>(
-        `/nft/listed-on-market?page=${params.page}&limit=${params.limit}&sortBy=id:${params.sort}`
+        `/nft/listed-on-market?page=1&limit=${params.limit}&sortBy=id:${params.sort}`
       );
       return response.data;
     } catch (err: any) {

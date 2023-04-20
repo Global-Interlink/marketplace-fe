@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
 import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import CollectionDetailTopSkeleton from "../../src/components/molecules/CollectionDetailTopSkeleton";
+import { BsChevronDown, BsChevronUp } from 'react-icons/bs'
 
 const Collection = () => {
   const router = useRouter();
@@ -34,6 +35,8 @@ const Collection = () => {
   const LIMIT = 20;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [showMore, setShowMore] = React.useState(false);
+  const [isShow, setIsShow] = React.useState(false);
 
   React.useEffect(() => {
     if (id) {
@@ -72,6 +75,16 @@ const Collection = () => {
       );
     }
   }, [currentPage, id, sort]);
+
+  React.useEffect(() => {
+    const divElement = document.querySelector('.collection-description');
+    if (divElement) {
+      const divHeight = divElement.getBoundingClientRect().height;
+      if (divHeight >= 72) {
+        setIsShow(true)
+      }
+    }
+  }, [collectionData]);
 
   return collectionData ? (
     <BaseComponent>
@@ -114,9 +127,12 @@ const Collection = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-[30px] space-y-10">
-              <p className="text-black dark:text-white"></p>
-              <div className="text-black dark:text-white">
+            <div className="mt-[30px]">
+              <div
+                className={`collection-description text-black dark:text-white transition-all duration-300 ${
+                  showMore ? "" : "ellipsis-multi"
+                }`}
+              >
                 <ReactMarkdown
                   rehypePlugins={[rehypeRaw]}
                   remarkPlugins={[remarkGfm]}
@@ -124,6 +140,9 @@ const Collection = () => {
                   {collectionData.description}
                 </ReactMarkdown>
               </div>
+                <button className={`${isShow ? 'flex' : 'hidden'} gap-1 justify-between items-center text-[#f626d1] py-2 px-3 rounded-[100px] mx-auto text-sm `} onClick={() => setShowMore(!showMore)}>
+                  {showMore ? "Show less" : "Show more"} {showMore ? <BsChevronUp /> : <BsChevronDown />}
+                </button>
               <Image
                 src={
                   collectionData.banner && validURL(collectionData.banner)
@@ -132,7 +151,7 @@ const Collection = () => {
                 }
                 width={2000}
                 height={2000}
-                className="flex w-full aspect-[1300/500] rounded-[20px] object-cover"
+                className="flex w-full aspect-[1300/500] rounded-[20px] object-cover mt-5"
                 alt="banner"
               />
             </div>
