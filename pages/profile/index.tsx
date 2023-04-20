@@ -18,6 +18,8 @@ import {
   fetchMyNFTs,
   fetchUser,
 } from "../../src/redux/profile/profileSlice";
+import { NFT } from "../../src/api/types";
+import { getUnique } from "../../src/utils/localStorage";
 
 const Collection = () => {
   const dispatch = useAppDispatch();
@@ -54,7 +56,7 @@ const Collection = () => {
       dispatch(
         fetchMyNFTs({
           page: currentPageItems,
-          limit: LIMIT * currentPageItems,
+          limit: LIMIT,
           sort: sort,
         })
       );
@@ -77,12 +79,27 @@ const Collection = () => {
       dispatch(
         fetchMyListingNFTs({
           page: currentPage,
-          limit: LIMIT * currentPage,
+          limit: LIMIT,
           sort: sort,
         })
       );
     }
   }, [currentPage, sort, address, connected, dispatch]);
+
+  const [listNFT, setListNFT] = useState<NFT[]>([]);
+  const [listedNFT, setListedNFT] = useState<NFT[]>([]);
+
+  useEffect(() => {
+    if (response?.data) {
+      setListNFT(getUnique([...listNFT, ...response?.data], 'id'));
+    }
+  }, [currentPageItems, response?.data])
+
+  useEffect(() => {
+    if (listed?.data) {
+      setListedNFT(getUnique([...listedNFT, ...listed?.data], 'id'));
+    }
+  }, [currentPageItems, listed?.data])
 
   const tabs = [
     {
@@ -102,7 +119,7 @@ const Collection = () => {
             <div>
               {response?.data && response.data.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {response?.data?.map((i) => {
+                  {listNFT.map((i) => {
                     return (
                       <ListNFTItem
                         key={i.onChainId}
@@ -156,7 +173,7 @@ const Collection = () => {
             <div>
               {listed?.data && listed.data.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {listed?.data?.map((i) => {
+                  {listedNFT.map((i) => {
                     return (
                       <ListNFTItem
                         key={"listed_" + i.onChainId}
