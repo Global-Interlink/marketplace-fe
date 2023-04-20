@@ -21,3 +21,17 @@ export default class LocalStorage {
     }
   };
 }
+
+export const getUnique = (arr: any, comp: any) => {
+  const unique = arr
+    .map((e: any) => e[comp])
+
+    // store the keys of the unique objects
+    .map((e: any, i: any, final: any) => final.indexOf(e) === i && i)
+
+    // eliminate the dead keys & store unique objects
+    .filter((e: any) => arr[e])
+    .map((e: any) => arr[e])
+
+  return unique
+}
