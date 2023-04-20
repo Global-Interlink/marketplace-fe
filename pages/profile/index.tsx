@@ -34,7 +34,7 @@ const Collection = () => {
   );
   const { push } = useRouter();
   const { address, connected } = useWallet();
-  const LIMIT = 4;
+  const LIMIT = 12;
   const [sort, setSort] = useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageItems, setCurrentPageItems] = useState(1);
