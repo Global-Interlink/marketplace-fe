@@ -34,7 +34,7 @@ const Collection = () => {
   );
   const { push } = useRouter();
   const { address, connected } = useWallet();
-  const LIMIT = 12;
+  const LIMIT = 4;
   const [sort, setSort] = useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageItems, setCurrentPageItems] = useState(1);
@@ -87,12 +87,19 @@ const Collection = () => {
   }, [currentPage, sort, address, connected, dispatch]);
 
   const [listNFT, setListNFT] = useState<NFT[]>([]);
+  const [listedNFT, setListedNFT] = useState<NFT[]>([]);
 
   useEffect(() => {
     if (response?.data) {
       setListNFT(getUnique([...listNFT, ...response?.data], 'id'));
     }
   }, [currentPageItems, response?.data])
+
+  useEffect(() => {
+    if (listed?.data) {
+      setListedNFT(getUnique([...listedNFT, ...listed?.data], 'id'));
+    }
+  }, [currentPageItems, listed?.data])
 
   const tabs = [
     {
@@ -166,7 +173,7 @@ const Collection = () => {
             <div>
               {listed?.data && listed.data.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {listed?.data?.map((i) => {
+                  {listedNFT.map((i) => {
                     return (
                       <ListNFTItem
                         key={"listed_" + i.onChainId}
