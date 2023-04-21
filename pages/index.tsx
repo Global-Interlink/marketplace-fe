@@ -1,8 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import { FetchStatus } from "../src/api/APIFunctions";
-import ImgIcon from "../src/components/atoms/Icons/ImgIcon";
 import Sort from "../src/components/atoms/Sort";
 import CollectionListSkeleton from "../src/components/molecules/CollectionListSkeleton";
 import Empty from "../src/components/molecules/EmptyView";
@@ -10,13 +7,16 @@ import ListCollectionItem from "../src/components/molecules/ListCollectionItem";
 import BaseComponent from "../src/components/organisms/BaseComponent";
 import { fetchListCollection } from "../src/redux/home/homeSlice";
 import { useAppDispatch, useAppSelector } from "../src/redux/hook";
+import { Collection } from "../src/api/types";
+import { getUnique } from "../src/utils/localStorage";
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const { response, status } = useAppSelector((store) => store.home.homeData);
-  const LIMIT = 20;
+  const LIMIT = 12;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [listCollection, setListCollection] = React.useState<Collection[]>([]);
 
   React.useEffect(() => {
     dispatch(
@@ -27,6 +27,12 @@ const Home = () => {
       })
     );
   }, [currentPage, dispatch, sort]);
+
+  React.useEffect(() => {
+    if (response?.data) {
+      setListCollection(getUnique([...listCollection, ...response?.data], 'id'));
+    }
+  }, [setCurrentPage, response?.data])
 
   return status === FetchStatus.idle || status === FetchStatus.pending ? (
     <BaseComponent>
@@ -42,7 +48,7 @@ const Home = () => {
         </div>
         {response && response.data && response.data.length > 0 ? (
           <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {response?.data.map((i) => {
+            {listCollection.map((i) => {
               return <ListCollectionItem key={i.id} data={i} />;
             })}
           </div>
