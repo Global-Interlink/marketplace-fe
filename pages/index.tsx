@@ -5,34 +5,27 @@ import CollectionListSkeleton from "../src/components/molecules/CollectionListSk
 import Empty from "../src/components/molecules/EmptyView";
 import ListCollectionItem from "../src/components/molecules/ListCollectionItem";
 import BaseComponent from "../src/components/organisms/BaseComponent";
-import { fetchListCollection } from "../src/redux/home/homeSlice";
+import {
+  fetchListCollection,
+  fetchListCollectionLoadmore,
+} from "../src/redux/home/homeSlice";
 import { useAppDispatch, useAppSelector } from "../src/redux/hook";
-import { Collection } from "../src/api/types";
-import { getUnique } from "../src/utils/localStorage";
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const { response, status } = useAppSelector((store) => store.home.homeData);
   const LIMIT = 12;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [listCollection, setListCollection] = React.useState<Collection[]>([]);
 
   React.useEffect(() => {
     dispatch(
       fetchListCollection({
-        page: currentPage,
+        page: 1,
         limit: LIMIT,
         sort: sort,
       })
     );
-  }, [currentPage, dispatch, sort]);
-
-  React.useEffect(() => {
-    if (response?.data) {
-      setListCollection(getUnique([...listCollection, ...response?.data], 'id'));
-    }
-  }, [setCurrentPage, response?.data])
+  }, []);
 
   return status === FetchStatus.idle || status === FetchStatus.pending ? (
     <BaseComponent>
@@ -48,7 +41,7 @@ const Home = () => {
         </div>
         {response && response.data && response.data.length > 0 ? (
           <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-            {listCollection.map((i) => {
+            {response.data.map((i) => {
               return <ListCollectionItem key={i.id} data={i} />;
             })}
           </div>
@@ -57,12 +50,18 @@ const Home = () => {
         )}
         {response &&
           response.data &&
-          currentPage < response.meta.totalPages && (
+          response.meta.currentPage < response.meta.totalPages && (
             <div className="mt-[70px] flex justify-center">
               <button
                 onClick={() => {
                   if (response?.meta.currentPage < response?.meta.totalPages) {
-                    setCurrentPage(response?.meta.currentPage + 1);
+                    dispatch(
+                      fetchListCollectionLoadmore({
+                        page: response?.meta.currentPage + 1,
+                        limit: LIMIT,
+                        sort: sort,
+                      })
+                    );
                   }
                 }}
                 className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
