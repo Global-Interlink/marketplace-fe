@@ -173,7 +173,7 @@ const NFT = () => {
                       src={nftData?.collection?.logo || ""}
                       width={36}
                       height={26}
-                      className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-cover rounded-full"
+                      className="w-[36px] h-[36px] min-w-[36px] md:mt-0 object-cover rounded-full md:block flex justify-center items-center mx-auto mt-5"
                     />
                   </div>
                   <Link href={`/collection/${nftData.collection.id}`}>
@@ -183,11 +183,11 @@ const NFT = () => {
                   </Link>
                 </div>
               )}
-              <div className="bg-white border shadow dark:bg-[#2B294F] dark:border-[#3D2662] p-6 rounded-[20px] flex items-center justify-between mt-6">
+              <div className="bg-white border shadow dark:bg-[#2B294F] dark:border-[#3D2662] p-6 rounded-[20px] md:flex items-center justify-between mt-6">
                 {nftData?.saleStatus ? (
-                  <div className="text-black dark:text-white">
+                  <div className="text-black dark:text-white flex gap-2 md:block">
                     <p className="text-[20px]">Current Price :</p>
-                    <p className="text-[24px] font-bold">
+                    <p className="text-[20px] md:text-[24px] font-bold">
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
                       {`(~ $${Number(
                         nftData.saleStatus.usdPrice
@@ -201,7 +201,7 @@ const NFT = () => {
                   !nftData?.saleStatus &&
                   nftData.owner.address.address === address && (
                     <button
-                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full md:block flex justify-center items-center mx-auto mt-5"
                       onClick={() => {
                         if (nftData.collection) {
                           setOpenListing(true);
@@ -218,7 +218,7 @@ const NFT = () => {
                   nftData.owner.address.address !== address && (
                     <button
                       disabled={isLoading}
-                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                      className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full md:block flex justify-center items-center mx-auto mt-5"
                       onClick={() => {
                         if (nftData) {
                           handleBuyNow(
@@ -242,7 +242,7 @@ const NFT = () => {
                   nftData.owner.address.address === address &&
                   nftData.saleStatus.onSale && (
                     <button
-                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full "
+                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full md:block flex justify-center items-center mx-auto mt-5"
                       onClick={() => {
                         setOpenDelist(true);
                       }}

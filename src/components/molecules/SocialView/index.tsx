@@ -1,12 +1,7 @@
-import { useTheme } from "next-themes";
-import Link from "next/link";
 import React from "react";
+import { useTheme } from "next-themes";
 import { Collection } from "../../../api/types";
-import DiscordIcon from "../../atoms/Icons/DiscordIcon";
-import TelegramIcon from "../../atoms/Icons/TelegramIcon";
-import TwitterIcon from "../../atoms/Icons/TwitterIcon";
-import WebsiteIcon from "../../atoms/Icons/WebsiteIcon";
-
+import Image from "next/image";
 interface Props {
   response?: Collection;
 }
@@ -15,24 +10,44 @@ const SocialView: React.FC<Props> = ({ response }) => {
   return (
     <>
       {response?.website_url && (
-        <Link href={response?.website_url} target="_blank">
-          <WebsiteIcon />
-        </Link>
-      )}
-      {response?.twitter_url && (
-        <Link href={response.twitter_url} target="_blank">
-          <TwitterIcon />
-        </Link>
+        <a
+          href={response?.website_url}
+          target="_blank"
+          rel="noreferrer"
+          className="h-[24px] !w-[24px] bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+        >
+          <Image src={"/ic-website.svg"} width={14} height={14} alt={""} />
+        </a>
       )}
       {response?.telegram_url && (
-        <Link href={response.telegram_url} target="_blank">
-          <TelegramIcon />
-        </Link>
+        <a
+          href={response?.telegram_url}
+          target="_blank"
+          rel="noreferrer"
+          className="h-[24px] !w-[24px] bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+        >
+          <Image src={"/ic-telegram.svg"} width={14} height={11} alt={""} />
+        </a>
       )}
       {response?.discord_url && (
-        <Link href={response.discord_url} target="_blank">
-          <DiscordIcon />
-        </Link>
+        <a
+          href={response?.discord_url}
+          target="_blank"
+          rel="noreferrer"
+          className="h-[24px] !w-[24px] bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+        >
+          <Image src={"/ic-discord.svg"} width={16} height={12} alt={""} />
+        </a>
+      )}
+      {response?.twitter_url && (
+        <a
+          href={response?.twitter_url}
+          target="_blank"
+          rel="noreferrer"
+          className="h-[24px] !w-[24px] bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+        >
+          <Image src={"/ic-twitter.svg"} width={15} height={15} alt={""} />
+        </a>
       )}
     </>
   );

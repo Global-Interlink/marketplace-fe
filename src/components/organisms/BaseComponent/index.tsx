@@ -22,7 +22,6 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   const dispatch = useAppDispatch();
 
   const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
-  console.log("=accessToken", accessToken);
   React.useEffect(() => {
     if (accessToken) {
       const decoded = jwt_decode(accessToken) as {
@@ -50,7 +49,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
           }  `}
         >
           <div
-            className={`flex  flex-col container min-h-[100vh] pb-[1100px] lg:pb-[491px] mx-auto h-full
+            className={`flex flex-col container min-h-[100vh] pb-[500px] md:pb-[1100px] lg:pb-[491px] mx-auto h-full
            ${
              showBg404
                ? "lg:bg-bg404 lg:bg-left120 2xl:bg-left60 lg:bg-no-repeat bg-contain"

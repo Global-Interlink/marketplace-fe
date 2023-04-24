@@ -38,6 +38,8 @@ const Collection = () => {
   const [sort, setSort] = useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageItems, setCurrentPageItems] = useState(1);
+  const [listNFT, setListNFT] = useState<NFT[]>([]);
+  const [listedNFT, setListedNFT] = useState<NFT[]>([]);
 
   const handleFetchData = () => {
     setTimeout(() => {
@@ -50,7 +52,7 @@ const Collection = () => {
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
-
+  
   useEffect(() => {
     if (address && connected) {
       dispatch(
@@ -73,8 +75,6 @@ const Collection = () => {
   }, [address]);
 
   useEffect(() => {
-    console.log(currentPage);
-
     if (address) {
       dispatch(
         fetchMyListingNFTs({
@@ -86,20 +86,19 @@ const Collection = () => {
     }
   }, [currentPage, sort, address, connected, dispatch]);
 
-  const [listNFT, setListNFT] = useState<NFT[]>([]);
-  const [listedNFT, setListedNFT] = useState<NFT[]>([]);
-
   useEffect(() => {
     if (response?.data) {
-      setListNFT(getUnique([...listNFT, ...response?.data], 'id'));
+      setListNFT(getUnique([...listNFT, ...response?.data], "id"));
     }
-  }, [currentPageItems, response?.data])
+  }, [currentPageItems, response?.data]);
 
   useEffect(() => {
     if (listed?.data) {
-      setListedNFT(getUnique([...listedNFT, ...listed?.data], 'id'));
+      setListedNFT(getUnique([...listedNFT, ...listed?.data], "id"));
     }
-  }, [currentPageItems, listed?.data])
+  }, [currentPageItems, listed?.data]);
+
+  console.log('log');
 
   const tabs = [
     {
@@ -229,12 +228,12 @@ const Collection = () => {
                           src={"/img-default-acc.svg"}
                           width={78}
                           height={78}
-                          className="w-[44px] h-[44px] min-w-[44px] md:w-[78px] md:h-[78px] mt-2 md:mt-0 object-contain rounded-full"
+                          className="w-[44px] h-[44px] min-w-[44px] md:w-[78px] md:h-[78px] md:mt-0 object-contain rounded-full"
                         />
                       </div>
                       <div className="text-black dark:text-white">
                         {address && (
-                          <div className="border px-2 py-[2px] w-[150px] rounded border-black dark:border-white items-center flex space-x-[6px]">
+                          <div className="border px-2 py-[2px] rounded border-black dark:border-white items-center flex space-x-[6px]">
                             <p>{formatLongString(address)}</p>
                             <div
                               className="cursor-pointer"

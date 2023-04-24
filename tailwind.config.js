@@ -50,7 +50,7 @@ module.exports = {
       },
     },
     fontFamily: {
-      sans: ["Inter, sans-serif", { fontFeatureSettings: '"cv11", "ss01"' }],
+      sans: ["Lexend", "sans-serif"],
     },
   },
   plugins: [],

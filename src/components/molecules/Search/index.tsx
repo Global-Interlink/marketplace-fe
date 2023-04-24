@@ -39,10 +39,10 @@ const SearchForm = () => {
     <div className="relative flex" ref={ref}>
       <div
         className={` ${
-          isFocus ? "border" : ""
+          isFocus ? "border" : "border border-transparent"
         } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
       >
-        <Image src="/ic_search.svg" width={24} height={24} alt="ic-search"/>
+        <Image src="/ic_search.svg" width={20} height={20} alt="ic-search"/>
         <input
           placeholder="Search Collections and Creators"
           className="bg-transparent text-sm flex-1 outline-none dark:caret-white dark:text-white"

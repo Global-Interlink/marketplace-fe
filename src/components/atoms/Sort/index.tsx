@@ -24,7 +24,7 @@ const Sort: React.FC<Props> = ({ onChange, sort }) => {
   return (
     <div className="relative" ref={ref}>
       <div
-        className="border flex text-[#5B5B5B] dark:text-white bg-white border-primaryDark items-center justify-between dark:bg-[#514E89] w-[155px] h-10 px-5 rounded-full cursor-pointer"
+        className="flex text-xs leading-5 text-[#5B5B5B] dark:text-white bg-white items-center justify-between dark:bg-[#514E89] w-[155px] h-10 px-5 rounded-full cursor-pointer"
         onClick={() => {
           setOpen(true);
         }}
@@ -33,14 +33,14 @@ const Sort: React.FC<Props> = ({ onChange, sort }) => {
         <ArrowDown />
       </div>
       {open && (
-        <div className="absolute mt-2 bg-white dark:bg-[#514E89] border border-primaryDark shadow w-full rounded-[10px] z-10">
+        <div className="absolute mt-2 bg-white dark:bg-[#514E89] shadow w-full rounded-full z-10">
           <p
             onClick={() => {
               setOpen(false);
               onChange(currentSort === "DESC" ? "ASC" : "DESC");
               setCurrentSort(currentSort === "DESC" ? "ASC" : "DESC");
             }}
-            className="rounded-[10px] text-black px-5 py-3 hover:bg-slate-200 cursor-pointer dark:hover:bg-gray-600 dark:text-white"
+            className="flex text-xs leading-5 text-[#5B5B5B] dark:text-white bg-white items-center justify-between dark:bg-[#514E89] w-[155px] h-10 px-5 rounded-full cursor-pointer"
           >
             {currentSort !== "DESC" ? "Newest" : "Oldest"}
           </p>
