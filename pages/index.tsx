@@ -15,7 +15,7 @@ import { Collection } from "../src/api/types";
 const Home = () => {
   const dispatch = useAppDispatch();
   const { response, status } = useAppSelector((store) => store.home.homeData);
-  const LIMIT = 12;
+  const LIMIT = 1;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [listCollection, setListCollection] = React.useState<Collection[]>([]);
@@ -66,13 +66,7 @@ const Home = () => {
               <button
                 onClick={() => {
                   if (response?.meta.currentPage < response?.meta.totalPages) {
-                    dispatch(
-                      fetchListCollection({
-                        page: response?.meta.currentPage + 1,
-                        limit: LIMIT,
-                        sort: sort,
-                      })
-                    );
+                    setCurrentPage(currentPage + 1)
                   }
                 }}
                 className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
