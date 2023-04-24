@@ -5,10 +5,12 @@ import CollectionListSkeleton from "../src/components/molecules/CollectionListSk
 import Empty from "../src/components/molecules/EmptyView";
 import ListCollectionItem from "../src/components/molecules/ListCollectionItem";
 import BaseComponent from "../src/components/organisms/BaseComponent";
-import { fetchListCollection } from "../src/redux/home/homeSlice";
+import {
+  fetchListCollection,
+} from "../src/redux/home/homeSlice";
 import { useAppDispatch, useAppSelector } from "../src/redux/hook";
-import { Collection } from "../src/api/types";
 import { getUnique } from "../src/utils/localStorage";
+import { Collection } from "../src/api/types";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -27,9 +29,6 @@ const Home = () => {
         })
       );
   }, [currentPage, dispatch, sort]);
-
-  console.log('listCollection', listCollection);
-  
 
   React.useEffect(() => {
     if (response?.data) {
@@ -62,12 +61,18 @@ const Home = () => {
         )}
         {response &&
           response.data &&
-          currentPage < response.meta.totalPages && (
+          response.meta.currentPage < response.meta.totalPages && (
             <div className="mt-[70px] flex justify-center">
               <button
                 onClick={() => {
                   if (response?.meta.currentPage < response?.meta.totalPages) {
-                    setCurrentPage(response?.meta.currentPage + 1);
+                    dispatch(
+                      fetchListCollection({
+                        page: response?.meta.currentPage + 1,
+                        limit: LIMIT,
+                        sort: sort,
+                      })
+                    );
                   }
                 }}
                 className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
