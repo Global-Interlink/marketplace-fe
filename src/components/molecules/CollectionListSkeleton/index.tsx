@@ -1,7 +1,7 @@
 const CollectionListSkeleton = () => {
   return (
     <div>
-      <div className="flex items-center justify-end mt-10">
+      <div className="flex items-center justify-end md:mt-10">
         <div className="w-[155px] h-10 bg-slate-300 dark:bg-purple-500 rounded-full animate-pulse" />
       </div>
       <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">

@@ -19,20 +19,25 @@ const Home = () => {
   const [listCollection, setListCollection] = React.useState<Collection[]>([]);
 
   React.useEffect(() => {
-    dispatch(
-      fetchListCollection({
-        page: currentPage,
-        limit: LIMIT,
-        sort: sort,
-      })
-    );
+      dispatch(
+        fetchListCollection({
+          page: currentPage,
+          limit: LIMIT,
+          sort: sort,
+        })
+      );
   }, [currentPage, dispatch, sort]);
+
+  console.log('listCollection', listCollection);
+  
 
   React.useEffect(() => {
     if (response?.data) {
-      setListCollection(getUnique([...listCollection, ...response?.data], 'id'));
+      setListCollection(
+        getUnique([...listCollection, ...response?.data], "id")
+      );
     }
-  }, [setCurrentPage, response?.data])
+  }, [currentPage, response?.data]);
 
   return status === FetchStatus.idle || status === FetchStatus.pending ? (
     <BaseComponent>
@@ -43,13 +48,13 @@ const Home = () => {
   ) : (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <div className="flex items-center justify-end mt-10">
+        <div className="flex items-center justify-end md:mt-10">
           <Sort onChange={setSort} sort={sort} />
         </div>
         {response && response.data && response.data.length > 0 ? (
           <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
             {listCollection.map((i) => {
-              return <ListCollectionItem key={i.id} data={i} />;
+              return i?.creator && <ListCollectionItem key={i.id} data={i} />;
             })}
           </div>
         ) : (

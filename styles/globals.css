@@ -1,6 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    font-family: "Lexend", sans-serif !important;
+  }
+}
 
 span.external:after {
   content: url("/ic-badge-check.svg");
@@ -8,8 +15,10 @@ span.external:after {
   vertical-align: middle;
 }
 
-p.external:after {
+p.external::after {
   content: url("/ic-badge-check-h.svg");
+  position: absolute;
+  @apply md:-top-2;
   margin-left: 10px;
   vertical-align: middle;
 }
@@ -19,6 +28,7 @@ span.externalSP:after {
   margin-left: 4px;
   vertical-align: middle;
 }
+
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
@@ -101,12 +111,12 @@ a {
 }
 
 button.primaryButton {
-  background: linear-gradient(170deg, #f525d0 38.29%, #7a2cf3 86.6%);
+  background: linear-gradient(91.82deg, #f727d2 22.38%, #a52cef 108.71%);
 }
 
 button.primaryButton:hover {
-  background: linear-gradient(170deg, #f525d0 38.29%, #7a2cf3 86.6%);
-  box-shadow: inset 60px 60px 0px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(91.82deg, #f727d2 22.38%, #a52cef 108.71%);
+  box-shadow: 0px 2px 14px 4px rgba(224, 41, 219, 0.25);
 }
 
 button.hoverCommon:hover {
@@ -211,7 +221,6 @@ div.footerC {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 160px;
   display: flex !important;
   justify-content: flex-end;
 }
@@ -243,4 +252,24 @@ div.footerC {
   -webkit-box-orient: vertical;
   overflow: hidden;
   max-height: 80px;
+}
+
+.text-primary-footer {
+  background: linear-gradient(180deg, #f626d1 21.14%, #822cf1 80.69%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.footer {
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0px 4px 4px rgba(84, 84, 84, 0.25),
+    0px 4px 49px rgba(112, 112, 112, 0.12);
+}
+
+.dark .footer {
+  background: rgba(11, 11, 11, 0.45);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25),
+    0px -4px 50px 4px rgba(0, 0, 0, 0.3);
 }

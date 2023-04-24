@@ -20,7 +20,8 @@ import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
 import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import CollectionDetailTopSkeleton from "../../src/components/molecules/CollectionDetailTopSkeleton";
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs'
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { fetchListCollection } from "../../src/redux/home/homeSlice";
 
 const Collection = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const Collection = () => {
   const { response, status } = useAppSelector(
     (store) => store.collection.nftData
   );
-  const LIMIT = 20;
+  const LIMIT = 12;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [showMore, setShowMore] = React.useState(false);
@@ -77,11 +78,11 @@ const Collection = () => {
   }, [currentPage, id, sort]);
 
   React.useEffect(() => {
-    const divElement = document.querySelector('.collection-description');
+    const divElement = document.querySelector(".collection-description");
     if (divElement) {
       const divHeight = divElement.getBoundingClientRect().height;
       if (divHeight >= 72) {
-        setIsShow(true)
+        setIsShow(true);
       }
     }
   }, [collectionData]);
@@ -105,11 +106,10 @@ const Collection = () => {
                     className="w-8 min-w-[32px] h-8 mt-2 md:mt-0 md:min-w-[64px] md:w-[64px] md:h-[64px] object-cover rounded-full"
                   />
                 </div>
-
                 <div className="w-full">
                   <div className="w-full flex items-center justify-between">
                     <div>
-                      <p className="external text-[32px] text-black dark:text-white font-display">
+                      <p className="external text-xl md:text-[32px] font-semibold text-black dark:text-white font-display relative">
                         {collectionData?.name}
                       </p>
                     </div>
@@ -118,7 +118,7 @@ const Collection = () => {
                     </div>
                   </div>
 
-                  <div className="flex text-black dark:text-white">
+                  <div className="flex text-black dark:text-white md:mt-2">
                     Items {Number(collectionData?.totalNfts).toLocaleString()}
                   </div>
                   <div className="flex lg:hidden items-center space-x-3 mt-[28px]">
@@ -140,9 +140,15 @@ const Collection = () => {
                   {collectionData.description}
                 </ReactMarkdown>
               </div>
-                <button className={`${isShow ? 'flex' : 'hidden'} gap-1 justify-between items-center text-[#f626d1] py-2 px-3 rounded-[100px] mx-auto text-sm `} onClick={() => setShowMore(!showMore)}>
-                  {showMore ? "Show less" : "Show more"} {showMore ? <BsChevronUp /> : <BsChevronDown />}
-                </button>
+              <button
+                className={`${
+                  isShow ? "flex" : "hidden"
+                } gap-1 justify-between items-center text-[#f626d1] py-2 px-3 rounded-[100px] mx-auto text-sm `}
+                onClick={() => setShowMore(!showMore)}
+              >
+                {showMore ? "Show less" : "Show more"}{" "}
+                {showMore ? <BsChevronUp /> : <BsChevronDown />}
+              </button>
               <Image
                 src={
                   collectionData.banner && validURL(collectionData.banner)
@@ -158,7 +164,7 @@ const Collection = () => {
           </>
         )}
 
-        <div className="mt-[114px]">
+        <div className="mt-10 md:mt-[114px]">
           {status === FetchStatus.idle || status === FetchStatus.pending ? (
             <NFTListSkeleton />
           ) : (
