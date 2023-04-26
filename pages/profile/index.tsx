@@ -26,9 +26,7 @@ const Collection = () => {
   const { response, status } = useAppSelector(
     (store) => store.profie.profileData
   );
-  const { response: user, status: userStatus } = useAppSelector(
-    (store) => store.profie.userData
-  );
+  const { response: user } = useAppSelector((store) => store.profie.userData);
   const { response: listed, status: listedStatus } = useAppSelector(
     (store) => store.profie.listedData
   );
@@ -52,7 +50,7 @@ const Collection = () => {
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (address && connected) {
       dispatch(
@@ -98,8 +96,6 @@ const Collection = () => {
     }
   }, [currentPageItems, listed?.data]);
 
-  console.log('log');
-
   const tabs = [
     {
       label: (
@@ -112,7 +108,7 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {status === FetchStatus.pending ? (
+          {status === FetchStatus.pending && currentPageItems === 1 ? (
             <NFTListSkeleton hideTab />
           ) : (
             <div>
@@ -136,18 +132,24 @@ const Collection = () => {
               {response &&
                 response.data &&
                 currentPageItems < response?.meta.totalPages && (
-                  <div className="mt-[70px] flex justify-center">
-                    <button
-                      onClick={() => {
-                        if (currentPageItems < response?.meta.totalPages) {
-                          setCurrentPageItems(currentPageItems + 1);
-                        }
-                      }}
-                      className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                    >
-                      Load more
-                    </button>
-                  </div>
+                  <>
+                    {status === FetchStatus.pending && currentPageItems > 1 ? (
+                      <NFTListSkeleton hideTab />
+                    ) : (
+                      <div className="mt-[70px] flex justify-center">
+                        <button
+                          onClick={() => {
+                            if (currentPageItems < response?.meta.totalPages) {
+                              setCurrentPageItems(currentPageItems + 1);
+                            }
+                          }}
+                          className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
+                        >
+                          Load more
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
             </div>
           )}
@@ -166,7 +168,7 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {listedStatus === FetchStatus.pending ? (
+          {listedStatus === FetchStatus.pending && currentPageItems === 1 ? (
             <NFTListSkeleton hideTab />
           ) : (
             <div>
@@ -190,18 +192,24 @@ const Collection = () => {
               {listed &&
                 listed.data &&
                 currentPage < listed?.meta.totalPages && (
-                  <div className="mt-[70px] flex justify-center">
-                    <button
-                      onClick={() => {
-                        if (currentPage < listed?.meta.totalPages) {
-                          setCurrentPage(currentPage + 1);
-                        }
-                      }}
-                      className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                    >
-                      Load more
-                    </button>
-                  </div>
+                  <>
+                    {status === FetchStatus.pending && currentPageItems > 1 ? (
+                      <NFTListSkeleton hideTab />
+                    ) : (
+                      <div className="mt-[70px] flex justify-center">
+                        <button
+                          onClick={() => {
+                            if (currentPage < listed?.meta.totalPages) {
+                              setCurrentPage(currentPage + 1);
+                            }
+                          }}
+                          className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
+                        >
+                          Load more
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
             </div>
           )}
