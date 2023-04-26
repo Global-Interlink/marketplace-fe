@@ -21,7 +21,6 @@ import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import CollectionDetailTopSkeleton from "../../src/components/molecules/CollectionDetailTopSkeleton";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { fetchListCollection } from "../../src/redux/home/homeSlice";
 
 const Collection = () => {
   const router = useRouter();
@@ -81,7 +80,8 @@ const Collection = () => {
     const divElement = document.querySelector(".collection-description");
     if (divElement) {
       const divHeight = divElement.getBoundingClientRect().height;
-      if (divHeight >= 72) {
+      console.log(divHeight);
+      if (divHeight > 72) {
         setIsShow(true);
       }
     }
@@ -109,11 +109,23 @@ const Collection = () => {
                 <div className="w-full">
                   <div className="w-full flex items-center justify-between">
                     <div>
-                      <p className="external text-xl md:text-[32px] font-semibold text-black dark:text-white font-display relative">
-                        {collectionData?.name}
+                      <p
+                        className="text-xl md:text-[32px] leading-8 font-semibold text-black dark:text-white font-display relative line-clamp-2"
+                        title={collectionData?.name}
+                      >
+                        <span>{collectionData?.name}</span>
+                        <span>
+                          <Image
+                            src={"/ic-badge-check-h.svg"}
+                            alt={""}
+                            width={20}
+                            height={20}
+                            className="inline ml-2 mb-5"
+                          />
+                        </span>
                       </p>
                     </div>
-                    <div className="hidden lg:flex items-center space-x-3 md:space-x-6">
+                    <div className="lg:flex items-center space-x-3 md:space-x-6">
                       <SocialView response={collectionData} />
                     </div>
                   </div>
@@ -129,7 +141,17 @@ const Collection = () => {
             </div>
             <div className="mt-[30px]">
               <div
-                className={`collection-description text-black dark:text-white transition-all duration-300 ${
+                className={"collection-description text-transparent absolute -z-10"}
+              >
+                <ReactMarkdown
+                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {collectionData.description}
+                </ReactMarkdown>
+              </div>
+              <div
+                className={` text-black dark:text-white transition-all duration-300 ${
                   showMore ? "" : "ellipsis-multi"
                 }`}
               >

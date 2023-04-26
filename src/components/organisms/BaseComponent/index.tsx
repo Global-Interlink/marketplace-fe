@@ -18,7 +18,7 @@ interface Props {
 }
 const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   const { isOpenMenu, success } = useAppSelector((store) => store.app);
-  const { disconnect } = useWallet();
+  const { disconnect, connected } = useWallet();
   const dispatch = useAppDispatch();
 
   const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
@@ -60,34 +60,6 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
             {children}
           </div>
         </div>
-        {isOpenMenu && (
-          <div
-            id="menu-sp"
-            className="absolute bg-white dark:bg-gray-800 top-0 z-10 h-full w-full space-y-4 p-4"
-          >
-            <div className="flex justify-end">
-              <button
-                onClick={() => {
-                  dispatch(toggleMenu());
-                }}
-              >
-                <Image
-                  width={24}
-                  height={24}
-                  src="/ic-close.svg"
-                  alt="ic-close"
-                />
-              </button>
-            </div>
-            <SearchForm />
-            <div className="flex w-full justify-center">
-              <ConnectButton
-                label="Connect Wallet"
-                className="primaryButton !rounded-md"
-              />
-            </div>
-          </div>
-        )}
         <div className="absolute bottom-0 w-full">
           <Footer />
         </div>
@@ -101,6 +73,35 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
           />
         )}
       </div>
+      {isOpenMenu && (
+        <div
+          id="menu-sp"
+          className="fixed bg-white dark:bg-gray-800 top-0 w-full space-y-4 p-4 z-20 h-screen"
+        >
+          <div className="flex justify-end">
+            <button
+              onClick={() => {
+                dispatch(toggleMenu());
+              }}
+            >
+              <Image
+                width={24}
+                height={24}
+                src="/ic-close.svg"
+                alt="ic-close"
+              />
+            </button>
+          </div>
+          <SearchForm />
+          <div className="flex w-full justify-center items-center">
+            <ConnectButton
+              label="Connect Wallet"
+              className="primaryButton !rounded-md"
+            />
+          </div>
+          {connected && <button className="py-2 px-4 rounded-full primaryButton mx-auto flex" onClick={disconnect}>Disconnect</button>}
+        </div>
+      )}
     </div>
   );
 };

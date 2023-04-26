@@ -247,11 +247,11 @@ div.footerC {
 }
 
 .ellipsis-multi {
+  height: 72px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-height: 80px;
 }
 
 .text-primary-footer {
