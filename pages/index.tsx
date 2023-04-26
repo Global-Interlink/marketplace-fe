@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from "../src/redux/hook";
 const Home = () => {
   const dispatch = useAppDispatch();
   const { response, status } = useAppSelector((store) => store.home.homeData);
-  const LIMIT = 1;
+  const LIMIT = 12;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
 
