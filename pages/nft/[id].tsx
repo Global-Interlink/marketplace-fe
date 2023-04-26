@@ -185,7 +185,7 @@ const NFT = () => {
               )}
               <div className="bg-white border shadow dark:bg-[#2B294F] dark:border-[#3D2662] p-6 rounded-[20px] md:flex items-center justify-between mt-6">
                 {nftData?.saleStatus ? (
-                  <div className="text-black dark:text-white flex gap-2 md:block">
+                  <div className="text-black dark:text-white flex flex-col">
                     <p className="text-[20px]">Current Price :</p>
                     <p className="text-[20px] md:text-[24px] font-bold">
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
@@ -201,7 +201,7 @@ const NFT = () => {
                   !nftData?.saleStatus &&
                   nftData.owner.address.address === address && (
                     <button
-                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full md:block flex justify-center items-center mx-auto mt-5"
+                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full  w-full mt-5 md:mt-0 md:w-auto"
                       onClick={() => {
                         if (nftData.collection) {
                           setOpenListing(true);
@@ -218,7 +218,7 @@ const NFT = () => {
                   nftData.owner.address.address !== address && (
                     <button
                       disabled={isLoading}
-                      className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full md:block flex justify-center items-center mx-auto mt-5"
+                      className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full  w-full mt-5 md:mt-0 md:w-auto"
                       onClick={() => {
                         if (nftData) {
                           handleBuyNow(
@@ -242,7 +242,7 @@ const NFT = () => {
                   nftData.owner.address.address === address &&
                   nftData.saleStatus.onSale && (
                     <button
-                      className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full md:block flex justify-center items-center mx-auto mt-5"
+                      className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full w-full mt-5 md:mt-0 md:w-auto"
                       onClick={() => {
                         setOpenDelist(true);
                       }}
@@ -367,8 +367,8 @@ const NFT = () => {
                 dispatch(
                   setSuccess({
                     isOpen: true,
-                    title: "Congratulations !",
-                    message: "Your item has been activated for sale",
+                    title: "List Success",
+                    message: "Your item has been listed!",
                   })
                 );
               }}
