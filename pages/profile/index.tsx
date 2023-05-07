@@ -102,7 +102,7 @@ const Collection = () => {
         <div className="flex items-center space-x-[6px]">
           <p>My items</p>
           <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
-            {user?.totalInMyWallet}
+            {response?.meta.totalItems}
           </span>
         </div>
       ),
@@ -162,7 +162,7 @@ const Collection = () => {
         <div className="flex items-center space-x-[6px]">
           <p>Listing</p>
           <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
-            {user?.listedItems}
+            {listed?.meta.totalItems}
           </span>
         </div>
       ),
