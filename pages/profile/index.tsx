@@ -94,7 +94,7 @@ const Collection = () => {
     if (listed?.data) {
       setListedNFT(getUnique([...listedNFT, ...listed?.data], "id"));
     }
-  }, [currentPageItems, listed?.data]);
+  }, [currentPage, listed?.data]);
 
   const tabs = [
     {
@@ -168,7 +168,7 @@ const Collection = () => {
       ),
       children: (
         <div>
-          {listedStatus === FetchStatus.pending && currentPageItems === 1 ? (
+          {listedStatus === FetchStatus.pending && currentPage === 1 ? (
             <NFTListSkeleton hideTab />
           ) : (
             <div>
@@ -193,7 +193,7 @@ const Collection = () => {
                 listed.data &&
                 currentPage < listed?.meta.totalPages && (
                   <>
-                    {status === FetchStatus.pending && currentPageItems > 1 ? (
+                    {listedStatus === FetchStatus.pending && currentPage > 1 ? (
                       <NFTListSkeleton hideTab />
                     ) : (
                       <div className="mt-[70px] flex justify-center">
