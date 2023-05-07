@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Collection } from "../../../api/types";
 import ImgIcon from "../../atoms/Icons/ImgIcon";
 import { validURL } from "../ListNFTItem";
+import ICBadgeCheck from "../../atoms/Icons/ICBadgeCheck";
 
 interface Props {
   data: Collection;
@@ -31,12 +32,10 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
             className="rounded-full w-[52px] h-[52px] min-w-[52px] object-cover"
           />
           <div className="truncate text-primary dark:text-white">
-            <span
-              title={data.name}
-              className="text-primary truncate dark:text-white external"
-            >
-              {data.name}
-            </span>
+            <div className="flex items-center space-x-1">
+              <p className="truncate">{data.name}</p>
+              <ICBadgeCheck />
+            </div>
             <div className="flex items-center text-description dark:text-white space-x-1">
               <p>{data.totalNfts} items</p>
               <ImgIcon />

@@ -108,24 +108,15 @@ const Collection = () => {
                 </div>
                 <div className="w-full">
                   <div className="w-full flex items-center justify-between">
-                    <div>
+                    <div className="md:w-4/5">
                       <p
-                        className="text-xl md:text-[32px] leading-8 font-semibold text-black dark:text-white font-display relative line-clamp-2"
+                        className="text-xl md:text-[32px] external leading-8 font-semibold text-black dark:text-white font-display break-words line-clamp-3"
                         title={collectionData?.name}
                       >
-                        <span>{collectionData?.name}</span>
-                        <span>
-                          <Image
-                            src={"/ic-badge-check-h.svg"}
-                            alt={""}
-                            width={20}
-                            height={20}
-                            className="inline ml-2 mb-5"
-                          />
-                        </span>
+                        {collectionData?.name}
                       </p>
                     </div>
-                    <div className="lg:flex items-center space-x-3 md:space-x-6">
+                    <div className="hidden lg:flex items-center space-x-3 md:space-x-6">
                       <SocialView response={collectionData} />
                     </div>
                   </div>
@@ -141,7 +132,9 @@ const Collection = () => {
             </div>
             <div className="mt-[30px]">
               <div
-                className={"collection-description text-transparent absolute -z-10"}
+                className={
+                  "collection-description text-transparent absolute -z-10"
+                }
               >
                 <ReactMarkdown
                   rehypePlugins={[rehypeRaw]}

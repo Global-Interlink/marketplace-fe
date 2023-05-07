@@ -16,11 +16,8 @@ span.external:after {
 }
 
 p.external::after {
-  content: url("/ic-badge-check-h.svg");
-  position: absolute;
-  @apply md:-top-2;
+  content: url("/ic-badge-check.svg");
   margin-left: 10px;
-  vertical-align: middle;
 }
 
 span.externalSP:after {
