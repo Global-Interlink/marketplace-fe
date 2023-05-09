@@ -1,5 +1,4 @@
 import { useWallet } from "@suiet/wallet-kit";
-import { Spin } from "antd";
 import Image from "next/image";
 import React from "react";
 import { NFT } from "../../../api/types";
@@ -13,7 +12,6 @@ import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
 import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
-import { getRPCConnection } from "../../../utils/common";
 interface Props {
   data?: NFT;
   onListSuccess: () => void;
