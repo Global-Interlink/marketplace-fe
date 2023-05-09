@@ -29,7 +29,6 @@ import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { APIFunctions, FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
-import { getRPCConnection } from "../../src/utils/common";
 
 const NFT = () => {
   const router = useRouter();
