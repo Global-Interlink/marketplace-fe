@@ -16,11 +16,14 @@ export const getConnectedChain = (
     case "sui:mainnet":
       return "MAINNET";
     default:
-      return "DEVNET";
+      return undefined;
   }
 };
 
-export const getRPCConnection = (mode: string) => {
+export const getRPCConnection = (mode?: string) => {
+  if (mode === "DEVNET") {
+    return new JsonRpcProvider(devnetConnection);
+  }
   if (mode === "TESTNET") {
     return new JsonRpcProvider(testnetConnection);
   }
@@ -29,5 +32,5 @@ export const getRPCConnection = (mode: string) => {
       rpcClient: new JsonRpcClient(process.env.NEXT_PUBLIC_SUI_MAINNET_RPC),
     });
   }
-  return new JsonRpcProvider(devnetConnection);
+  return undefined;
 };

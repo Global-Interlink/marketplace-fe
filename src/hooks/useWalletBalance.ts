@@ -13,11 +13,11 @@ const useWalletBalance = (
 
   const getWalletBalance = async (
     address: string,
-    chainConnected: "DEVNET" | "TESTNET" | "MAINNET",
+    chainConnected: "DEVNET" | "TESTNET" | "MAINNET" | undefined,
     coinType?: string
   ) => {
     const provider = getRPCConnection(chainConnected);
-    const object = await provider.getBalance({
+    const object = await provider?.getBalance({
       owner: address,
       coinType: coinType,
     });
