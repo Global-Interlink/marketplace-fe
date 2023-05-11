@@ -27,9 +27,9 @@ export const getRPCConnection = (mode?: string) => {
   if (mode === "TESTNET") {
     return new JsonRpcProvider(testnetConnection);
   }
-  if (mode === "MAINNET" && process.env.NEXT_PUBLIC_SUI_MAINNET_RPC) {
+  if (mode === "MAINNET" && process.env.NEXT_PUBLIC_SUI_NETWORK_RPC) {
     return new JsonRpcProvider(undefined, {
-      rpcClient: new JsonRpcClient(process.env.NEXT_PUBLIC_SUI_MAINNET_RPC),
+      rpcClient: new JsonRpcClient(process.env.NEXT_PUBLIC_SUI_NETWORK_RPC),
     });
   }
   return undefined;

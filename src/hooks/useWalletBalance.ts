@@ -6,41 +6,37 @@ const useWalletBalance = (
   chainId?: string,
   coinType?: string
 ) => {
-  const chainConnected = getConnectedChain(chainId);
+  console.log("=chain", chainId);
   const [fetching, setFetching] = useState(false);
   const [totalBalance, setTotalBalance] = useState(BigInt(0));
   const [fetched, setFetched] = useState(false);
-
-  const getWalletBalance = async (
-    address: string,
-    chainConnected: "DEVNET" | "TESTNET" | "MAINNET" | undefined,
-    coinType?: string
-  ) => {
-    const provider = getRPCConnection(chainConnected);
-    const object = await provider?.getBalance({
-      owner: address,
-      coinType: coinType,
-    });
-    return object;
+  const getWalletBalance = async (address: string, coinType?: string) => {
+    try {
+      const chainConnected = getConnectedChain(chainId);
+      const provider = getRPCConnection(chainConnected);
+      const object = await provider?.getBalance({
+        owner: address,
+        coinType: coinType,
+      });
+      return object;
+    } catch (e) {
+      console.log("=e", e);
+    }
   };
 
   const fetchBalance = async (address: string, coinType?: string) => {
-    const b = (await getWalletBalance(
-      address,
-      chainConnected,
-      coinType
-    )) as any;
-    setTotalBalance(b.totalBalance);
+    const b = (await getWalletBalance(address, coinType)) as any;
+    setTotalBalance(b?.totalBalance);
     setFetched(true);
     setTimeout(() => {
       setFetching(!fetching);
-    }, 5000);
+    }, 1000);
   };
   useEffect(() => {
-    if (address) {
+    if (address && chainId) {
       fetchBalance(address, coinType);
     }
-  }, [coinType, address, fetching]);
+  }, [coinType, address, fetching, chainId]);
   return {
     totalBalance,
     fetched,
