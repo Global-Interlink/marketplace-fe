@@ -5,8 +5,22 @@ import {
   testnetConnection,
 } from "@mysten/sui.js";
 
-export const getRPCConnection = () => {
-  const mode = process.env.NEXT_PUBLIC_RPC_CONNECTION;
+export const getConnectedChain = (
+  chain?: "sui:devnet" | "sui:testnet" | string
+) => {
+  switch (chain) {
+    case "sui:devnet":
+      return "DEVNET";
+    case "sui:testnet":
+      return "TESTNET";
+    case "sui:mainnet":
+      return "MAINNET";
+    default:
+      return "DEVNET";
+  }
+};
+
+export const getRPCConnection = (mode: string) => {
   if (mode === "TESTNET") {
     return new JsonRpcProvider(testnetConnection);
   }

@@ -12,6 +12,7 @@ import { Dropdown, Popover } from "antd";
 import SearchForm from "../../molecules/Search";
 import axios from "axios";
 import { toast } from "react-toastify";
+import AccountBalance from "../../molecules/AccountBalance";
 
 const Header = () => {
   const { connected, address, chain, disconnect, signMessage } = useWallet();
@@ -162,10 +163,7 @@ const Header = () => {
                   showArrow={false}
                 >
                   <div>
-                    <ConnectButton
-                      label="Connect wallet"
-                      className="primaryButton connect-wallet-btn"
-                    />
+                    <AccountBalance />
                   </div>
                 </Popover>
               </>
