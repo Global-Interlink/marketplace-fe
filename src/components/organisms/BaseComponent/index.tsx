@@ -93,7 +93,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
             </button>
           </div>
           <SearchForm />
-          <div className="flex w-full justify-center items-center">
+          <div className="flex w-full justify-center items-center bg-transparent">
             <ConnectButton
               label="Connect Wallet"
               className="primaryButton !rounded-md"

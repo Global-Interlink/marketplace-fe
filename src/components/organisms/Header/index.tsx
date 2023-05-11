@@ -109,7 +109,7 @@ const Header = () => {
               <Image src="/logo.svg" alt="logo" width={127} height={52} />
             </div>
             <div className="block md:hidden w-[127px] h-[52px] object-cover">
-              <Image src="/logo.svg" alt="logo" width={103} height={23} />
+              <Image src="/logo.png" alt="logo" width={103} height={23} />
             </div>
           </Link>
         </div>
