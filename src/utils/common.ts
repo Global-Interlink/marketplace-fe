@@ -34,3 +34,7 @@ export const getRPCConnection = (mode?: string) => {
   }
   return undefined;
 };
+
+export const getSupportEnv = () => {
+  return process.env.NEXT_PUBLIC_RPC_CONNECTION || "TESTNET";
+};
