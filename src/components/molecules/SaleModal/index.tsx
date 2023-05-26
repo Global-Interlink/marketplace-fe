@@ -41,7 +41,11 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
       const txb = new TransactionBlock();
       txb.moveCall({
         target: `${packageObjectId}::${contractModule}::list`,
-        arguments: [txb.pure(marketId), txb.pure(nftId), txb.pure(String(price * SUI_DECIMAL))],
+        arguments: [
+          txb.pure(marketId),
+          txb.pure(nftId),
+          txb.pure(String(price * SUI_DECIMAL)),
+        ],
         typeArguments: [nftType],
       });
       txb.setGasBudget(
@@ -113,7 +117,7 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
 
         <div className="mt-10 mb-10 space-y-5">
           <p className="text-xl font-bold">Price</p>
-          <div className="flex items-center space-x-10">
+          <div className="flex items-start space-x-10">
             <div className="flex items-center space-x-3 bg-white dark:bg-[#514E89] w-[146px] rounded-md h-12 justify-center">
               <Image src={"/ic-sui.svg"} alt="sui" width={18} height={28} />
               <p className="text-black dark:text-white font-medium">SUI</p>
@@ -130,8 +134,12 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
                   }
                 }}
               />
+              {Number(price) <= 0 && (
+                <p className="text-error">Price must be greater than 0</p>
+              )}
             </div>
           </div>
+
           <p className="text-xl font-bold">Fee</p>
           <div className="bg-white dark:bg-[#514E89] border dark:border-[#897DBC] py-[10px] px-[28px] rounded-[20px]">
             <div className="flex items-center justify-between">
@@ -148,8 +156,8 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
         {/* footer */}
         <div className="font-light flex items-center justify-center space-x-5 mb-11">
           <button
-            className="hoverCommon primaryButton  text-white font-medium w-1/2 h-12 rounded-full"
-            disabled={!connected || isLoading}
+            className="hoverCommon primaryButton disabled:cursor-not-allowed  text-white font-medium w-1/2 h-12 rounded-full"
+            disabled={!connected || isLoading || Number(price) <= 0}
             onClick={() => {
               if (item?.collection) {
                 handleListing(

@@ -1,5 +1,5 @@
 import { useWallet } from "@suiet/wallet-kit";
-import Image from "next/image";
+import { Image } from "antd";
 import React from "react";
 import { NFT } from "../../../api/types";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -107,24 +107,38 @@ const ListNFTItem: React.FC<Props> = ({
       toast.error(e.message);
     }
   };
+  const isShowList =
+    data &&
+    !data?.saleStatus &&
+    data.owner?.address?.address === address
+  const isShowBuy =
+    data?.saleStatus &&
+    data.saleStatus.onSale &&
+    data.owner?.address?.address !== address;
+  const isShowDelist =
+    data?.saleStatus &&
+    data.owner?.address?.address === address &&
+    data.saleStatus.onSale;
   return (
     <div>
       <div className="flex flex-col w-full rounded-[20px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
-        <Image
-          src={
-            data?.image && validURL(data?.image) ? data?.image : "/default.jpeg"
-          }
-          width={500}
-          height={500}
-          className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover cursor-pointer"
-          alt="mock"
-          onClick={(e: any) => {
-            router.push(`/nft/${data?.id}`);
-          }}
-          onErrorCapture={() => {
-            console.log("==error");
-          }}
-        />
+        <div className="flex w-full">
+          <Image
+            src={
+              data?.image && validURL(data?.image)
+                ? data?.image
+                : "/default.jpeg"
+            }
+            className="rounded-t-[20px] object-cover cursor-pointer  aspect-[310/216] "
+            height={"auto"}
+            alt="mock"
+            preview={false}
+            onClick={(e: any) => {
+              router.push(`/nft/${data?.id}`);
+            }}
+            fallback="/default.jpeg"
+          />
+        </div>
         <div className="flex p-5 space-x-[14px]  rounded-b-[20px]">
           <div className="w-full">
             <div
@@ -150,63 +164,60 @@ const ListNFTItem: React.FC<Props> = ({
                 <div className="flex-1" />
               )}
               <div className="flex-1">
-                {data &&
-                  !data?.saleStatus &&
-                  data.owner?.address?.address === address && (
-                    <button
-                      disabled={!connected || isLoading}
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
-                      onClick={() => {
-                        if (data.collection) {
-                          setOpenListing(true);
-                        } else {
-                          toast.error("This NFT isn't supported on SAKAYA");
-                        }
-                      }}
-                    >
-                      List Now
-                    </button>
-                  )}
-                {data?.saleStatus &&
-                  data.saleStatus.onSale &&
-                  data.owner?.address?.address !== address && (
-                    <button
-                      disabled={!connected || isLoading}
-                      className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
-                      onClick={() => {
-                        if (data) {
-                          handleBuyNow(
-                            data?.onChainId,
-                            data?.nftType,
-                            Number(data.saleStatus?.price) * SUI_DECIMAL
-                          );
-                        }
-                      }}
-                    >
-                      {isLoading ? (
-                        <LoadingOutlined className="text-white" size={20} />
-                      ) : (
-                        "Buy Now"
-                      )}
-                    </button>
-                  )}
-                {data?.saleStatus &&
-                  data.owner?.address?.address === address &&
-                  data.saleStatus.onSale && (
-                    <button
-                      disabled={!connected || isLoading}
-                      className="primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
-                      onClick={(e: any) => {
-                        setOpenDelist(true);
-                      }}
-                    >
-                      {isLoading ? (
-                        <LoadingOutlined className="text-white" size={20} />
-                      ) : (
-                        "Delist"
-                      )}
-                    </button>
-                  )}
+                {isShowList && (
+                  <button
+                    disabled={!connected || isLoading}
+                    className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
+                    onClick={() => {
+                      if (data.collection) {
+                        setOpenListing(true);
+                      } else {
+                        toast.error("This NFT isn't supported on SAKAYA");
+                      }
+                    }}
+                  >
+                    List Now
+                  </button>
+                )}
+                {isShowBuy && (
+                  <button
+                    disabled={!connected || isLoading}
+                    className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
+                    onClick={() => {
+                      if (data) {
+                        handleBuyNow(
+                          data?.onChainId,
+                          data?.nftType,
+                          Number(data.saleStatus?.price) * SUI_DECIMAL
+                        );
+                      }
+                    }}
+                  >
+                    {isLoading ? (
+                      <LoadingOutlined className="text-white" size={20} />
+                    ) : (
+                      "Buy Now"
+                    )}
+                  </button>
+                )}
+                {isShowDelist && (
+                  <button
+                    disabled={!connected || isLoading}
+                    className="primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
+                    onClick={(e: any) => {
+                      setOpenDelist(true);
+                    }}
+                  >
+                    {isLoading ? (
+                      <LoadingOutlined className="text-white" size={20} />
+                    ) : (
+                      "Delist"
+                    )}
+                  </button>
+                )}
+                {!isShowList && !isShowBuy && !isShowDelist && (
+                  <div className="h-[36px]" />
+                )}
               </div>
             </div>
           </div>
