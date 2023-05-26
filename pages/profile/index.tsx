@@ -17,7 +17,7 @@ import {
   fetchMyListingNFTs,
   fetchMyNFTs,
   fetchUser,
-  clear
+  clear,
 } from "../../src/redux/profile/profileSlice";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
@@ -54,6 +54,12 @@ const Collection = () => {
       dispatch(clear());
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!connected) {
+      dispatch(clear());
+    }
+  }, [connected]);
 
   useEffect(() => {
     if (address && connected) {
