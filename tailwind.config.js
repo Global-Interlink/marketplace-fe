@@ -33,6 +33,7 @@ module.exports = {
           "linear-gradient(159.23deg, #FFFFFF 12.5%, rgba(255, 255, 255, 0.3) 86.07%);",
         bgProperty: "linear-gradient(#1B153E 100%, #4F2A8A 25% );",
         bgLeaderBoard: "url('/leader-board.png')",
+        bgWeeklyReward: "url('/weekly-reward.png')",
       },
       scale: {
         101: "1.01",

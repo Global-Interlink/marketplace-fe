@@ -4,13 +4,15 @@ import MoreTicketItem from "../../src/components/molecules/MoreTicketItem";
 import TodayTaskItem from "../../src/components/molecules/TodayTaskItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import ListRanking from "../../src/components/organisms/ListRanking";
+import RewardItem from "../../src/components/molecules/RewardItem";
+import ListReward from "../../src/components/organisms/ListReward";
 
 const Campaign = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <div className="w-full flex space-x-12 text-gray-900">
-          <div className="w-1/2 p-8 bg-white rounded-lg campaignboxshadow">
+        <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-12 text-gray-900">
+          <div className="w-full lg:w-1/2 p-8 bg-white rounded-lg campaignboxshadow">
             <p className="text-[30px] font-medium">Daily Task</p>
             <p className="text-gray-500">
               Track your progress to get more tickets for weekly reward pool
@@ -62,7 +64,7 @@ const Campaign = () => {
               </div>
             </div>
           </div>
-          <div className="w-1/2 p-8 bg-white rounded-lg campaignboxshadow bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]">
+          <div className="w-full lg:w-1/2 p-8 bg-white rounded-lg campaignboxshadow bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]">
             <p className="text-[30px] font-medium">Leaderboard</p>
             <p className="mt-4 text-gray-700 mb-2">Weekly Giveaway end in</p>
             <CountDown startTime={1687648015000} />
@@ -78,7 +80,12 @@ const Campaign = () => {
           </div>
         </div>
         <div className="mt-10 text-gray-900 p-8 h-[1056px] bg-white campaignboxshadow rounded-[18px]">
-          <p className="text-[30px] font-medium">Daily Task</p>
+          <p className="text-[30px] font-medium">Weekly Reward (12/6 - 19/6)</p>
+          <div className="bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px]  bg-no-repeat mt-10 bg-[length:675px_675px]">
+            <ListReward rank="gold" />
+            <ListReward rank="silver" />
+            <ListReward rank="bronze" />
+          </div>
         </div>
       </div>
     </BaseComponent>
