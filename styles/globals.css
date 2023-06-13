@@ -284,6 +284,14 @@ div.footerC {
   background-color: #2b294b !important;
 }
 
+.gradientColor {
+  background: linear-gradient(91.82deg, #f727d2 22.38%, #a52cef 108.71%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
 .accountBalanceAddress {
   font-size: 12px;
   line-height: 16px;
@@ -292,4 +300,8 @@ div.footerC {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
+}
+
+.campaignboxshadow {
+  box-shadow: 32px 32px 64px rgba(52, 64, 84, 0.08);
 }
