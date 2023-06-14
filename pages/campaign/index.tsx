@@ -1,25 +1,24 @@
-import { Image } from "antd";
 import CountDown from "../../src/components/molecules/Countdown";
 import MoreTicketItem from "../../src/components/molecules/MoreTicketItem";
 import TodayTaskItem from "../../src/components/molecules/TodayTaskItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import ListRanking from "../../src/components/organisms/ListRanking";
-import RewardItem from "../../src/components/molecules/RewardItem";
 import ListReward from "../../src/components/organisms/ListReward";
+import WeeklyProgress from "../../src/components/molecules/WeeklyProgress";
 
 const Campaign = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
         <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-12 text-gray-900">
-          <div className="w-full lg:w-1/2 p-8 bg-white rounded-lg campaignboxshadow">
+          <div className="w-full lg:w-1/2 p-4 md:p-8 bg-white rounded-lg campaignboxshadow">
             <p className="text-[30px] font-medium">Daily Task</p>
             <p className="text-gray-500">
               Track your progress to get more tickets for weekly reward pool
             </p>
             <div className="mt-4">
               <p>Weekly progression</p>
-              {/* TODO */}
+              <WeeklyProgress />
             </div>
             <div className="mt-5">
               <p>Today tasks</p>
@@ -64,10 +63,10 @@ const Campaign = () => {
               </div>
             </div>
           </div>
-          <div className="w-full lg:w-1/2 p-8 bg-white rounded-lg campaignboxshadow bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]">
+          <div className="w-full lg:w-1/2 mp-4 md:p-8 bg-white rounded-lg campaignboxshadow bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]">
             <p className="text-[30px] font-medium">Leaderboard</p>
             <p className="mt-4 text-gray-700 mb-2">Weekly Giveaway end in</p>
-            <CountDown startTime={1687648015000} />
+            <CountDown startTime={1687948015000} />
             <p className="mt-4 text-gray-700">Current Prizepool</p>
             <p className="gradientColor !leading-[60px] !text-[48px] font-semibold">
               10,000 SUI
