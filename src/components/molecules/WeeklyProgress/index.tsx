@@ -29,7 +29,7 @@ const WeeklyProgress = () => {
   };
 
   return (
-    <div className="flex items-center justify-between space-x-1">
+    <div className="flex items-center justify-between space-x-1 mt-4">
       {weekdays.map((i, idx) => {
         return (
           <div className="flex flex-col" key={i}>
