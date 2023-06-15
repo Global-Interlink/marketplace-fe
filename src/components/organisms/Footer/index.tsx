@@ -20,58 +20,34 @@ const Footer = () => {
             <br />
             Connection Platform
           </p>
+
           <div className="flex items-center sm:justify-start justify-center dark:text-white text-primary space-x-5 mt-6">
-            <Link href={"#"}>
-              {theme === "dark" ? (
-                <Image
-                  width={24}
-                  height={24}
-                  alt="ic-facebook-footer"
-                  src="/ic-facebook-footer-dark.svg"
-                />
-              ) : (
-                <Image
-                  width={24}
-                  height={24}
-                  alt="ic-facebook-footer"
-                  src="/ic-facebook-footer.svg"
-                />
-              )}
-            </Link>
-            <Link href={"#"}>
-              {theme === "dark" ? (
-                <Image
-                  width={24}
-                  height={24}
-                  alt="ic-linkedin-footer"
-                  src="/ic-linkedin-footer-dark.svg"
-                />
-              ) : (
-                <Image
-                  width={24}
-                  height={24}
-                  alt="ic-linkedin-footer"
-                  src="/ic-linkedin-footer.svg"
-                />
-              )}
-            </Link>
-            <Link href={"#"}>
-              {theme === "dark" ? (
-                <Image
-                  width={24}
-                  height={24}
-                  alt="ic-twitter-footer"
-                  src="/ic-twitter-footer-dark.svg"
-                />
-              ) : (
-                <Image
-                  width={24}
-                  height={24}
-                  alt="ic-twitter-footer"
-                  src="/ic-twitter-footer.svg"
-                />
-              )}
-            </Link>
+            <a
+              href={"https://gil.eco/"}
+              target="_blank"
+              rel="noreferrer"
+              className="h-[24px] !w-[24px] bg-gray-500 dark:bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+            >
+              <Image src={"/ic-website.svg"} width={14} height={14} alt={""} />
+            </a>
+
+            <a
+              href={"https://twitter.com/Sakayamarket"}
+              target="_blank"
+              rel="noreferrer"
+              className="h-[24px] !w-[24px] bg-gray-500 dark:bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+            >
+              <Image src={"/ic-twitter.svg"} width={15} height={15} alt={""} />
+            </a>
+
+            <a
+              href="https://twitter.com/MokuFinance"
+              target="_blank"
+              rel="noreferrer"
+              className="h-[24px] !w-[24px] bg-gray-500 dark:bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
+            >
+              <Image src={"/ic-telegram.svg"} width={14} height={11} alt={""} />
+            </a>
           </div>
         </div>
         <div>

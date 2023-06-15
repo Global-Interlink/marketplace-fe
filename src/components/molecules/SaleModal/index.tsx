@@ -101,7 +101,7 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
     >
       <div className="flex flex-col justify-center">
         <div className="mt-8 space-y-2">
-          <p className="text-[24px] font-bold text-left">{item?.name}</p>
+          <p className="text-[24px] font-bold text-left break-all">{item?.name}</p>
           {item?.collection && (
             <div className="flex w-full items-center space-x-2">
               <div className="">

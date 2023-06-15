@@ -96,7 +96,7 @@ const Collection = () => {
         ) : (
           <>
             <div className="flex space-y-5 md:items-center flex-col md:flex-row md:justify-between md:space-x-10">
-              <div className="flex w-full md:items-center space-x-2 md:space-x-4">
+              <div className="flex w-full md:items-start space-x-2 md:space-x-4">
                 <div className="">
                   <Image
                     alt="logo-lp"
@@ -110,7 +110,7 @@ const Collection = () => {
                   <div className="w-full flex items-center justify-between">
                     <div className="md:w-4/5">
                       <p
-                        className="text-xl md:text-[32px] external leading-8 font-semibold text-black dark:text-white font-display break-words line-clamp-3"
+                        className="text-xl md:text-[32px] external leading-8 font-semibold text-black dark:text-white font-display break-all"
                         title={collectionData?.name}
                       >
                         {collectionData?.name}
@@ -133,7 +133,7 @@ const Collection = () => {
             <div className="mt-[30px]">
               <div
                 className={
-                  "collection-description text-transparent absolute -z-10"
+                  "collection-description text-transparent absolute -z-10 break-all"
                 }
               >
                 <ReactMarkdown

@@ -176,7 +176,7 @@ const NFT = () => {
                     />
                   </div>
                   <Link href={`/collection/${nftData.collection.id}`}>
-                    <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
+                    <p className="external mt-2 md:text-[20px] text-black dark:text-white font-display break-all">
                       {nftData?.collection?.name}
                     </p>
                   </Link>
