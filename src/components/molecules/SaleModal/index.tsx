@@ -45,6 +45,11 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
           txb.pure(marketId),
           txb.pure(nftId),
           txb.pure(String(price * SUI_DECIMAL)),
+          txb.makeMoveVec({
+            objects: [
+              txb.splitCoins(txb.gas, [txb.pure(String(0.12 * SUI_DECIMAL))]),
+            ],
+          }),
         ],
         typeArguments: [nftType],
       });
