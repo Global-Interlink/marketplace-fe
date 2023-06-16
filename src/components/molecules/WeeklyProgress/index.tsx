@@ -1,9 +1,29 @@
 import { Image } from "antd";
-import dayjs from "dayjs";
 
-const WeeklyProgress = () => {
+export interface AllTaskDay {
+  Monday: number;
+  Tuesday: number;
+  Wednesday: number;
+  Thursday: number;
+  Friday: number;
+  Saturday: number;
+  Sunday: number;
+}
+interface Props {
+  data?: AllTaskDay;
+}
+
+const WeeklyProgress: React.FC<Props> = ({ data }) => {
   const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const mockTaskCompleted = [2, 3, 2, 0, 0, 0, 0];
+  const taskCompleted = [
+    data?.Monday || 0,
+    data?.Tuesday || 0,
+    data?.Wednesday || 0,
+    data?.Thursday || 0,
+    data?.Friday || 0,
+    data?.Saturday || 0,
+    data?.Sunday || 0,
+  ];
   const currentDate = new Date();
   const currentDayName = currentDate.toLocaleString("en-US", {
     weekday: "short",
@@ -37,14 +57,14 @@ const WeeklyProgress = () => {
               <Image
                 preview={false}
                 className="w-full h-full"
-                src={getProgressBar(mockTaskCompleted[idx], i)}
+                src={getProgressBar(taskCompleted[idx], i)}
                 alt="s"
               />
               <div className="absolute text-sm top-0 h-full w-full flex justify-center items-center font-medium">
-                <p className="mt-2 text-gray-700">{mockTaskCompleted[idx]}/3</p>
+                <p className="mt-2 text-gray-700 dark:text-gray-300">{taskCompleted[idx]}/3</p>
               </div>
             </div>
-            <div className="text-xs text-gray-500 text-center font-medium">
+            <div className="text-xs text-gray-500 dark:text-gray-300 text-center font-medium">
               {i}
             </div>
           </div>

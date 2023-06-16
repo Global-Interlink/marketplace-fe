@@ -12,7 +12,7 @@ const MoreTicketItem: React.FC<Props> = ({
 }) => {
   return mission === "2" ? (
     <div className="relative">
-      <div className="bg-white py-2 px-6 border rounded-lg flex justify-between items-center">
+      <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
         <div>
           <p className="text-sm">{title}</p>
           <p className="text-[12px] text-gray-400">{description}</p>
@@ -35,18 +35,18 @@ const MoreTicketItem: React.FC<Props> = ({
       )}
     </div>
   ) : mission === "1" ? (
-    <div className="bg-white py-2 px-6 border rounded-lg flex justify-between items-center">
+    <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
       <div>
         <p className="text-sm">{title}</p>
         <p className="text-[12px] text-gray-400">{description}</p>
       </div>
-      <button className="text-sm bg-[#F9D8F5] h-8 text-[#EB77DC] rounded-full px-3">
+      <button className="text-sm bg-[#F9D8F5]  h-8 text-[#EB77DC] rounded-full px-3">
         {status === "bought" ? "Bought" : "Buy 1 ticket"}
       </button>
     </div>
   ) : (
     <div className="relative">
-      <div className="bg-white py-2 px-6 border rounded-lg flex justify-between items-center">
+      <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
         <div>
           <p className="text-sm">{title}</p>
           <p className="text-[12px] text-gray-400">{description}</p>

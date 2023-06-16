@@ -305,3 +305,13 @@ div.footerC {
 .campaignboxshadow {
   box-shadow: 32px 32px 64px rgba(52, 64, 84, 0.08);
 }
+
+.darkGradient {
+  background: linear-gradient(
+    151.03deg,
+    rgba(31, 8, 68, 0.8) 15.06%,
+    rgba(79, 42, 138, 0.25) 95.6%
+  );
+  box-shadow: 32px 32px 64px rgba(0, 0, 0, 0.08);
+  color: white;
+}

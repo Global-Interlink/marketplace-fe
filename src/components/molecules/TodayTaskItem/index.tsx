@@ -1,23 +1,16 @@
 interface Props {
   title: string;
   description: string;
-  status: "done" | "fail" | "new";
+  status: boolean;
 }
 const TodayTaskItem: React.FC<Props> = ({ title, description, status }) => {
-  const statusColor =
-    status === "new"
-      ? "bg-[#F9D8F5] text-[#EB77DC]"
-      : status === "done"
-      ? "bg-[#D1FADF]  text-[#039855]"
-      : "bg-[#FEF3F2] text-[#D92D20]";
-  const statusText =
-    status === "new" ? "Do it now" : status === "done" ? "Done" : "Fail";
-  const boxBgr =
-    status === "new"
-      ? "bg-white"
-      : status === "done"
-      ? "bg-[#F6FEF9]"
-      : "bg-[#FFFBFA]";
+  const statusColor = status
+    ? "bg-[#D1FADF]  text-[#039855]"
+    : "bg-[#F9D8F5] text-[#EB77DC]";
+  const statusText = status ? "Done" : "Do it now";
+  const boxBgr = status
+    ? "bg-[#F6FEF9] dark:bg-boxTaskDark"
+    : "bg-white dark:bg-boxTaskDarkNew";
   return (
     <div
       className={`${boxBgr} py-2 px-6 border rounded-lg flex justify-between items-center`}

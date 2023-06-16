@@ -4,10 +4,10 @@ interface Props {
 const RewardItem: React.FC<Props> = ({ rank }) => {
   const bgColor =
     rank === "gold"
-      ? "bg-[#FEF0C7]"
+      ? "bg-[#FEF0C7] dark:bg-boxRewardItem"
       : rank === "silver"
-      ? "bg-[#EAECF0]"
-      : "bg-[#EFE5DE]";
+      ? "bg-[#EAECF0] dark:bg-boxRewardSilverItem"
+      : "bg-[#EFE5DE] dark:bg-boxRewardBronzeItem";
   return (
     <div
       className={`flex items-center justify-between w-full md:w-[417px] py-2 px-5 rounded-lg ${bgColor}`}
