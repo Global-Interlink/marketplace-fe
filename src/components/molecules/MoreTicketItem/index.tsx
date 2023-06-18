@@ -3,12 +3,16 @@ interface Props {
   description: string;
   status: "available" | "bought" | "unavailable";
   mission: "1" | "2" | "3";
+  onHandleBuy: (
+    type: "forEvery" | "completedAnyTask" | "completedAllTask"
+  ) => void;
 }
 const MoreTicketItem: React.FC<Props> = ({
   title,
   description,
   status,
   mission,
+  onHandleBuy,
 }) => {
   return mission === "2" ? (
     <div className="relative">
@@ -17,7 +21,14 @@ const MoreTicketItem: React.FC<Props> = ({
           <p className="text-sm">{title}</p>
           <p className="text-[12px] text-gray-400">{description}</p>
         </div>
-        <button className="text-sm bg-gray-50 h-8 text-gray-600 rounded-full px-3">
+        <button
+          onClick={() => {
+            onHandleBuy("completedAnyTask");
+          }}
+          className={`text-sm bg-gray-50 h-8 rounded-full px-3 ${
+            status === "available" ? "text-gray-600 " : "text-[#D0D5DD]"
+          }`}
+        >
           {status === "bought" ? "Bought" : "Buy 1 ticket"}
         </button>
       </div>
@@ -40,7 +51,12 @@ const MoreTicketItem: React.FC<Props> = ({
         <p className="text-sm">{title}</p>
         <p className="text-[12px] text-gray-400">{description}</p>
       </div>
-      <button className="text-sm bg-[#F9D8F5]  h-8 text-[#EB77DC] rounded-full px-3">
+      <button
+        className="text-sm bg-[#F9D8F5]  h-8 text-[#EB77DC] rounded-full px-3"
+        onClick={() => {
+          onHandleBuy("forEvery");
+        }}
+      >
         {status === "bought" ? "Bought" : "Buy 1 ticket"}
       </button>
     </div>
@@ -51,7 +67,14 @@ const MoreTicketItem: React.FC<Props> = ({
           <p className="text-sm">{title}</p>
           <p className="text-[12px] text-gray-400">{description}</p>
         </div>
-        <button className="text-sm bg-[white] h-8 text-[#D0D5DD] rounded-full px-3">
+        <button
+          onClick={() => {
+            onHandleBuy("completedAllTask");
+          }}
+          className={`text-sm bg-gray-50 h-8 rounded-full px-3 ${
+            status === "available" ? "text-gray-600 " : "text-[#D0D5DD]"
+          }`}
+        >
           {status === "bought" ? "Bought" : "Buy 3 ticket"}
         </button>
       </div>

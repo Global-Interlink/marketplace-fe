@@ -17,3 +17,7 @@ export function toFixed(num: any, fixed: any) {
   var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
   return num.toString().match(re)[0];
 }
+
+export const formatAddress = (longString: string) => {
+  return `${longString?.slice(0, 20)}...${longString?.slice(longString?.length - 20, longString?.length)}`
+}

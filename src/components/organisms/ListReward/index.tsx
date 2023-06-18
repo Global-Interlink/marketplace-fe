@@ -10,7 +10,7 @@ const ListReward: React.FC<Props> = ({ rank }) => {
       ? "bg-[#FFFAEB] dark:bg-boxReward"
       : rank === "silver"
       ? "bg-[#F9FAFB] dark:bg-boxRewardSilver"
-      : "bg-[#FFF9F4] dark: bg-boxRewardBronze";
+      : "bg-[#FFF9F4] dark:bg-boxRewardBronze";
   return (
     <div className={`relative flex flex-col space-y-4 w-full  md:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}>
       <RewardItem rank={rank} />

@@ -5,8 +5,9 @@ interface Props {
     key: string;
     title: string;
   }[];
+  onChangeKey: (key: string) => void;
 }
-const Tabs: React.FC<Props> = ({ items }) => {
+const Tabs: React.FC<Props> = ({ items, onChangeKey }) => {
   const [activeId, setActiveId] = React.useState("");
   React.useEffect(() => {
     if (items) {
@@ -26,6 +27,7 @@ const Tabs: React.FC<Props> = ({ items }) => {
               }`}
               onClick={() => {
                 setActiveId(i.key);
+                onChangeKey(i.key);
               }}
             >
               {i.title}

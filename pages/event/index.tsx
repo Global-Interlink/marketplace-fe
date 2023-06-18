@@ -1,8 +1,8 @@
 import CountDown from "../../src/components/molecules/Countdown";
-import MoreTicketItem from "../../src/components/molecules/MoreTicketItem";
-import TodayTaskItem from "../../src/components/molecules/TodayTaskItem";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
-import ListRanking from "../../src/components/organisms/ListRanking";
+import ListRanking, {
+  LeaderBoard,
+} from "../../src/components/organisms/ListRanking";
 import ListReward from "../../src/components/organisms/ListReward";
 import WeeklyProgress, {
   AllTaskDay,
@@ -14,6 +14,12 @@ import ListTodayTask, {
   StatusTask,
 } from "../../src/components/organisms/ListTodayTask";
 import { useTheme } from "next-themes";
+import MoreTicketList, {
+  MoreTicket,
+} from "../../src/components/organisms/MoreTicketList";
+import { toast } from "react-toastify";
+import { useWallet } from "@suiet/wallet-kit";
+
 const getAccessToken = async () => {
   const secret = new TextEncoder().encode("ABBCD");
   const token = await new jose.SignJWT({
@@ -31,9 +37,12 @@ const getAccessToken = async () => {
 };
 
 const Campaign = () => {
+  const { address } = useWallet();
   const { theme } = useTheme();
   const [weeklyProgress, setWeeklyProgress] = React.useState<AllTaskDay>();
   const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>();
+  const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
+  const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
   const api = axios.create({
     baseURL: `http://210.245.74.41:3030/main/v1`,
     headers: {
@@ -42,14 +51,36 @@ const Campaign = () => {
     },
   });
   const fetchData = async () => {
-    api.get("/ticket/leaderboard");
+    api.get<LeaderBoard>("/ticket/leaderboard").then((res) => {
+      setLeaderBoard(res.data);
+    });
     api.get<AllTaskDay>("/history-task/weekly/all-tasks").then((res) => {
       setWeeklyProgress(res.data);
     });
     api.get<{ data: StatusTask[] }>("/history-task/status-task").then((res) => {
       setStatusTasks(res.data.data);
     });
-    // api.get("/win-prize/weekly-reward");
+    api.get("/win-prize/weekly-rewar");
+    api
+      .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
+      .then((res) => {
+        setMoreTicket(res.data);
+      });
+  };
+
+  const handleBuy = (type: string) => {
+    api
+      .post("/more-tickets/buy-more-ticket", {
+        buyType: type,
+        walletAddress: address,
+      })
+      .then((res) => {
+        console.log(res);
+        toast.success("Buy ticket success!");
+      })
+      .catch((e) => {
+        toast.error(e.message);
+      });
   };
 
   React.useEffect(() => {
@@ -78,26 +109,7 @@ const Campaign = () => {
               <p className="text-gray-500 dark:text-gray-300">
                 Chance to get more tickets weekly
               </p>
-              <div className="mt-8 space-y-6">
-                <MoreTicketItem
-                  title="1 ticket (1000 - 2000 tGIL)"
-                  description="One lucky chance for everyone"
-                  status="available"
-                  mission="1"
-                />
-                <MoreTicketItem
-                  title="1 tickets (1000 tGIL)"
-                  description="For complete at least 1 task"
-                  status="bought"
-                  mission="2"
-                />
-                <MoreTicketItem
-                  title="3 tickets"
-                  description="For complete all daily tasks the whole week"
-                  status="unavailable"
-                  mission="3"
-                />
-              </div>
+              <MoreTicketList data={moreTicket} onHandleBuy={handleBuy} />
             </div>
           </div>
           <div
@@ -105,11 +117,17 @@ const Campaign = () => {
               theme === "dark" ? "darkGradient" : "bg-white"
             }`}
           >
-            <div className={`bg-bgLeaderBoard  bg-no-repeat bg-right-top bg-[length:320px_320px]`}>
+            <div
+              className={`bg-bgLeaderBoard  bg-no-repeat bg-right-top bg-[length:320px_320px]`}
+            >
               <p className="text-[30px] font-medium">Leaderboard</p>
-              <p className="mt-4 text-gray-700 mb-2 dark:text-gray-200">Weekly Giveaway end in</p>
+              <p className="mt-4 text-gray-700 mb-2 dark:text-gray-200">
+                Weekly Giveaway end in
+              </p>
               <CountDown startTime={1687948015000} />
-              <p className="mt-4 text-gray-700 dark:text-gray-200">Current Prizepool</p>
+              <p className="mt-4 text-gray-700 dark:text-gray-200">
+                Current Prizepool
+              </p>
               <p className="gradientColor !leading-[60px] !text-[48px] font-semibold">
                 10,000 SUI
               </p>
@@ -117,7 +135,7 @@ const Campaign = () => {
                 Learn more about prize table{" "}
                 <span className="gradientColor">here.</span>
               </p>
-              <ListRanking />
+              <ListRanking data={leaderBoard} />
             </div>
           </div>
         </div>

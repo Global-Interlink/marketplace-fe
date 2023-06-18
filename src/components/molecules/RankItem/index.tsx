@@ -1,23 +1,34 @@
 import { Image } from "antd";
+import { formatLongString } from "../../../contract-abi/consts";
 
 interface Props {
   image: string;
   address: string;
-  percent: string;
-  tickets: number;
+  percent: number;
+  tickets: string;
+  no?: string;
 }
-const RankItem: React.FC<Props> = ({ image, address, percent, tickets }) => {
+const RankItem: React.FC<Props> = ({
+  image,
+  address,
+  percent,
+  tickets,
+  no,
+}) => {
   return (
     <div className="bg-gray-50 dark:bg-boxTaskDarkNew dark:text-gray-200 break-all flex items-center border-2 py-[14px] text-gray-700 px-4 lg:px-6 rounded-lg space-x-2 md:space-x-4 justify-between">
-      <Image
-        preview={false}
-        width={60}
-        height={43}
-        className="w-[40px] lg:min-w-[60px]"
-        src={image}
-        alt={image}
-      />
-      <p>{address}</p>
+      <div className="relative flex items-center justify-start">
+        <Image
+          preview={false}
+          width={60}
+          height={43}
+          className="w-[40px] lg:min-w-[60px]"
+          src={image}
+          alt={image}
+        />
+        {no && <p className="absolute text-sm font-medium text-white">{no}</p>}
+      </div>
+      <div className="justify-start">{formatLongString(address)}</div>
       <div className="flex items-center">
         <Image
           preview={false}
@@ -28,7 +39,7 @@ const RankItem: React.FC<Props> = ({ image, address, percent, tickets }) => {
         />
         <p>{tickets}</p>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center justify-start space-x-2">
         <Image
           preview={false}
           width={48}
@@ -36,7 +47,7 @@ const RankItem: React.FC<Props> = ({ image, address, percent, tickets }) => {
           src="/medal.svg"
           alt="medal"
         />
-        <p className="text-[#D92D20]">{percent}</p>
+        <p className="text-[#D92D20] w-12">{percent}%</p>
       </div>
     </div>
   );
