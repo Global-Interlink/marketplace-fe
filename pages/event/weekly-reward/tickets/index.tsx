@@ -66,6 +66,7 @@ const Tickets = () => {
           <p className="text-[30px] font-medium">Weekly Reward Tickets</p>
           <div className="mt-4 flex items-center space-x-11">
             <Tabs
+              activeKey={activeTab}
               items={[
                 {
                   key: "1",
@@ -128,41 +129,43 @@ const Tickets = () => {
               <p className="text-sm p-4 text-center text-gray-500">No data</p>
             )}
           </div>
-          <div className="text-sm text-gray-700 flex items-center justify-between mt-[28px]">
-            <p>
-              Page {currentPage} of {totalPages}
-            </p>
-            <div className="space-x-3">
-              <button
-                className={`rounded-full border py-2 px-[14px] ${
-                  currentPage === 1
-                    ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                    : ""
-                }`}
-                onClick={() => {
-                  if (currentPage > 1) {
-                    setCurrentPage(currentPage - 1);
-                  }
-                }}
-              >
-                Previous
-              </button>
-              <button
-                className={`rounded-full border py-2 px-[14px] ${
-                  currentPage === totalPages
-                    ? "bg-gray-50 text-gray-400 cursor-not-allowed"
-                    : ""
-                }`}
-                onClick={() => {
-                  if (currentPage < totalPages) {
-                    setCurrentPage(currentPage + 1);
-                  }
-                }}
-              >
-                Next
-              </button>
+          {totalPages > 1 && (
+            <div className="text-sm text-gray-700 flex items-center justify-between mt-[28px]">
+              <p>
+                Page {currentPage} of {totalPages}
+              </p>
+              <div className="space-x-3">
+                <button
+                  className={`rounded-full border py-2 px-[14px] ${
+                    currentPage === 1
+                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1);
+                    }
+                  }}
+                >
+                  Previous
+                </button>
+                <button
+                  className={`rounded-full border py-2 px-[14px] ${
+                    currentPage === totalPages
+                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      setCurrentPage(currentPage + 1);
+                    }
+                  }}
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </BaseComponent>
