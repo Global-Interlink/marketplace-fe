@@ -61,11 +61,6 @@ const Campaign = () => {
       setStatusTasks(res.data.data);
     });
     api.get("/win-prize/weekly-rewar");
-    api
-      .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
-      .then((res) => {
-        setMoreTicket(res.data);
-      });
   };
 
   const handleBuy = (type: string) => {
@@ -77,15 +72,32 @@ const Campaign = () => {
       .then((res) => {
         console.log(res);
         toast.success("Buy ticket success!");
+        if (address) {
+          fetchMoreTicketData(address);
+        }
       })
       .catch((e) => {
-        toast.error(e.message);
+        toast.error(e.response.data.cause);
       });
   };
 
   React.useEffect(() => {
     fetchData();
   }, []);
+
+  const fetchMoreTicketData = (address: string) => {
+    api
+      .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
+      .then((res) => {
+        setMoreTicket(res.data);
+      });
+  };
+
+  React.useEffect(() => {
+    if (address) {
+      fetchMoreTicketData(address);
+    }
+  }, [address]);
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">

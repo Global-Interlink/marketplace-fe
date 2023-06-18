@@ -14,6 +14,12 @@ const MoreTicketItem: React.FC<Props> = ({
   mission,
   onHandleBuy,
 }) => {
+  const buttonColor =
+    status === "available"
+      ? `bg-[#F9D8F5]  h-8 text-[#EB77DC]`
+      : status === "unavailable"
+      ? "text-[#D0D5DD] bg-gray-50"
+      : "bg-gray-50 text-gray-600";
   return mission === "2" ? (
     <div className="relative">
       <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
@@ -23,11 +29,11 @@ const MoreTicketItem: React.FC<Props> = ({
         </div>
         <button
           onClick={() => {
-            onHandleBuy("completedAnyTask");
+            if (status === "available") {
+              onHandleBuy("completedAnyTask");
+            }
           }}
-          className={`text-sm bg-gray-50 h-8 rounded-full px-3 ${
-            status === "available" ? "text-gray-600 " : "text-[#D0D5DD]"
-          }`}
+          className={`text-sm h-8 rounded-full px-3 ${buttonColor}`}
         >
           {status === "bought" ? "Bought" : "Buy 1 ticket"}
         </button>
@@ -52,9 +58,11 @@ const MoreTicketItem: React.FC<Props> = ({
         <p className="text-[12px] text-gray-400">{description}</p>
       </div>
       <button
-        className="text-sm bg-[#F9D8F5]  h-8 text-[#EB77DC] rounded-full px-3"
+        className={`text-sm  h-8 rounded-full px-3 ${buttonColor}`}
         onClick={() => {
-          onHandleBuy("forEvery");
+          if (status === "available") {
+            onHandleBuy("forEvery");
+          }
         }}
       >
         {status === "bought" ? "Bought" : "Buy 1 ticket"}
@@ -69,11 +77,11 @@ const MoreTicketItem: React.FC<Props> = ({
         </div>
         <button
           onClick={() => {
-            onHandleBuy("completedAllTask");
+            if (status === "available") {
+              onHandleBuy("completedAllTask");
+            }
           }}
-          className={`text-sm bg-gray-50 h-8 rounded-full px-3 ${
-            status === "available" ? "text-gray-600 " : "text-[#D0D5DD]"
-          }`}
+          className={`text-sm  h-8 rounded-full px-3 ${buttonColor}`}
         >
           {status === "bought" ? "Bought" : "Buy 3 ticket"}
         </button>
