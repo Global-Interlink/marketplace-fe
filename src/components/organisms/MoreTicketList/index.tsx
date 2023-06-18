@@ -1,4 +1,5 @@
 import MoreTicketItem from "../../molecules/MoreTicketItem";
+import { StatusTask } from "../ListTodayTask";
 
 export interface MoreTicket {
   data: {
@@ -13,8 +14,9 @@ interface Props {
   onHandleBuy: (
     type: "forEvery" | "completedAnyTask" | "completedAllTask"
   ) => void;
+  statusTask: StatusTask[];
 }
-const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy }) => {
+const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
   const completed_any_task = data?.data.completedAnyTask;
   const for_every = data?.data.forEvery;
   const completed_all_task = data?.data.completedAllTask;
@@ -34,7 +36,7 @@ const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy }) => {
         status={
           completed_any_task
             ? "bought"
-            : for_every
+            : statusTask.find((i) => i.statusTask === true)
             ? "available"
             : "unavailable"
         }
@@ -47,7 +49,7 @@ const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy }) => {
         status={
           completed_all_task
             ? "bought"
-            : for_every && completed_any_task
+            : !statusTask.find((i) => i.statusTask === false)
             ? "available"
             : "unavailable"
         }

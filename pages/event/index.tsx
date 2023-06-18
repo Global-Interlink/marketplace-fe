@@ -40,7 +40,7 @@ const Campaign = () => {
   const { address } = useWallet();
   const { theme } = useTheme();
   const [weeklyProgress, setWeeklyProgress] = React.useState<AllTaskDay>();
-  const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>();
+  const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>([]);
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
   const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
   const api = createAxios();
@@ -116,7 +116,11 @@ const Campaign = () => {
               <p className="text-gray-500 dark:text-gray-300">
                 Chance to get more tickets weekly
               </p>
-              <MoreTicketList data={moreTicket} onHandleBuy={handleBuy} />
+              <MoreTicketList
+                data={moreTicket}
+                onHandleBuy={handleBuy}
+                statusTask={statusTasks}
+              />
             </div>
           </div>
           <div
