@@ -99,7 +99,14 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
               className="primaryButton !rounded-md"
             />
           </div>
-          {connected && <button className="py-2 px-4 rounded-full primaryButton mx-auto flex" onClick={disconnect}>Disconnect</button>}
+          {connected && (
+            <button
+              className="py-2 px-4 rounded-full primaryButton mx-auto flex"
+              onClick={disconnect}
+            >
+              Disconnect
+            </button>
+          )}
         </div>
       )}
     </div>

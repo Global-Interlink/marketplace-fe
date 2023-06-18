@@ -7,6 +7,7 @@ import React from "react";
 import { formatAddress } from "../../../../src/contract-abi/consts";
 import dayjs from "dayjs";
 import { createAxios } from "../../../../src/api/axiosWallet";
+import Breadcrumbs from "../../../../src/components/molecules/Breadcrumb";
 
 interface Ticket {
   ticketId: number;
@@ -56,6 +57,12 @@ const Tickets = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
+        <Breadcrumbs
+          breadcrumbs={[
+            { title: "Event page", path: "/event" },
+            { title: "Weekly Reward Tickets"},
+          ]}
+        />
         <div className="w-full md:max-w-5xl bg-white mx-auto campaignboxshadow rounded-lg py-8 px-6 md:px-[42px] text-gray-900">
           <p className="text-[30px] font-medium">Weekly Reward Tickets</p>
           <div className="mt-4 flex items-center space-x-11">
