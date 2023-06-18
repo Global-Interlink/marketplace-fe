@@ -1,3 +1,4 @@
+import React from "react";
 import CountDown from "../../src/components/molecules/Countdown";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import ListRanking, {
@@ -8,8 +9,6 @@ import WeeklyProgress, {
   AllTaskDay,
 } from "../../src/components/molecules/WeeklyProgress";
 import * as jose from "jose";
-import React from "react";
-import axios from "axios";
 import ListTodayTask, {
   StatusTask,
 } from "../../src/components/organisms/ListTodayTask";
@@ -19,6 +18,7 @@ import MoreTicketList, {
 } from "../../src/components/organisms/MoreTicketList";
 import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
+import { createAxios } from "../../src/api/axiosWallet";
 
 const getAccessToken = async () => {
   const secret = new TextEncoder().encode("ABBCD");
@@ -33,7 +33,7 @@ const getAccessToken = async () => {
     .setIssuedAt()
     .setExpirationTime("2m")
     .sign(secret);
-  return `Bearer ${token},`;
+  return token;
 };
 
 const Campaign = () => {
@@ -43,13 +43,7 @@ const Campaign = () => {
   const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>();
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
   const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
-  const api = axios.create({
-    baseURL: `http://210.245.74.41:3030/main/v1`,
-    headers: {
-      "Content-Type": "application/json",
-      // Authorization: token,
-    },
-  });
+  const api = createAxios();
   const fetchData = async () => {
     api.get<LeaderBoard>("/ticket/leaderboard").then((res) => {
       setLeaderBoard(res.data);
@@ -98,6 +92,7 @@ const Campaign = () => {
       fetchMoreTicketData(address);
     }
   }, [address]);
+
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">

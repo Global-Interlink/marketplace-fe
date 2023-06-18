@@ -1,4 +1,3 @@
-import axios from "axios";
 import SearchTicket from "../../../../src/components/molecules/SearchTicket";
 import SelectWeek from "../../../../src/components/molecules/SelectWeek";
 import Tabs from "../../../../src/components/molecules/Tabs";
@@ -7,6 +6,7 @@ import { useWallet } from "@suiet/wallet-kit";
 import React from "react";
 import { formatAddress } from "../../../../src/contract-abi/consts";
 import dayjs from "dayjs";
+import { createAxios } from "../../../../src/api/axiosWallet";
 
 interface Ticket {
   ticketId: number;
@@ -42,13 +42,7 @@ const Tickets = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const api = axios.create({
-    baseURL: `http://210.245.74.41:3030/main/v1`,
-    headers: {
-      "Content-Type": "application/json",
-      // Authorization: token,
-    },
-  });
+  const api = createAxios();
   const fetchData = async () => {
     api.get<{ data: { data: Ticket[] } }>("/ticket/all/ticket").then((res) => {
       setTicketData(res.data.data.data);

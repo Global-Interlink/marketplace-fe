@@ -47,7 +47,7 @@ const RankItem: React.FC<Props> = ({
           src="/medal.svg"
           alt="medal"
         />
-        <p className="text-[#D92D20] w-12">{percent}%</p>
+        <p className="text-[#D92D20]">{percent}%</p>
       </div>
     </div>
   );
