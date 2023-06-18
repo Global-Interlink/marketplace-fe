@@ -19,6 +19,7 @@ import MoreTicketList, {
 import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
+import Link from "next/link";
 
 const getAccessToken = async () => {
   const secret = new TextEncoder().encode("ABBCD");
@@ -147,6 +148,9 @@ const Campaign = () => {
                 <span className="gradientColor">here.</span>
               </p>
               <ListRanking data={leaderBoard} />
+            </div>
+            <div className="flex items-center justify-center mt-4">
+              <Link href={"/event/weekly-reward/tickets"} className="text-sm rounded-full border py-2 px-[14px]">View All</Link>
             </div>
           </div>
         </div>
