@@ -21,11 +21,10 @@ import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
 
-const getAccessToken = async () => {
+const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABBCD");
   const token = await new jose.SignJWT({
-    walletAddress:
-      "0x2eb3ce5badd1ce6452d1b03edb878c8c4ec7f511da6c5b3823190e9a0a912853",
+    walletAddress: walletAddress,
     role: "user",
     userId: 1,
     timeExpires: new Date().toUTCString(),
@@ -61,10 +60,17 @@ const Campaign = () => {
     fetchLeaderBoard();
   };
 
-  const fetchLeaderBoard = () => {
-    api.get<LeaderBoard>("/ticket/leaderboard").then((res) => {
-      setLeaderBoard(res.data);
-    });
+  const fetchLeaderBoard = async (address?: string) => {
+    if (!address) {
+      return;
+    }
+    // const token = await getAccessToken(address);
+    const api = createAxios();
+    api
+      .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
+      .then((res) => {
+        setLeaderBoard(res.data);
+      });
   };
 
   console.log("=", rewards);
@@ -102,6 +108,7 @@ const Campaign = () => {
   React.useEffect(() => {
     if (address) {
       fetchMoreTicketData(address);
+      fetchLeaderBoard(address);
     }
   }, [address]);
 
@@ -156,7 +163,9 @@ const Campaign = () => {
               </p>
               <p className="text-gray-500 dark:text-gray-300">
                 Learn more about prize table{" "}
-                <Link className="gradientColor" href="/event/prize">here.</Link>
+                <Link className="gradientColor" href="/event/prize">
+                  here.
+                </Link>
               </p>
               <ListRanking data={leaderBoard} />
             </div>
