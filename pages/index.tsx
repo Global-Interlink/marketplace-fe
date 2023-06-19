@@ -10,6 +10,8 @@ import {
   fetchListCollectionLoadmore,
 } from "../src/redux/home/homeSlice";
 import { useAppDispatch, useAppSelector } from "../src/redux/hook";
+import Image from "next/image";
+import Link from "next/link";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +40,16 @@ const Home = () => {
   ) : (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <div className="flex items-center justify-end md:mt-10">
+        <Link href={"/event"}>
+          <Image
+            src={"/banner-event.svg"}
+            className="object-cover w-full h-full"
+            width={3000}
+            height={500}
+            alt="banner"
+          />
+        </Link>
+        <div className="flex items-center justify-end">
           <Sort onChange={setSort} sort={sort} />
         </div>
         {response && response.data && response.data.length > 0 ? (
@@ -60,7 +71,7 @@ const Home = () => {
             <>
               {status === FetchStatus.pending && currentPage > 1 ? (
                 <div className="py-4 md:py-8">
-                  <CollectionListSkeleton isLoadMore={true}/>
+                  <CollectionListSkeleton isLoadMore={true} />
                 </div>
               ) : (
                 <div className="mt-[70px] flex justify-center">

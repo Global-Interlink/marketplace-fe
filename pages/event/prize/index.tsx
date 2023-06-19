@@ -1,9 +1,16 @@
+import Breadcrumbs from "../../../src/components/molecules/Breadcrumb";
 import BaseComponent from "../../../src/components/organisms/BaseComponent";
 
 const Prize = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
+      <Breadcrumbs
+          breadcrumbs={[
+            { title: "Event page", path: "/event" },
+            { title: "Prize" },
+          ]}
+        />
         <div className="w-full lg:w-[686px] bg-white mx-auto campaignboxshadow rounded-lg py-8 px-6 md:px-[42px] text-gray-900">
           <p className="text-[30px] font-medium">Prize Table</p>
           <p className="text-sm text-gray-400">Last modified: 13/6/2023</p>

@@ -47,9 +47,6 @@ const Campaign = () => {
   const [rewards, setRewards] = React.useState<Reward[]>([]);
   const api = createAxios();
   const fetchData = async () => {
-    api.get<LeaderBoard>("/ticket/leaderboard").then((res) => {
-      setLeaderBoard(res.data);
-    });
     api.get<AllTaskDay>("/history-task/weekly/all-tasks").then((res) => {
       setWeeklyProgress(res.data);
     });
@@ -61,6 +58,13 @@ const Campaign = () => {
       .then((res) => {
         setRewards(res.data.data.data);
       });
+    fetchLeaderBoard();
+  };
+
+  const fetchLeaderBoard = () => {
+    api.get<LeaderBoard>("/ticket/leaderboard").then((res) => {
+      setLeaderBoard(res.data);
+    });
   };
 
   console.log("=", rewards);
@@ -75,6 +79,7 @@ const Campaign = () => {
         toast.success("Buy ticket success!");
         if (address) {
           fetchMoreTicketData(address);
+          fetchLeaderBoard();
         }
       })
       .catch((e) => {
@@ -151,7 +156,7 @@ const Campaign = () => {
               </p>
               <p className="text-gray-500 dark:text-gray-300">
                 Learn more about prize table{" "}
-                <span className="gradientColor">here.</span>
+                <Link className="gradientColor" href="/event/prize">here.</Link>
               </p>
               <ListRanking data={leaderBoard} />
             </div>
