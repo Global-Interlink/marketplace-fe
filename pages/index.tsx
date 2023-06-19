@@ -29,6 +29,8 @@ const Home = () => {
       })
     );
   }, []);
+  const isShowEvent = process.env.NEXT_PUBLIC_EVENT_STARTED  === "true";
+  console.log("=isShowEvent", isShowEvent);
 
   return status === FetchStatus.idle ||
     (status === FetchStatus.pending && currentPage === 1) ? (
@@ -40,15 +42,17 @@ const Home = () => {
   ) : (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <Link href={"/event"}>
-          <Image
-            src={"/banner-event.svg"}
-            className="object-cover w-full h-full"
-            width={3000}
-            height={500}
-            alt="banner"
-          />
-        </Link>
+        {isShowEvent && (
+          <Link href={"/event"}>
+            <Image
+              src={"/banner-event.svg"}
+              className="object-cover w-full h-full"
+              width={3000}
+              height={500}
+              alt="banner"
+            />
+          </Link>
+        )}
         <div className="flex items-center justify-end">
           <Sort onChange={setSort} sort={sort} />
         </div>
