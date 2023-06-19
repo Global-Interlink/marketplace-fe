@@ -61,9 +61,6 @@ const Campaign = () => {
   };
 
   const fetchLeaderBoard = async (address?: string) => {
-    if (!address) {
-      return;
-    }
     // const token = await getAccessToken(address);
     const api = createAxios();
     api
