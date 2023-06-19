@@ -60,12 +60,12 @@ const Tickets = () => {
         <Breadcrumbs
           breadcrumbs={[
             { title: "Event page", path: "/event" },
-            { title: "Weekly Reward Tickets"},
+            { title: "Weekly Reward Tickets" },
           ]}
         />
         <div className="w-full md:max-w-5xl bg-white mx-auto campaignboxshadow rounded-lg py-8 px-6 md:px-[42px] text-gray-900">
           <p className="text-[30px] font-medium">Weekly Reward Tickets</p>
-          <div className="mt-4 flex items-center space-x-11">
+          <div className="mt-4 flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0  lg:space-x-11">
             <Tabs
               activeKey={activeTab}
               items={[
