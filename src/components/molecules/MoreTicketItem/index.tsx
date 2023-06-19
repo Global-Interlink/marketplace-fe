@@ -22,7 +22,7 @@ const MoreTicketItem: React.FC<Props> = ({
       : "bg-gray-50 text-gray-600";
   return mission === "2" ? (
     <div className="relative">
-      <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
+      <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-4 md:px-6 border rounded-lg flex justify-between items-center">
         <div>
           <p className="text-sm">{title}</p>
           <p className="text-[12px] text-gray-400">{description}</p>
@@ -33,13 +33,13 @@ const MoreTicketItem: React.FC<Props> = ({
               onHandleBuy("completedAnyTask");
             }
           }}
-          className={`text-sm h-8 rounded-full px-3 ${buttonColor}`}
+          className={`md:text-sm h-8 rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
         >
           {status === "bought" ? "Bought" : "Buy 1 ticket"}
         </button>
       </div>
       {status === "unavailable" && (
-        <div className="absolute top-0 flex w-full h-full items-center justify-center">
+        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center">
           <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[30px]">
             <span className="bg-[#FFFAEB] text-[#B54708] px-2 py-[2px] text-xs rounded-full">
               Notice
@@ -52,13 +52,13 @@ const MoreTicketItem: React.FC<Props> = ({
       )}
     </div>
   ) : mission === "1" ? (
-    <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
+    <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-4 md:px-6 border rounded-lg flex justify-between items-center">
       <div>
         <p className="text-sm">{title}</p>
         <p className="text-[12px] text-gray-400">{description}</p>
       </div>
       <button
-        className={`text-sm  h-8 rounded-full px-3 ${buttonColor}`}
+        className={`md:text-sm h-8 rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
         onClick={() => {
           if (status === "available") {
             onHandleBuy("forEvery");
@@ -70,7 +70,7 @@ const MoreTicketItem: React.FC<Props> = ({
     </div>
   ) : (
     <div className="relative">
-      <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-6 border rounded-lg flex justify-between items-center">
+      <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-4 md:px-6 border rounded-lg flex justify-between items-center">
         <div>
           <p className="text-sm">{title}</p>
           <p className="text-[12px] text-gray-400">{description}</p>
@@ -81,13 +81,13 @@ const MoreTicketItem: React.FC<Props> = ({
               onHandleBuy("completedAllTask");
             }
           }}
-          className={`text-sm  h-8 rounded-full px-3 ${buttonColor}`}
+          className={`md:text-sm h-8 rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
         >
           {status === "bought" ? "Bought" : "Buy 3 ticket"}
         </button>
       </div>
       {status === "unavailable" && (
-        <div className="absolute top-0 flex w-full h-full items-center justify-center">
+        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center">
           <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[30px]">
             <span className="bg-[#FFFAEB] text-[#B54708] px-2 py-[2px] text-xs rounded-full">
               Notice

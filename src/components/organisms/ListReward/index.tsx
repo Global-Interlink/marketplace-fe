@@ -1,10 +1,22 @@
 import { Image } from "antd";
 import RewardItem from "../../molecules/RewardItem";
 
+export interface Reward {
+  winPrizeId: number;
+  walletAddress: string;
+  currency: string;
+  amount: number;
+  winPrizeOrder: number;
+  ticketNumber: number;
+  targetDate: string;
+  createdAt: string;
+  deletedAt: null;
+}
 interface Props {
   rank: "gold" | "silver" | "bronze";
+  data: Reward[];
 }
-const ListReward: React.FC<Props> = ({ rank }) => {
+const ListReward: React.FC<Props> = ({ rank, data }) => {
   const bgColor =
     rank === "gold"
       ? "bg-[#FFFAEB] dark:bg-boxReward"
@@ -12,11 +24,12 @@ const ListReward: React.FC<Props> = ({ rank }) => {
       ? "bg-[#F9FAFB] dark:bg-boxRewardSilver"
       : "bg-[#FFF9F4] dark:bg-boxRewardBronze";
   return (
-    <div className={`relative flex flex-col space-y-4 w-full  md:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}>
-      <RewardItem rank={rank} />
-      <RewardItem rank={rank} />
-      <RewardItem rank={rank} />
-      <RewardItem rank={rank} />
+    <div
+      className={`relative flex flex-col space-y-4 w-full min-h-[260px]  md:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
+    >
+      {data.slice(0,4).map((i) => {
+        return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />
+      })}
       <div className="absolute -right-[160px] -top-[40px]">
         <Image
           src={

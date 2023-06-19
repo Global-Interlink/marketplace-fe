@@ -21,3 +21,7 @@ export function toFixed(num: any, fixed: any) {
 export const formatAddress = (longString: string) => {
   return `${longString?.slice(0, 20)}...${longString?.slice(longString?.length - 20, longString?.length)}`
 }
+
+export const formatRewardAddress = (longString: string) => {
+  return `${longString?.slice(0, 14)}...${longString?.slice(longString?.length - 8, longString?.length)}`
+}
