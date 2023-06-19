@@ -26,7 +26,11 @@ const RankItem: React.FC<Props> = ({
           src={image}
           alt={image}
         />
-        {no && <p className="absolute text-sm font-medium text-white">{no}</p>}
+        {no && (
+          <div className="absolute flex items-center justify-center w-full">
+            <p className="text-md font-medium text-white">{no}</p>
+          </div>
+        )}
       </div>
       <div className="justify-start">{formatLongString(address)}</div>
       <div className="flex items-center">
