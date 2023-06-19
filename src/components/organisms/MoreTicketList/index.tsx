@@ -2,10 +2,10 @@ import MoreTicketItem from "../../molecules/MoreTicketItem";
 import { StatusTask } from "../ListTodayTask";
 
 export interface MoreTicket {
-  data: {
+  data?: {
     forEvery?: boolean;
     completedAnyTask?: boolean;
-    completedAllTask?: true;
+    completedAllTask?: boolean;
   };
 }
 
@@ -17,9 +17,9 @@ interface Props {
   statusTask: StatusTask[];
 }
 const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
-  const completed_any_task = data?.data.completedAnyTask;
-  const for_every = data?.data.forEvery;
-  const completed_all_task = data?.data.completedAllTask;
+  const completed_any_task = data?.data?.completedAnyTask;
+  const for_every = data?.data?.forEvery;
+  const completed_all_task = data?.data?.completedAllTask;
   console.log("=data", data);
   return (
     <div className="mt-8 space-y-6">
