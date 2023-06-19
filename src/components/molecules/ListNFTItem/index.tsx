@@ -56,6 +56,7 @@ const ListNFTItem: React.FC<Props> = ({
       return;
     }
 
+    const fee = 0.12 * SUI_DECIMAL;
     try {
       const txb = new TransactionBlock();
       txb.moveCall({
@@ -64,7 +65,7 @@ const ListNFTItem: React.FC<Props> = ({
           txb.pure(marketId),
           txb.pure(nftId),
           txb.makeMoveVec({
-            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price))])],
+            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price + fee))])],
           }),
         ],
         typeArguments: [nftType],
@@ -108,9 +109,7 @@ const ListNFTItem: React.FC<Props> = ({
     }
   };
   const isShowList =
-    data &&
-    !data?.saleStatus &&
-    data.owner?.address?.address === address
+    data && !data?.saleStatus && data.owner?.address?.address === address;
   const isShowBuy =
     data?.saleStatus &&
     data.saleStatus.onSale &&

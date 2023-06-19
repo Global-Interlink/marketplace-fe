@@ -81,7 +81,7 @@ const NFT = () => {
       setLoading(false);
       return;
     }
-
+    const fee = 0.12 * SUI_DECIMAL;
     try {
       const txb = new TransactionBlock();
       txb.moveCall({
@@ -90,7 +90,7 @@ const NFT = () => {
           txb.pure(marketId),
           txb.pure(nftId),
           txb.makeMoveVec({
-            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price))])],
+            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price + fee))])],
           }),
         ],
         typeArguments: [nftType],
