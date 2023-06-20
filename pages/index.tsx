@@ -29,7 +29,7 @@ const Home = () => {
       })
     );
   }, []);
-  const isShowEvent = process.env.NEXT_PUBLIC_EVENT_STARTED  === "true";
+  const isShowEvent = process.env.NEXT_PUBLIC_EVENT_STARTED === "true";
 
   return status === FetchStatus.idle ||
     (status === FetchStatus.pending && currentPage === 1) ? (
@@ -44,8 +44,8 @@ const Home = () => {
         {isShowEvent && (
           <Link href={"/event"}>
             <Image
-              src={"/banner-event.svg"}
-              className="object-cover w-full h-full"
+              src={"/banner-event.png"}
+              className="object-cover rounded-md md:rounded-xl mb-6 h-[100px] md:h-auto"
               width={3000}
               height={500}
               alt="banner"
