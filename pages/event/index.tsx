@@ -22,14 +22,15 @@ import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
 
 const getAccessToken = async (walletAddress: string) => {
-  const secret = new TextEncoder().encode("ABBCD");
+  const secret = new TextEncoder().encode("ABCCD");
+  const alg = "HS256";
   const token = await new jose.SignJWT({
     walletAddress: walletAddress,
     role: "user",
     userId: 1,
     timeExpires: new Date().toUTCString(),
   })
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg })
     .setIssuedAt()
     .setExpirationTime("2m")
     .sign(secret);
@@ -46,12 +47,6 @@ const Campaign = () => {
   const [rewards, setRewards] = React.useState<Reward[]>([]);
   const api = createAxios();
   const fetchData = async () => {
-    api.get<AllTaskDay>("/history-task/weekly/all-tasks").then((res) => {
-      setWeeklyProgress(res.data);
-    });
-    api.get<{ data: StatusTask[] }>("/history-task/status-task").then((res) => {
-      setStatusTasks(res.data.data);
-    });
     api
       .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar")
       .then((res) => {
@@ -60,9 +55,28 @@ const Campaign = () => {
     fetchLeaderBoard();
   };
 
+  const fetchAllTask = async (address: string) => {
+    const token = await getAccessToken(address);
+    const api = createAxios(token);
+    api.get<{ data: StatusTask[] }>("/history-task/status-task").then((res) => {
+      setStatusTasks(res.data.data);
+    });
+    api.get<AllTaskDay>("/history-task/weekly/all-tasks").then((res) => {
+      setWeeklyProgress(res.data);
+    });
+  };
+
   const fetchLeaderBoard = async (address?: string) => {
-    // const token = await getAccessToken(address);
-    const api = createAxios();
+    if (address) {
+      const token = await getAccessToken(address);
+      const api = createAxios(token);
+      api
+        .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
+        .then((res) => {
+          setLeaderBoard(res.data);
+        });
+      return;
+    }
     api
       .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
       .then((res) => {
@@ -70,7 +84,6 @@ const Campaign = () => {
       });
   };
 
-  console.log("=", rewards);
   const handleBuy = (type: string) => {
     api
       .post("/more-tickets/buy-more-ticket", {
@@ -106,6 +119,7 @@ const Campaign = () => {
     if (address) {
       fetchMoreTicketData(address);
       fetchLeaderBoard(address);
+      fetchAllTask(address);
     }
   }, [address]);
 
