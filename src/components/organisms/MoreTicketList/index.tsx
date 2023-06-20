@@ -1,4 +1,6 @@
+import { useWallet } from "@suiet/wallet-kit";
 import MoreTicketItem from "../../molecules/MoreTicketItem";
+import { AllTaskDay } from "../../molecules/WeeklyProgress";
 import { StatusTask } from "../ListTodayTask";
 
 export interface MoreTicket {
@@ -15,17 +17,28 @@ interface Props {
     type: "forEvery" | "completedAnyTask" | "completedAllTask"
   ) => void;
   statusTask: StatusTask[];
+  weeklyProgress?: AllTaskDay;
 }
-const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
+const MoreTicketList: React.FC<Props> = ({
+  data,
+  onHandleBuy,
+  statusTask,
+  weeklyProgress,
+}) => {
+  const { connected } = useWallet();
   const completed_any_task = data?.data?.completedAnyTask;
   const for_every = data?.data?.forEvery;
   const completed_all_task = data?.data?.completedAllTask;
+  const weeklyTask = Object.values(weeklyProgress || {});
+  const isNotCompletedAllWeeklyTask = weeklyProgress
+    ? true
+    : weeklyTask.filter((i) => i < 3).length > 0;
   return (
     <div className="mt-8 space-y-6">
       <MoreTicketItem
         title="1 ticket (1000 - 2000 tGIL)"
         description="One lucky chance for everyone"
-        status={for_every ? "bought" : "available"}
+        status={!connected ? "unavailable" : for_every ? "bought" : "available"}
         mission="1"
         onHandleBuy={onHandleBuy}
       />
@@ -33,7 +46,9 @@ const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
         title="1 ticket (1000 tGIL)"
         description="For complete at least 1 task"
         status={
-          completed_any_task
+          !connected
+            ? "unavailable"
+            : completed_any_task
             ? "bought"
             : statusTask.find((i) => i.statusTask === true)
             ? "available"
@@ -46,11 +61,13 @@ const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
         title="3 tickets"
         description="For complete all daily tasks the whole week"
         status={
-          completed_all_task
+          !connected
+            ? "unavailable"
+            : completed_all_task
             ? "bought"
-            : !statusTask.find((i) => i.statusTask === false)
-            ? "available"
-            : "unavailable"
+            : isNotCompletedAllWeeklyTask
+            ? "unavailable"
+            : "available"
         }
         mission="3"
         onHandleBuy={onHandleBuy}

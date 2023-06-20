@@ -39,7 +39,7 @@ const getAccessToken = async (walletAddress: string) => {
 };
 
 const Campaign = () => {
-  const { address } = useWallet();
+  const { address, connected } = useWallet();
   const { theme } = useTheme();
   const [weeklyProgress, setWeeklyProgress] = React.useState<AllTaskDay>();
   const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>([]);
@@ -109,6 +109,15 @@ const Campaign = () => {
     fetchData();
   }, []);
 
+  React.useEffect(() => {
+    if (!connected) {
+      setStatusTasks([]);
+      setWeeklyProgress(undefined);
+      setMoreTicket(undefined);
+      fetchLeaderBoard();
+    }
+  }, [connected]);
+
   const fetchMoreTicketData = (address: string) => {
     api
       .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
@@ -155,6 +164,7 @@ const Campaign = () => {
                 data={moreTicket}
                 onHandleBuy={handleBuy}
                 statusTask={statusTasks}
+                weeklyProgress={weeklyProgress}
               />
             </div>
           </div>
