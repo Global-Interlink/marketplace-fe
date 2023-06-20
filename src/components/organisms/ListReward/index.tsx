@@ -57,7 +57,7 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       )}
       {data.length === 0 && (
         <div className="absolute w-full flex justify-center h-full top-0 left-0 items-center">
-          <p className="text-[#344054]">No Reward</p>
+          <p className="text-[#344054] dark:text-white">No Reward</p>
         </div>
       )}
     </div>

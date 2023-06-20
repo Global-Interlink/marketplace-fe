@@ -22,6 +22,9 @@ const ListRanking: React.FC<Props> = ({ data }) => {
     );
   return (
     <div className="mt-6 space-y-4">
+      {!data || data?.top.length === 0 ? (
+        <p className="text-center mt-10 dark:text-white">No Data</p>
+      ) : null}
       {data?.top.slice(0, 4).map((i, index) => {
         return (
           <RankItem

@@ -10,10 +10,10 @@ interface Props {
 }
 const Tabs: React.FC<Props> = ({ items, onChangeKey, activeKey }) => {
   return (
-    <ul className="inline-flex rounded-lg text-center p-1 text-[#667085] dark:text-[#98A2B3] border bg-gray-50">
+    <ul className="inline-flex rounded-lg text-center p-1 text-[#667085] dark:text-[#98A2B3] border bg-gray-50 space-x-2">
       {items.map((i) => {
         return (
-          <li className="mr-2" key={i.key}>
+          <li key={i.key}>
             <button
               className={`inline-block text-sm px-4 py-2 hover:tex rounded-lg ${
                 i.key === activeKey

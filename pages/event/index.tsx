@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
+import { getNextSunday } from "../../src/utils/common";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -124,6 +125,9 @@ const Campaign = () => {
     }
   }, [address]);
 
+  const timeCountdown = React.useMemo(() => {
+    return getNextSunday().valueOf();
+  }, []);
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
@@ -166,7 +170,7 @@ const Campaign = () => {
               <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
                 Weekly Giveaway end in
               </p>
-              <CountDown startTime={1687948015000} />
+              <CountDown startTime={timeCountdown} />
               <p className="mt-4 text-[#344054] dark:text-[#EAECF0]">
                 Current Prizepool
               </p>
@@ -175,20 +179,22 @@ const Campaign = () => {
               </p>
               <p className="text-[#667085] dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}
-                <Link className="gradientColor" href="/event/prize">
+                <Link className="text-[#E23DCC]" href="/event/prize">
                   here.
                 </Link>
               </p>
               <ListRanking data={leaderBoard} />
             </div>
-            <div className="flex items-center justify-center mt-4">
-              <Link
-                href={"/event/weekly-reward/tickets"}
-                className="text-sm rounded-full border py-2 px-[14px]"
-              >
-                View All
-              </Link>
-            </div>
+            {leaderBoard && leaderBoard.top && leaderBoard.top.length > 0 && (
+              <div className="flex items-center justify-center mt-4">
+                <Link
+                  href={"/event/weekly-reward/tickets"}
+                  className="text-sm rounded-full border py-2 px-[14px]"
+                >
+                  View All
+                </Link>
+              </div>
+            )}
           </div>
         </div>
         <div
