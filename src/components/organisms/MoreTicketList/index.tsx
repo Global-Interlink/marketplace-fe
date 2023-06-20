@@ -20,7 +20,6 @@ const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
   const completed_any_task = data?.data?.completedAnyTask;
   const for_every = data?.data?.forEvery;
   const completed_all_task = data?.data?.completedAllTask;
-  console.log("=data", data);
   return (
     <div className="mt-8 space-y-6">
       <MoreTicketItem
@@ -31,7 +30,7 @@ const MoreTicketList: React.FC<Props> = ({ data, onHandleBuy, statusTask }) => {
         onHandleBuy={onHandleBuy}
       />
       <MoreTicketItem
-        title="1 tickets (1000 tGIL)"
+        title="1 ticket (1000 tGIL)"
         description="For complete at least 1 task"
         status={
           completed_any_task

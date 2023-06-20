@@ -6,7 +6,6 @@ import { SUI_DECIMAL } from "../../../api/constants";
 const AccountBalance = () => {
   const { address, chain } = useWallet();
   const { totalBalance, fetched } = useWalletBalance(address, chain?.id);
-  console.log("==totalBalance", totalBalance);
   return (
     <div className="accountBalance flex flex-col justify-center items-center">
       <p className="accountBalanceAddress">{formatLongString(address || "")}</p>

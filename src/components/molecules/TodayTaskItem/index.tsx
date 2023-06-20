@@ -4,8 +4,14 @@ interface Props {
   title: string;
   description: string;
   status: boolean;
+  event: string;
 }
-const TodayTaskItem: React.FC<Props> = ({ title, description, status }) => {
+const TodayTaskItem: React.FC<Props> = ({
+  title,
+  description,
+  status,
+  event,
+}) => {
   const { push } = useRouter();
   const statusColor = status
     ? "bg-[#D1FADF]  text-[#039855]"
@@ -20,13 +26,17 @@ const TodayTaskItem: React.FC<Props> = ({ title, description, status }) => {
     >
       <div>
         <p className="uppercase text-sm">{title}</p>
-        <p className="text-[12px] text-gray-400">{description}</p>
+        <p className="text-[12px] text-[#98A2B3]">{description}</p>
       </div>
       <button
         className={`text-sm h-8 rounded-full px-3 ${statusColor}`}
         onClick={() => {
           if (!status) {
-            push("/");
+            if (event.includes("Buy")) {
+              push("/");
+            } else {
+              push("/profile");
+            }
           }
         }}
       >

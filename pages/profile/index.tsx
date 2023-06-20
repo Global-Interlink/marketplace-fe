@@ -111,7 +111,7 @@ const Collection = () => {
       label: (
         <div className="flex items-center space-x-[6px]">
           <p>My items</p>
-          <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
+          <span className="text-white dark:text-[#D0D5DD] bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
             {response?.meta.totalItems}
           </span>
         </div>
@@ -171,7 +171,7 @@ const Collection = () => {
       label: (
         <div className="flex items-center space-x-[6px]">
           <p>Listing</p>
-          <span className="text-white dark:text-gray-300 bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
+          <span className="text-white dark:text-[#D0D5DD] bg-gray-500 dark:bg-inputBg text-base px-1 rounded">
             {listed?.meta.totalItems}
           </span>
         </div>

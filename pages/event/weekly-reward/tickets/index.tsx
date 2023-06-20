@@ -63,7 +63,7 @@ const Tickets = () => {
             { title: "Weekly Reward Tickets" },
           ]}
         />
-        <div className="w-full md:max-w-5xl bg-white mx-auto campaignboxshadow rounded-lg py-8 px-6 md:px-[42px] text-gray-900">
+        <div className="w-full md:max-w-5xl bg-white mx-auto campaignboxshadow rounded-lg py-8 px-6 md:px-[42px] text-[#101828]">
           <p className="text-[30px] font-medium">Weekly Reward Tickets</p>
           <div className="mt-4 flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0  lg:space-x-11">
             <Tabs
@@ -90,7 +90,7 @@ const Tickets = () => {
           </div>
           <div className="mt-10  rounded-lg border-t border-2">
             <table className="w-full whitespace-pre-wrap break-all">
-              <thead className="bg-gray-50 text-gray-500">
+              <thead className="bg-gray-50 text-[#667085]">
                 <tr className="text-left">
                   <th className="px-6 py-2 font-normal text-xs rounded-tl-lg w-1/4">
                     Ticket No.
@@ -107,13 +107,13 @@ const Tickets = () => {
                 {currentItems.map((i) => {
                   return (
                     <tr className="text-sm border-b" key={i.ticketId}>
-                      <td className="px-6 py-4 text-gray-900">
+                      <td className="px-6 py-4 text-[#101828]">
                         {i.ticketNumber}
                       </td>
-                      <td className="px-6 py-4 text-gray-500">
+                      <td className="px-6 py-4 text-[#667085]">
                         {formatAddress(i.walletAddress)}
                       </td>
-                      <td className="px-6 py-4 text-gray-500">
+                      <td className="px-6 py-4 text-[#667085]">
                         {dayjs(i.createdAt).format("HH:mm:ss YYYY-MM-DD")}
                       </td>
                     </tr>
@@ -122,16 +122,16 @@ const Tickets = () => {
               </tbody>
             </table>
             {activeTab === "1" && !address && (
-              <p className="text-sm p-4 text-center text-gray-500">
+              <p className="text-sm p-4 text-center text-[#667085]">
                 Please connect wallet
               </p>
             )}
             {currentItems.length === 0 && (
-              <p className="text-sm p-4 text-center text-gray-500">No data</p>
+              <p className="text-sm p-4 text-center text-[#667085]">No data</p>
             )}
           </div>
           {totalPages > 1 && (
-            <div className="text-sm text-gray-700 flex items-center justify-between mt-[28px]">
+            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
               <p>
                 Page {currentPage} of {totalPages}
               </p>
@@ -139,7 +139,7 @@ const Tickets = () => {
                 <button
                   className={`rounded-full border py-2 px-[14px] ${
                     currentPage === 1
-                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
                       : ""
                   }`}
                   onClick={() => {
@@ -153,7 +153,7 @@ const Tickets = () => {
                 <button
                   className={`rounded-full border py-2 px-[14px] ${
                     currentPage === totalPages
-                      ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
                       : ""
                   }`}
                   onClick={() => {

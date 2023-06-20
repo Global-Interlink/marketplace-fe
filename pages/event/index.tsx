@@ -61,9 +61,11 @@ const Campaign = () => {
     api.get<{ data: StatusTask[] }>("/history-task/status-task").then((res) => {
       setStatusTasks(res.data.data);
     });
-    api.get<AllTaskDay>("/history-task/weekly/all-tasks").then((res) => {
-      setWeeklyProgress(res.data);
-    });
+    api
+      .get<{ data: AllTaskDay }>("/history-task/weekly/all-tasks")
+      .then((res) => {
+        setWeeklyProgress(res.data.data);
+      });
   };
 
   const fetchLeaderBoard = async (address?: string) => {
@@ -91,7 +93,6 @@ const Campaign = () => {
         walletAddress: address,
       })
       .then((res) => {
-        console.log(res);
         toast.success("Buy ticket success!");
         if (address) {
           fetchMoreTicketData(address);
@@ -126,24 +127,24 @@ const Campaign = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-12 text-gray-900">
+        <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-12 text-[#101828]">
           <div
             className={`w-full lg:w-1/2 p-4 md:p-8  rounded-lg campaignboxshadow ${
               theme === "dark" ? "darkGradient" : "bg-white"
             }`}
           >
             <p className="text-[30px] font-medium">Daily Task</p>
-            <p className="text-gray-500 dark:text-gray-300">
+            <p className="text-[#667085] dark:text-[#D0D5DD]">
               Track your progress to get more tickets for weekly reward pool
             </p>
             <div className="mt-4">
-              <p className="dark:text-gray-200">Weekly progression</p>
+              <p className="dark:text-[#EAECF0]">Weekly progression</p>
               <WeeklyProgress data={weeklyProgress} />
             </div>
             <div className="mt-5">
               <ListTodayTask data={statusTasks} />
               <p className="text-[30px] mt-8 font-medium">Get more tickets</p>
-              <p className="text-gray-500 dark:text-gray-300">
+              <p className="text-[#667085] dark:text-[#D0D5DD]">
                 Chance to get more tickets weekly
               </p>
               <MoreTicketList
@@ -162,17 +163,17 @@ const Campaign = () => {
               className={`bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
             >
               <p className="text-[30px] font-medium">Leaderboard</p>
-              <p className="mt-4 text-gray-700 mb-2 dark:text-gray-200">
+              <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
                 Weekly Giveaway end in
               </p>
               <CountDown startTime={1687948015000} />
-              <p className="mt-4 text-gray-700 dark:text-gray-200">
+              <p className="mt-4 text-[#344054] dark:text-[#EAECF0]">
                 Current Prizepool
               </p>
               <p className="gradientColor !leading-[60px] !text-[48px] font-semibold">
                 10,000 SUI
               </p>
-              <p className="text-gray-500 dark:text-gray-300">
+              <p className="text-[#667085] dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}
                 <Link className="gradientColor" href="/event/prize">
                   here.
@@ -191,7 +192,7 @@ const Campaign = () => {
           </div>
         </div>
         <div
-          className={`mt-10 text-gray-900 p-8 h-[1056px] campaignboxshadow rounded-[18px] ${
+          className={`mt-10 text-[#101828] p-8 campaignboxshadow rounded-[18px] ${
             theme === "dark" ? "darkGradient" : "bg-white"
           }`}
         >

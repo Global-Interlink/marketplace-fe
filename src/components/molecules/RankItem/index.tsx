@@ -16,7 +16,7 @@ const RankItem: React.FC<Props> = ({
   no,
 }) => {
   return (
-    <div className="bg-gray-50 dark:bg-boxTaskDarkNew dark:text-gray-200 break-all flex items-center border-2 py-[14px] text-gray-700 px-4 lg:px-6 rounded-lg space-x-2 md:space-x-4 justify-between">
+    <div className="bg-gray-50 dark:bg-boxTaskDarkNew dark:text-[#EAECF0] break-all flex items-center border-2 py-[14px] text-[#344054] px-4 lg:px-6 rounded-lg space-x-2 md:space-x-4 justify-between">
       <div className="relative flex items-center justify-start">
         <Image
           preview={false}

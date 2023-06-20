@@ -30,7 +30,6 @@ const Home = () => {
     );
   }, []);
   const isShowEvent = process.env.NEXT_PUBLIC_EVENT_STARTED  === "true";
-  console.log("=isShowEvent", isShowEvent);
 
   return status === FetchStatus.idle ||
     (status === FetchStatus.pending && currentPage === 1) ? (

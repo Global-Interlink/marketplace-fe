@@ -80,7 +80,6 @@ const Collection = () => {
     const divElement = document.querySelector(".collection-description");
     if (divElement) {
       const divHeight = divElement.getBoundingClientRect().height;
-      console.log(divHeight);
       if (divHeight > 72) {
         setIsShow(true);
       }
@@ -188,7 +187,6 @@ const Collection = () => {
                 <p className="text-black dark:text-white font-bold">Items</p>
                 <Sort
                   onChange={(sort) => {
-                    console.log("=sort", sort);
                     setSort(sort);
                   }}
                   sort={sort}

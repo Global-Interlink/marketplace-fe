@@ -5,6 +5,7 @@ export interface StatusTask {
   title: string;
   tokenNumber: number;
   tiket: number;
+  content: string;
 }
 interface Props {
   data?: StatusTask[];
@@ -18,9 +19,10 @@ const ListTodayTask: React.FC<Props> = ({ data }) => {
           return (
             <TodayTaskItem
               key={idx}
-              title={i.title}
+              title={i.content}
               description={`${i.tokenNumber} tGIL + ${i.tiket} ticket`}
               status={i.statusTask}
+              event={i.title}
             />
           );
         })}

@@ -1,14 +1,14 @@
-import SearchIcon from "../../atoms/Icons/search";
+import SearchIcon2 from "../../atoms/Icons/SearchIcon";
 
 interface Props {
   onChangeText: (keyword: string) => void;
 }
 const SearchTicket: React.FC<Props> = ({ onChangeText }) => {
   return (
-    <div className="flex-1 border rounded-md flex items-center space-x-3 py-3 px-4">
-      <SearchIcon />
+    <div className="flex-1 border rounded-md flex items-center space-x-2 py-3 px-4">
+      <SearchIcon2 />
       <input
-        className="w-full px-2 focus:outline-none bg-white"
+        className="w-full focus:outline-none bg-white text-[#344054]"
         onChange={(e) => {
           onChangeText(e.target.value);
         }}

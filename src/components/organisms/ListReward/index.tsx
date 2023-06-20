@@ -27,8 +27,8 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
     <div
       className={`relative flex flex-col space-y-4 w-full min-h-[260px]  md:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
     >
-      {data.slice(0,4).map((i) => {
-        return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />
+      {data.slice(0, 4).map((i) => {
+        return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />;
       })}
       <div className="absolute -right-[160px] -top-[40px]">
         <Image
@@ -45,14 +45,21 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
           height={239}
         />
       </div>
-      <div className="absolute w-full flex -bottom-[26px] h-8 justify-center items-center">
-        <Image
-          preview={false}
-          src={"/more-icon.svg"}
-          alt="more"
-          className="cursor-pointer"
-        />
-      </div>
+      {data.length > 4 && (
+        <div className="absolute w-full flex -bottom-[26px] h-8 justify-center items-center">
+          <Image
+            preview={false}
+            src={"/more-icon.svg"}
+            alt="more"
+            className="cursor-pointer"
+          />
+        </div>
+      )}
+      {data.length === 0 && (
+        <div className="absolute w-full flex justify-center h-full top-0 left-0 items-center">
+          <p className="text-[#344054]">No Reward</p>
+        </div>
+      )}
     </div>
   );
 };

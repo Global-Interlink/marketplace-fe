@@ -61,10 +61,12 @@ const WeeklyProgress: React.FC<Props> = ({ data }) => {
                 alt="s"
               />
               <div className="absolute text-sm top-0 h-full w-full flex justify-center items-center font-medium">
-                <p className="mt-2 text-gray-700 dark:text-gray-300">{taskCompleted[idx]}/3</p>
+                <p className="mt-2 text-[#344054] dark:text-[#D0D5DD]">
+                  {taskCompleted[idx]}/3
+                </p>
               </div>
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-300 text-center font-medium">
+            <div className="text-xs text-[#667085] dark:text-[#D0D5DD] text-center font-medium">
               {i}
             </div>
           </div>

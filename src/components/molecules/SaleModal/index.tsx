@@ -84,7 +84,6 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
         close && close();
       }
     } catch (e: any) {
-      console.log("=e", e);
       setLoading(false);
       toast.error(e.message);
       close && close();

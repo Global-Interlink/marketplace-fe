@@ -6,7 +6,6 @@ const useWalletBalance = (
   chainId?: string,
   coinType?: string
 ) => {
-  console.log("=chain", chainId);
   const [fetching, setFetching] = useState(false);
   const [totalBalance, setTotalBalance] = useState(BigInt(0));
   const [fetched, setFetched] = useState(false);
@@ -19,9 +18,7 @@ const useWalletBalance = (
         coinType: coinType,
       });
       return object;
-    } catch (e) {
-      console.log("=e", e);
-    }
+    } catch (e) {}
   };
 
   const fetchBalance = async (address: string, coinType?: string) => {
