@@ -13,6 +13,8 @@ import SearchForm from "../../molecules/Search";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AccountBalance from "../../molecules/AccountBalance";
+import ArrowRight from "../../atoms/Icons/ArrowRight";
+import Sparkle from "react-sparkle";
 
 const Header = () => {
   const { connected, address, chain, disconnect, signMessage } = useWallet();
@@ -131,11 +133,25 @@ const Header = () => {
             </div>
           </Dropdown>
         </div>
+        <Link href={"/event"}>
+          <div className="flex items-center space-x-2 relative">
+            <p className="gradientColor textShadow text-sm">Go to Event</p>
+            <ArrowRight />
+            <Sparkle
+              color={"#EA28D7"}
+              count={10}
+              minSize={7}
+              maxSize={12}
+              fadeOutSpeed={30}
+              flicker={false}
+            />
+          </div>
+        </Link>
         <div className="flex items-center">
           <div className="text-black dark:text-white items-center hidden lg:flex">
             {connected && (
               <>
-                <div className="mr-12 flex items-center space-x-2">
+                <div className="mr-6 flex items-center space-x-2">
                   <Image
                     src="/ic-sui.svg"
                     alt="sui"
