@@ -1,5 +1,6 @@
 import { Image } from "antd";
 import { formatLongString } from "../../../contract-abi/consts";
+import { useWallet } from "@suiet/wallet-kit";
 
 interface Props {
   image: string;
@@ -15,6 +16,7 @@ const RankItem: React.FC<Props> = ({
   tickets,
   no,
 }) => {
+  const wallet = useWallet();
   return (
     <div className="bg-gray-50 dark:bg-boxTaskDarkNew dark:text-[#EAECF0] break-all flex items-center border-2 py-[14px] text-[#344054] px-4 lg:px-6 rounded-lg space-x-2 md:space-x-4 justify-between">
       <div className="relative flex items-center justify-start">
@@ -32,7 +34,12 @@ const RankItem: React.FC<Props> = ({
           </div>
         )}
       </div>
-      <div className="justify-start">{formatLongString(address)}</div>
+      <div className="justify-start">
+        {formatLongString(address)}
+        {no && wallet.address?.toLowerCase() === address.toLowerCase()
+          ? " (you)"
+          : ""}
+      </div>
       <div className="flex items-center">
         <Image
           preview={false}
