@@ -9,6 +9,7 @@ export interface MoreTicket {
     completedAnyTask?: boolean;
     completedAllTask?: boolean;
   };
+  numberDynamicNft: number;
 }
 
 interface Props {
@@ -38,7 +39,13 @@ const MoreTicketList: React.FC<Props> = ({
       <MoreTicketItem
         title="1 ticket (1000 - 2000 tGIL)"
         description="One lucky chance for everyone"
-        status={!connected ? "unavailable" : for_every ? "bought" : "available"}
+        status={
+          !connected || data?.numberDynamicNft === 0
+            ? "unavailable"
+            : for_every
+            ? "bought"
+            : "available"
+        }
         mission="1"
         onHandleBuy={onHandleBuy}
       />
