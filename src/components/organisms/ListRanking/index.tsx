@@ -21,15 +21,21 @@ const ListRanking: React.FC<Props> = ({ data }) => {
         i.walletAddress.toLowerCase() === data.self.walletAddress.toLowerCase()
     );
   return (
-    <div className="mt-6 space-y-4">
+    <div
+      className={`mt-6 space-y-4 ${
+        !data || data?.top.length === 0 ? "flex flex-1 flex-col" : ""
+      } `}
+    >
       {!data || data?.top.length === 0 ? (
-        <p className="text-center mt-10 dark:text-white">No Data</p>
+        <div className="flex items-center w-full  h-full text-center justify-center dark:text-white">
+          No Data
+        </div>
       ) : null}
       {data?.top.slice(0, showCurrentRank ? 4 : 5).map((i, index) => {
         return (
           <RankItem
             key={i.walletAddress}
-            image={`/rank${index + 1}.svg`}
+            image={index < 4 ? `/rank${index + 1}.svg` : "/rank5.png"}
             address={i.walletAddress}
             percent={i.percent}
             tickets={i.numberTickets}

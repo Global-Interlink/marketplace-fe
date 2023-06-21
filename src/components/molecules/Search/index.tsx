@@ -80,7 +80,7 @@ const SearchForm = () => {
               <Link key={idx} href={`/collection/${i.id}`}>
                 <div
                   key={idx}
-                  className="flex items-center space-x-3 px-6 pt-3 pb-3 cursor-pointer bg-white dark:bg-bgProperty hover:bg-gray-400"
+                  className="flex items-start space-x-3 px-6 pt-3 pb-3 cursor-pointer bg-white dark:bg-bgProperty hover:bg-gray-400"
                   onClick={() => {
                     setShowBottom(false);
                   }}
@@ -91,11 +91,11 @@ const SearchForm = () => {
                       height={44}
                       alt="logo-searc"
                       src={i.featuredImage}
-                      className="rounded-full w-[44px] h-[44px]" 
+                      className="rounded-full w-[44px] min-w-[44px] h-[44px]" 
                     />
                   </div>
                   <div>
-                    <span className="externalSP text-sm text-black dark:text-white">{i.name}</span>
+                    <span className="externalSP text-sm text-black dark:text-white line-clamp-2" title={i.name}>{i.name}</span>
                     <div className="flex items-center space-x-3 mt-[6px]">
                       <span className="text-gray-500 text-sm">
                         {i.totalNfts} items

@@ -102,17 +102,17 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
         <div className="mt-8 space-y-2">
           <p className="text-[24px] font-bold text-left break-all">{item?.name}</p>
           {item?.collection && (
-            <div className="flex w-full items-center space-x-2">
+            <div className="flex w-full items-start space-x-2">
               <div className="">
                 <Image
                   alt="logo-lp"
                   src={item?.collection?.logo || ""}
                   width={512}
                   height={512}
-                  className="w-[36px] h-[36px] min-w-[36px] mt-2 md:mt-0 object-cover rounded-full"
+                  className="w-[36px] h-[36px] min-w-[36px] mt-2 object-cover rounded-full"
                 />
               </div>
-              <span className="external mt-2 md:text-[20px] text-black dark:text-white font-display">
+              <span className="external md:text-[20px] text-black dark:text-white font-display">
                 {item?.collection?.name}
               </span>
             </div>

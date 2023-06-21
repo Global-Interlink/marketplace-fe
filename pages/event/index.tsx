@@ -125,18 +125,17 @@ const Campaign = () => {
 
   React.useEffect(() => {
     if (address) {
-      setTimeout(() => {
-        fetchMoreTicketData(address);
-        fetchLeaderBoard(address);
-        fetchAllTask(address);
-        setFetched(true);
-      });
+      fetchMoreTicketData(address);
+      fetchLeaderBoard(address);
+      fetchAllTask(address);
+      setFetched(true);
     }
   }, [address]);
 
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
+  console.log("=timeCountdown", timeCountdown);
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
@@ -174,7 +173,7 @@ const Campaign = () => {
             }`}
           >
             <div
-              className={`bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
+              className={`flex  flex-col h-full bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
             >
               <p className="text-[30px] font-medium">Leaderboard</p>
               <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
@@ -185,7 +184,10 @@ const Campaign = () => {
                 Current Prizepool
               </p>
               <p className="gradientColor !leading-[60px] !text-[48px] font-semibold">
-                {Number(Number(totalBalance) / SUI_DECIMAL).toLocaleString()} SUI
+                {Number(
+                  Math.ceil(Number(totalBalance) / SUI_DECIMAL)
+                ).toLocaleString()}{" "}
+                SUI
               </p>
               <p className="text-[#667085] dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}
@@ -194,17 +196,17 @@ const Campaign = () => {
                 </Link>
               </p>
               <ListRanking data={leaderBoard} />
+              {leaderBoard && leaderBoard.top && leaderBoard.top.length > 0 && (
+                <div className="flex items-center justify-center mt-4">
+                  <Link
+                    href={"/event/weekly-reward/tickets"}
+                    className="text-sm rounded-full border py-2 px-[14px]"
+                  >
+                    View All
+                  </Link>
+                </div>
+              )}
             </div>
-            {leaderBoard && leaderBoard.top && leaderBoard.top.length > 0 && (
-              <div className="flex items-center justify-center mt-4">
-                <Link
-                  href={"/event/weekly-reward/tickets"}
-                  className="text-sm rounded-full border py-2 px-[14px]"
-                >
-                  View All
-                </Link>
-              </div>
-            )}
           </div>
         </div>
         <div

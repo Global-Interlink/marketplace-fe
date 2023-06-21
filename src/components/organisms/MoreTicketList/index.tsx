@@ -34,19 +34,21 @@ const MoreTicketList: React.FC<Props> = ({
   const isNotCompletedAllWeeklyTask = weeklyProgress
     ? true
     : weeklyTask.filter((i) => i < 3).length > 0;
+  const isCompletedAtLeastOneTask = weeklyTask.filter((i) => i > 0).length > 0;
   return (
     <div className="mt-8 space-y-6">
       <MoreTicketItem
         title="1 ticket (1000 - 2000 tGIL)"
         description="One lucky chance for everyone"
         status={
-          !connected || data?.numberDynamicNft === 0
-            ? "unavailable"
-            : for_every
+          for_every
             ? "bought"
+            : !connected || data?.numberDynamicNft === 0
+            ? "unavailable"
             : "available"
         }
         mission="1"
+        data={data}
         onHandleBuy={onHandleBuy}
       />
       <MoreTicketItem
@@ -57,12 +59,13 @@ const MoreTicketList: React.FC<Props> = ({
             ? "unavailable"
             : completed_any_task
             ? "bought"
-            : statusTask.find((i) => i.statusTask === true)
+            : isCompletedAtLeastOneTask
             ? "available"
             : "unavailable"
         }
         mission="2"
         onHandleBuy={onHandleBuy}
+        data={data}
       />
       <MoreTicketItem
         title="3 tickets"
@@ -78,6 +81,7 @@ const MoreTicketList: React.FC<Props> = ({
         }
         mission="3"
         onHandleBuy={onHandleBuy}
+        data={data}
       />
     </div>
   );

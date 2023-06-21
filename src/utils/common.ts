@@ -44,16 +44,16 @@ export function getNextSunday() {
   var nextSunday = new Date();
 
   // Lấy ngày hiện tại
-  var currentDay = today.getDay();
+  var currentDay = today.getUTCDay();
 
   // Tính số ngày cần thêm để đến Chủ nhật kế tiếp
-  var daysToAdd = 7 - currentDay + 1;
+  var daysToAdd = 7 - currentDay;
 
   // Đặt nextSunday thành ngày hiện tại + số ngày cần thêm
-  nextSunday.setDate(today.getDate() + daysToAdd);
+  nextSunday.setUTCDate(today.getUTCDate() + daysToAdd);
 
-  // Đặt thời gian của nextSunday thành cuối ngày
-  nextSunday.setHours(23, 59, 59, 999);
+  // Đặt thời gian của nextSunday thành 23:59:59
+  nextSunday.setUTCHours(23, 59, 59, 0);
 
   return nextSunday;
 }

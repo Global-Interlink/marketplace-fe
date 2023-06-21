@@ -13,7 +13,7 @@ interface Props {
 const ListTodayTask: React.FC<Props> = ({ data }) => {
   return (
     <>
-      <p>Today tasks</p>
+      <p className="font-normal">Today tasks</p>
       <div className="mt-6 space-y-6">
         {data?.map((i, idx) => {
           return (

@@ -41,7 +41,7 @@ const Footer = () => {
             </a>
 
             <a
-              href="https://twitter.com/MokuFinance"
+              href="https://t.me/glinterlink"
               target="_blank"
               rel="noreferrer"
               className="h-[24px] !w-[24px] bg-gray-500 dark:bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"

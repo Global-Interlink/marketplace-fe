@@ -25,7 +25,7 @@ const TodayTaskItem: React.FC<Props> = ({
       className={`${boxBgr} py-2 px-6 border rounded-lg flex justify-between items-center`}
     >
       <div>
-        <p className="uppercase text-sm">{title}</p>
+        <p className="uppercase text-sm font-medium">{title}</p>
         <p className="text-[12px] text-[#98A2B3]">{description}</p>
       </div>
       <button

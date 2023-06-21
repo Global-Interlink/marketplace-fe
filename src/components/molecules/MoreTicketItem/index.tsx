@@ -1,3 +1,5 @@
+import { MoreTicket } from "../../organisms/MoreTicketList";
+import { LoadingOutlined } from "@ant-design/icons";
 interface Props {
   title: string;
   description: string;
@@ -6,6 +8,7 @@ interface Props {
   onHandleBuy: (
     type: "forEvery" | "completedAnyTask" | "completedAllTask"
   ) => void;
+  data?: MoreTicket;
 }
 const MoreTicketItem: React.FC<Props> = ({
   title,
@@ -13,18 +16,20 @@ const MoreTicketItem: React.FC<Props> = ({
   status,
   mission,
   onHandleBuy,
+  data,
 }) => {
-  const buttonColor =
-    status === "available"
-      ? `bg-[#F9D8F5]  h-8 text-[#EB77DC]`
-      : status === "unavailable"
-      ? "text-[#D0D5DD] bg-gray-50"
-      : "bg-gray-50 text-[#475467]";
+  const buttonColor = !data
+    ? "text-[#D0D5DD] bg-gray-50"
+    : status === "available"
+    ? `bg-[#F9D8F5] text-[#EB77DC]`
+    : status === "unavailable"
+    ? "text-[#D0D5DD] bg-gray-50"
+    : "bg-gray-50 text-[#475467]";
   return mission === "2" ? (
     <div className="relative">
       <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-4 md:px-6 border rounded-lg flex justify-between items-center">
         <div>
-          <p className="text-sm">{title}</p>
+          <p className="text-sm font-medium">{title}</p>
           <p className="text-[12px] text-[#98A2B3]">{description}</p>
         </div>
         <button
@@ -33,9 +38,13 @@ const MoreTicketItem: React.FC<Props> = ({
               onHandleBuy("completedAnyTask");
             }
           }}
-          className={`md:text-sm h-8 rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
+          className={`md:text-sm h-8 min-h-[32px] rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
         >
-          {status === "bought" ? "Bought" : "Buy 1 ticket"}
+          {data ? (
+            <>{status === "bought" ? "Bought" : "Buy 1 ticket"}</>
+          ) : (
+            <LoadingOutlined className="text-[#E23DCC]" size={20} />
+          )}
         </button>
       </div>
       {status === "unavailable" && (
@@ -58,14 +67,18 @@ const MoreTicketItem: React.FC<Props> = ({
         <p className="text-[12px] text-[#98A2B3]">{description}</p>
       </div>
       <button
-        className={`md:text-sm h-8 rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
+        className={`md:text-sm h-8 min-h-[32px] rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
         onClick={() => {
           if (status === "available") {
             onHandleBuy("forEvery");
           }
         }}
       >
-        {status === "bought" ? "Bought" : "Buy 1 ticket"}
+        {data ? (
+          <>{status === "bought" ? "Bought" : "Buy 1 ticket"}</>
+        ) : (
+          <LoadingOutlined className="text-[#E23DCC]" size={20} />
+        )}
       </button>
     </div>
   ) : (
@@ -81,9 +94,13 @@ const MoreTicketItem: React.FC<Props> = ({
               onHandleBuy("completedAllTask");
             }
           }}
-          className={`md:text-sm h-8 rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
+          className={`md:text-sm h-8 min-h-[32px] rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
         >
-          {status === "bought" ? "Bought" : "Buy 3 ticket"}
+          {data ? (
+            <>{status === "bought" ? "Bought" : "Buy 3 tickets"}</>
+          ) : (
+            <LoadingOutlined className="text-[#E23DCC]" size={20} />
+          )}
         </button>
       </div>
       {status === "unavailable" && (
