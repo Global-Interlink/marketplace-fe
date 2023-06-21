@@ -45,7 +45,7 @@ const MoreTicketItem: React.FC<Props> = ({
               Notice
             </span>
             <span className="text-[#B54708] text-xs font-medium">
-              Complete at for complete at least 1 task to unlock
+              Complete at least one task to unlock
             </span>
           </div>
         </div>

@@ -33,10 +33,16 @@ export const formatRewardAddress = (longString: string) => {
     longString?.length
   )}`;
 };
+export const formatLeaderBoardAddress = (longString: string) => {
+  return `${longString?.slice(0, 6)}...${longString?.slice(
+    longString?.length - 6,
+    longString?.length
+  )}`;
+};
 
-export const formatUserRewardAddress = (longString: string) => {
-  return `${longString?.slice(0, 11)}...${longString?.slice(
-    longString?.length - 7,
+export const formatUserLeaderBoarddAddress = (longString: string) => {
+  return `${longString?.slice(0, 4)}...${longString?.slice(
+    longString?.length - 3,
     longString?.length
   )}`;
 };

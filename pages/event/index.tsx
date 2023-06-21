@@ -21,6 +21,8 @@ import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
 import { getNextSunday } from "../../src/utils/common";
+import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
+import { SUI_DECIMAL } from "../../src/api/constants";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -46,14 +48,15 @@ const Campaign = () => {
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
   const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
   const [rewards, setRewards] = React.useState<Reward[]>([]);
+  const [isFetched, setFetched] = React.useState(false);
   const api = createAxios();
+  const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
       .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar")
       .then((res) => {
         setRewards(res.data.data.data);
       });
-    fetchLeaderBoard();
   };
 
   const fetchAllTask = async (address: string) => {
@@ -69,22 +72,15 @@ const Campaign = () => {
       });
   };
 
-  const fetchLeaderBoard = async (address?: string) => {
-    if (address) {
-      const token = await getAccessToken(address);
-      const api = createAxios(token);
-      api
-        .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
-        .then((res) => {
-          setLeaderBoard(res.data);
-        });
-      return;
-    }
+  const fetchLeaderBoard = async (address: string) => {
+    const token = await getAccessToken(address);
+    const api = createAxios(token);
     api
       .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
       .then((res) => {
         setLeaderBoard(res.data);
       });
+    return;
   };
 
   const handleBuy = (type: string) => {
@@ -97,7 +93,7 @@ const Campaign = () => {
         toast.success("Buy ticket success!");
         if (address) {
           fetchMoreTicketData(address);
-          fetchLeaderBoard();
+          fetchLeaderBoard(address);
         }
       })
       .catch((e) => {
@@ -110,11 +106,12 @@ const Campaign = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!connected) {
+    if (!connected && isFetched) {
       setStatusTasks([]);
       setWeeklyProgress(undefined);
       setMoreTicket(undefined);
-      fetchLeaderBoard();
+      setLeaderBoard(undefined);
+      setFetched(false);
     }
   }, [connected]);
 
@@ -128,9 +125,12 @@ const Campaign = () => {
 
   React.useEffect(() => {
     if (address) {
-      fetchMoreTicketData(address);
-      fetchLeaderBoard(address);
-      fetchAllTask(address);
+      setTimeout(() => {
+        fetchMoreTicketData(address);
+        fetchLeaderBoard(address);
+        fetchAllTask(address);
+        setFetched(true);
+      });
     }
   }, [address]);
 
@@ -185,7 +185,7 @@ const Campaign = () => {
                 Current Prizepool
               </p>
               <p className="gradientColor !leading-[60px] !text-[48px] font-semibold">
-                10,000 SUI
+                {Number(Number(totalBalance) / SUI_DECIMAL).toLocaleString()} SUI
               </p>
               <p className="text-[#667085] dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}

@@ -25,7 +25,7 @@ const ListRanking: React.FC<Props> = ({ data }) => {
       {!data || data?.top.length === 0 ? (
         <p className="text-center mt-10 dark:text-white">No Data</p>
       ) : null}
-      {data?.top.slice(0, 4).map((i, index) => {
+      {data?.top.slice(0, showCurrentRank ? 4 : 5).map((i, index) => {
         return (
           <RankItem
             key={i.walletAddress}

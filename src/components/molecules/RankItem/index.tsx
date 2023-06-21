@@ -1,7 +1,7 @@
 import { Image } from "antd";
 import {
-  formatRewardAddress,
-  formatUserRewardAddress,
+  formatUserLeaderBoarddAddress,
+  formatLeaderBoardAddress,
 } from "../../../contract-abi/consts";
 import { useWallet } from "@suiet/wallet-kit";
 
@@ -22,8 +22,8 @@ const RankItem: React.FC<Props> = ({
   const wallet = useWallet();
   const isYou = wallet.address?.toLowerCase() === address.toLowerCase();
   const formatedAddress = isYou
-    ? formatUserRewardAddress(address)
-    : formatRewardAddress(address);
+    ? formatUserLeaderBoarddAddress(address)
+    : formatLeaderBoardAddress(address);
   return (
     <div className="bg-gray-50 dark:bg-boxTaskDarkNew dark:text-[#EAECF0] break-all flex items-center border-2 py-[14px] text-[#344054] px-4 lg:px-6 rounded-lg">
       <div className="flex w-full justify-between space-x-2 lg:space-x-4">
