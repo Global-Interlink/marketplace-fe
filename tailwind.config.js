@@ -57,6 +57,9 @@ module.exports = {
         footer: "0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 12px",
         collectionItem: "0px 10px 20px 5px rgba(17, 17, 17, 0.2)",
       },
+      screens: {
+        s_1440: "1440px",
+      },
     },
     fontFamily: {
       sans: ["Lexend", "sans-serif"],

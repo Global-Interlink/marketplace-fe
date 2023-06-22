@@ -10,10 +10,10 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col space-y-4 lg:space-y-0 lg:flex-row justify-between">
         <div className="flex sm:block justify-center flex-col items-center">
           <div className="hidden md:block">
-            <Image src="/logo.svg" alt="logo" width={175} height={72} />
+            <Image src="/logo.png" alt="logo" width={175} height={72} />
           </div>
           <div className="block md:hidden">
-            <Image src="/logo.svg" alt="logo" width={120} height={48} />
+            <Image src="/logo.png" alt="logo" width={120} height={48} />
           </div>
           <p className="text-2xl leading-[30px] sm:block hidden font-semibold dark:text-white text-gray-400 mt-4">
             Global Decentralized Financial

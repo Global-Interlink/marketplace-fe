@@ -25,24 +25,23 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       : "bg-[#FFF9F4] dark:bg-boxRewardBronze";
   return (
     <div
-      className={`relative flex flex-col w-full min-h-[260px]  md:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
+      className={`relative flex flex-col w-full min-h-[260px] lg:w-[380px] xl:w-[480px] 2xl:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
     >
       {data.slice(0, 4).map((i) => {
         return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />;
       })}
-      <div className="absolute -right-[160px] -top-[40px]">
+      <div className="absolute -right-[70px] md:-right-[160px] md:-top-[40px] w-[140px] md:w-[300px] md:h-[240px]">
         <Image
           src={
             rank === "gold"
-              ? "/reward-gold.svg"
+              ? "/reward-gold.png"
               : rank === "silver"
-              ? "/reward-silver.svg"
-              : "/reward-bronze.svg"
+              ? "/reward-silver.png"
+              : "/reward-bronze.png"
           }
           preview={false}
           alt="reward1"
-          width={301}
-          height={239}
+          className="object-contain"
         />
       </div>
       {data.length > 4 && (

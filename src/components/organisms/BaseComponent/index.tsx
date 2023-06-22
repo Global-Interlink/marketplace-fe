@@ -40,7 +40,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   return (
     <div className="relative">
       <Header />
-      <div className="dark:bg-bgCommonD pt-20 overflow-auto min-h-[100vh]  backdrop-blur-xl bg-bgCommonL bg-cover  bg-center bg-no-repeat">
+      <div className="dark:bg-bgCommonD overflow-x-hidden pt-20 overflow-auto min-h-[100vh]  backdrop-blur-xl bg-bgCommonL bg-cover  bg-center bg-no-repeat">
         <div
           className={`flex flex-1 w-full px-4 md:px-20 ${
             showBgTop

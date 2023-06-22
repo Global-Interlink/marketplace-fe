@@ -145,7 +145,7 @@ const Tickets = () => {
             />
           </div>
           <div className="mt-10  rounded-lg border-t border-2">
-            <table className="w-full whitespace-pre-wrap break-all">
+            <table className="w-full whitespace-pre-wrap block md:table overflow-x-auto">
               <thead className="bg-gray-50 text-[#667085]">
                 <tr className="text-left">
                   <th className="px-6 py-2 font-normal text-xs rounded-tl-lg w-1/4">

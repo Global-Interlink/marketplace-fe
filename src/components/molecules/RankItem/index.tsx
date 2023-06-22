@@ -27,14 +27,14 @@ const RankItem: React.FC<Props> = ({
   return (
     <div className="bg-gray-50 dark:bg-boxTaskDarkNew dark:text-[#EAECF0] break-all flex items-center border-2 py-[14px] text-[#344054] px-4 lg:px-6 rounded-lg">
       <div className="flex w-full justify-between space-x-2 lg:space-x-4">
-        <div className="relative flex items-center justify-start w-[60px]">
+        <div className="relative flex items-center justify-start w-10 lg:w-[44px] xl:w-[55px] 2xl:w-[60px]">
           <Image
             preview={false}
             width={60}
             height={43}
-            className="w-[40px] lg:min-w-[60px]"
             src={image}
             alt={image}
+            className="object-contain"
           />
           {no && (
             <div className="absolute flex items-center justify-center w-full">
@@ -44,7 +44,7 @@ const RankItem: React.FC<Props> = ({
             </div>
           )}
         </div>
-        <div className="flex items-center w-[220px]">
+        <div className="flex items-center w-[220px] justify-center">
           {formatedAddress}
           {isYou ? " (you)" : ""}
         </div>

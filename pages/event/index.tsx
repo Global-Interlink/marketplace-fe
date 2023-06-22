@@ -138,7 +138,7 @@ const Campaign = () => {
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
-        <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-12 text-[#101828]">
+        <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-8 xl:space-x-12 text-[#101828]">
           <div
             className={`w-full lg:w-1/2 p-4 md:p-8  rounded-lg campaignboxshadow ${
               theme === "dark" ? "darkGradient" : "bg-white"
@@ -171,7 +171,7 @@ const Campaign = () => {
             }`}
           >
             <div
-              className={`flex  flex-col h-full bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
+              className={`flex flex-col h-full bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
             >
               <p className="text-[30px] font-medium">Leaderboard</p>
               <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
@@ -208,14 +208,14 @@ const Campaign = () => {
           </div>
         </div>
         <div
-          className={`mt-10 text-[#101828] p-8 campaignboxshadow rounded-[18px] ${
+          className={`mt-10 text-[#101828] p-4 md:p-8 campaignboxshadow rounded-[18px] ${
             theme === "dark" ? "darkGradient" : "bg-white"
           }`}
         >
           <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
             {`Weekly Reward \n${getThisWeek()}`}
           </p>
-          <div className="bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px]  bg-no-repeat mt-10 bg-[length:675px_675px]">
+          <div className="lg:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
             <ListReward
               data={rewards.filter((i) => i.winPrizeOrder === 1)}
               rank="gold"
@@ -227,6 +227,11 @@ const Campaign = () => {
             <ListReward
               data={rewards.filter((i) => i.winPrizeOrder === 3)}
               rank="bronze"
+            />
+            <img
+              src="/weekly-reward.png"
+              className="w-full aspect-square block lg:hidden"
+              alt="reward"
             />
           </div>
         </div>
