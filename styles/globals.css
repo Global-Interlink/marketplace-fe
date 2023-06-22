@@ -120,10 +120,12 @@ button.hoverCommon:hover {
   box-shadow: inset 60px 60px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* button.primaryButton:disabled {
-  background: gra;
+button.primaryButton:disabled {
+  background:  grey;
   color: rgba(255, 255, 255, 0.3);
-} */
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
 div.footerC {
   background: linear-gradient(

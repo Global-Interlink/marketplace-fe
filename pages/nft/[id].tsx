@@ -216,7 +216,7 @@ const NFT = () => {
                   nftData.saleStatus.onSale &&
                   nftData.owner.address.address !== address && (
                     <button
-                      disabled={isLoading}
+                      disabled={isLoading || !connected}
                       className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full  w-full mt-5 md:mt-0 md:w-auto"
                       onClick={() => {
                         if (nftData) {
@@ -241,6 +241,7 @@ const NFT = () => {
                   nftData.owner.address.address === address &&
                   nftData.saleStatus.onSale && (
                     <button
+                      disabled={isLoading || !connected}
                       className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full w-full mt-5 md:mt-0 md:w-auto"
                       onClick={() => {
                         setOpenDelist(true);
