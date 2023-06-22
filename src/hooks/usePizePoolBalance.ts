@@ -12,7 +12,6 @@ const usePizePoolBalance = () => {
   const [fetched, setFetched] = useState(false);
   const targetEnv = getSupportEnv();
   const prizePoolAddress = process.env.NEXT_PUBLIC_POOL_REWARD_ADDRESS || "";
-
   const getWalletBalance = async () => {
     try {
       const provider = getRPCConnection(targetEnv);
@@ -26,7 +25,7 @@ const usePizePoolBalance = () => {
 
   const fetchBalance = async () => {
     const b = (await getWalletBalance()) as any;
-    setTotalBalance(b?.totalBalance);
+    setTotalBalance(b?.totalBalance || 0);
     setFetched(true);
     setTimeout(() => {
       setFetching(!fetching);

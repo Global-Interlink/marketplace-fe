@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const createAxios = (accessToken?: string) => {
   return axios.create({
-    baseURL: `https://dev-wallet.sakaya.market/main/v1`,
+    baseURL: process.env.NEXT_PUBLIC_WALLET_API_ENDPOINT,
     headers: {
       "Content-Type": "application/json",
       ...(accessToken ? { Authorization: "Bearer " + accessToken } : {}),
