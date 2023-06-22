@@ -214,7 +214,9 @@ const Campaign = () => {
             theme === "dark" ? "darkGradient" : "bg-white"
           }`}
         >
-          <p className="text-[30px] font-medium">Weekly Reward (12/6 - 19/6)</p>
+          <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
+            {"Weekly Reward \n(12/6 - 19/6)"}
+          </p>
           <div className="bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px]  bg-no-repeat mt-10 bg-[length:675px_675px]">
             <ListReward
               data={rewards.filter((i) => i.winPrizeOrder === 1)}

@@ -38,7 +38,7 @@ const MoreTicketItem: React.FC<Props> = ({
               onHandleBuy("completedAnyTask");
             }
           }}
-          className={`md:text-sm h-8 min-h-[32px] rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
+          className={`md:text-sm h-8 min-h-[32px] rounded-full px-3 ${buttonColor}  text-[12px]`}
         >
           {data ? (
             <>{status === "bought" ? "Bought" : "Buy 1 ticket"}</>
@@ -48,8 +48,8 @@ const MoreTicketItem: React.FC<Props> = ({
         </button>
       </div>
       {status === "unavailable" && (
-        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center bg-white/50">
-          <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[30px]">
+        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center bg-white/50 dark:bg-transparent">
+          <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[40px] md:h-[30px]">
             <span className="bg-[#FFFAEB] text-[#B54708] px-2 py-[2px] text-xs rounded-full">
               Notice
             </span>
@@ -67,7 +67,7 @@ const MoreTicketItem: React.FC<Props> = ({
         <p className="text-[12px] text-[#98A2B3]">{description}</p>
       </div>
       <button
-        className={`md:text-sm h-8 min-h-[32px] rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
+        className={`md:text-sm h-8 min-h-[32px] rounded-full px-3 ${buttonColor} text-[12px]`}
         onClick={() => {
           if (status === "available") {
             onHandleBuy("forEvery");
@@ -86,7 +86,9 @@ const MoreTicketItem: React.FC<Props> = ({
       <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-4 md:px-6 border rounded-lg flex justify-between items-center">
         <div>
           <p className="text-sm">{title}</p>
-          <p className="text-[12px] text-[#98A2B3]">{description}</p>
+          <p className="text-[12px] text-[#98A2B3] line-clamp-1">
+            {description}
+          </p>
         </div>
         <button
           onClick={() => {
@@ -94,7 +96,7 @@ const MoreTicketItem: React.FC<Props> = ({
               onHandleBuy("completedAllTask");
             }
           }}
-          className={`md:text-sm h-8 min-h-[32px] rounded-full md:px-3 ${buttonColor} px-1 text-[12px]`}
+          className={`md:text-sm h-8 min-h-[32px] rounded-full px-3 ${buttonColor}  text-[12px]`}
         >
           {data ? (
             <>{status === "bought" ? "Bought" : "Buy 3 tickets"}</>
@@ -104,8 +106,8 @@ const MoreTicketItem: React.FC<Props> = ({
         </button>
       </div>
       {status === "unavailable" && (
-        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center bg-white/50">
-          <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[30px]">
+        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center bg-white/5 dark:bg-transparent">
+          <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[40px] md:h-[30px]">
             <span className="bg-[#FFFAEB] text-[#B54708] px-2 py-[2px] text-xs rounded-full">
               Notice
             </span>
