@@ -23,6 +23,7 @@ import Link from "next/link";
 import { getNextSunday, getThisWeek } from "../../src/utils/common";
 import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
 import { SUI_DECIMAL } from "../../src/api/constants";
+import NotEligible from "../../src/components/molecules/EligibleModal";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -50,6 +51,8 @@ const Campaign = () => {
   const [rewards, setRewards] = React.useState<Reward[]>([]);
   const [isFetched, setFetched] = React.useState(false);
   const api = createAxios();
+  const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
+  const [isOpenModal, setOpenModal] = React.useState(false);
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
@@ -120,6 +123,8 @@ const Campaign = () => {
       .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
       .then((res) => {
         setMoreTicket(res.data);
+        setNumberDynamicNft(res.data.numberDynamicNft);
+        setOpenModal(true);
       });
   };
 
@@ -235,6 +240,16 @@ const Campaign = () => {
             />
           </div>
         </div>
+        {isOpenModal && (
+          <NotEligible
+            isEligible={
+              numberDynamicNft !== undefined ? numberDynamicNft > 0 : false
+            }
+            close={() => {
+              setOpenModal(false);
+            }}
+          />
+        )}
       </div>
     </BaseComponent>
   );
