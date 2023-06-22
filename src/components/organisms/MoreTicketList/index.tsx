@@ -17,13 +17,11 @@ interface Props {
   onHandleBuy: (
     type: "forEvery" | "completedAnyTask" | "completedAllTask"
   ) => void;
-  statusTask: StatusTask[];
   weeklyProgress?: AllTaskDay;
 }
 const MoreTicketList: React.FC<Props> = ({
   data,
   onHandleBuy,
-  statusTask,
   weeklyProgress,
 }) => {
   const { connected } = useWallet();
@@ -33,7 +31,7 @@ const MoreTicketList: React.FC<Props> = ({
   const weeklyTask = Object.values(weeklyProgress || {});
   const isNotCompletedAllWeeklyTask = weeklyProgress
     ? true
-    : weeklyTask.filter((i) => i < 3).length > 0;
+    : weeklyTask.filter((i) => i !== 3).length > 0;
   const isCompletedAtLeastOneTask = weeklyTask.filter((i) => i > 0).length > 0;
   return (
     <div className="mt-8 space-y-6">
@@ -49,7 +47,7 @@ const MoreTicketList: React.FC<Props> = ({
         title="1 ticket (1000 tGIL)"
         description="For complete at least 1 task"
         status={
-          !connected
+          !connected || !data
             ? "unavailable"
             : completed_any_task
             ? "bought"
@@ -65,7 +63,7 @@ const MoreTicketList: React.FC<Props> = ({
         title="3 tickets"
         description="For complete all daily tasks the whole week"
         status={
-          !connected
+          !connected || !data
             ? "unavailable"
             : completed_all_task
             ? "bought"

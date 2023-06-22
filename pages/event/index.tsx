@@ -161,7 +161,6 @@ const Campaign = () => {
               <MoreTicketList
                 data={moreTicket}
                 onHandleBuy={handleBuy}
-                statusTask={statusTasks}
                 weeklyProgress={weeklyProgress}
               />
             </div>
