@@ -10,6 +10,7 @@ import { createAxios } from "../../../../src/api/axiosWallet";
 import Breadcrumbs from "../../../../src/components/molecules/Breadcrumb";
 import { debounce } from "lodash";
 import { LoadingOutlined } from "@ant-design/icons";
+import { start } from "repl";
 
 interface Ticket {
   ticketId: number;
@@ -27,6 +28,12 @@ interface Meta {
     totalPages: number;
   };
 }
+
+export interface Week {
+  start: string;
+  end: string;
+  current?: boolean;
+}
 const Tickets = () => {
   const { address } = useWallet();
   const [tickets, setTicketData] = React.useState<Ticket[]>([]);
@@ -34,6 +41,11 @@ const Tickets = () => {
   const [activeTab, setActiveTab] = React.useState("1");
   const [nextPage, setNextPage] = React.useState(1);
   const [isLoading, setLoading] = React.useState(false);
+  const [week, setWeek] = React.useState<Week[]>();
+  const [filterWeek, setFilterWeek] = React.useState<{
+    start: string;
+    end: string;
+  }>();
 
   const api = createAxios();
 
@@ -41,6 +53,9 @@ const Tickets = () => {
     const params = {
       page: nextPage,
       ...(keyword ? { walletAddress: keyword } : {}),
+      ...(filterWeek
+        ? { startDate: filterWeek.start, endDate: filterWeek.end }
+        : {}),
     };
     setLoading(true);
     api
@@ -59,6 +74,12 @@ const Tickets = () => {
         setLoading(false);
       });
   };
+
+  React.useEffect(() => {
+    api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
+      setWeek(res.data.data);
+    });
+  }, []);
 
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
@@ -82,7 +103,7 @@ const Tickets = () => {
     } else {
       fetchData();
     }
-  }, [address, activeTab, nextPage]);
+  }, [address, activeTab, nextPage, filterWeek]);
 
   return (
     <BaseComponent>
@@ -110,7 +131,12 @@ const Tickets = () => {
               ]}
               onChangeKey={setActiveTab}
             />
-            <SelectWeek />
+            <SelectWeek
+              week={week}
+              onChangeWeek={(s, e) => {
+                setFilterWeek({ start: s, end: e });
+              }}
+            />
             <SearchTicket
               onChangeText={(keyword) => {
                 setNextPage(1);
