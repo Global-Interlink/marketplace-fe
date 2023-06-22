@@ -276,7 +276,7 @@ div.footerC {
   border-radius: 100px !important;
   border: 1px solid #bd28e0 !important;
   height: 40px;
-  width: 124px;
+  min-width: 124px;
   cursor: pointer;
 }
 

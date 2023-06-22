@@ -95,7 +95,7 @@ const SearchForm = () => {
                     />
                   </div>
                   <div>
-                    <span className="externalSP text-sm text-black dark:text-white line-clamp-2" title={i.name}>{i.name}</span>
+                    <span className="externalSP text-sm text-black dark:text-white break-all line-clamp-2" title={i.name}>{i.name}</span>
                     <div className="flex items-center space-x-3 mt-[6px]">
                       <span className="text-gray-500 text-sm">
                         {i.totalNfts} items

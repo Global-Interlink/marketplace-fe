@@ -112,7 +112,7 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
                   className="w-[36px] h-[36px] min-w-[36px] mt-2 object-cover rounded-full"
                 />
               </div>
-              <span className="external md:text-[20px] text-black dark:text-white font-display">
+              <span className="external md:text-[20px] text-black dark:text-white font-display break-all">
                 {item?.collection?.name}
               </span>
             </div>

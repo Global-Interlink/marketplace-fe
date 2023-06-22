@@ -135,7 +135,6 @@ const Campaign = () => {
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
-  console.log("=timeCountdown", timeCountdown);
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">

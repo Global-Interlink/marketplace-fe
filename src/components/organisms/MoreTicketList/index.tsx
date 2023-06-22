@@ -40,13 +40,7 @@ const MoreTicketList: React.FC<Props> = ({
       <MoreTicketItem
         title="1 ticket (1000 - 2000 tGIL)"
         description="One lucky chance for everyone"
-        status={
-          for_every
-            ? "bought"
-            : !connected || data?.numberDynamicNft === 0
-            ? "unavailable"
-            : "available"
-        }
+        status={for_every ? "bought" : !connected ? "unavailable" : "available"}
         mission="1"
         data={data}
         onHandleBuy={onHandleBuy}
