@@ -57,3 +57,24 @@ export function getNextSunday() {
 
   return nextSunday;
 }
+
+
+export function getThisWeek() {
+// Lấy ngày hiện tại
+var today = new Date();
+
+// Tính toán ngày đầu tiên của tuần hiện tại (tính từ thứ 2)
+var startOfWeek = new Date(today.getTime() - today.getDay() * 24 * 60 * 60 * 1000);
+
+// Tính toán ngày cuối cùng của tuần hiện tại (tính đến Chủ nhật)
+var endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+// Lấy thông tin ngày, tháng và năm của ngày bắt đầu và kết thúc
+var startDate = startOfWeek.getUTCDate() + 1;
+var startMonth = startOfWeek.getUTCMonth() + 1; // Tháng trong JavaScript được đếm từ 0
+
+var endDate = endOfWeek.getUTCDate() + 1;
+var endMonth = endOfWeek.getUTCMonth() + 1; // Tháng trong JavaScript được đếm từ 0
+
+return `(${startDate}/${startMonth} - ${endDate}/${endMonth})`
+}

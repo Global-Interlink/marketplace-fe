@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
-import { getNextSunday } from "../../src/utils/common";
+import { getNextSunday, getThisWeek } from "../../src/utils/common";
 import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
 import { SUI_DECIMAL } from "../../src/api/constants";
 
@@ -215,7 +215,7 @@ const Campaign = () => {
           }`}
         >
           <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
-            {"Weekly Reward \n(12/6 - 19/6)"}
+            {`Weekly Reward \n${getThisWeek()}`}
           </p>
           <div className="bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px]  bg-no-repeat mt-10 bg-[length:675px_675px]">
             <ListReward
