@@ -28,7 +28,7 @@ const Home = () => {
         sort: sort,
       })
     );
-  }, []);
+  }, [sort]);
   const isShowEvent = process.env.NEXT_PUBLIC_EVENT_STARTED === "true";
 
   return status === FetchStatus.idle ||
