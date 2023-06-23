@@ -1,0 +1,55 @@
+name: Deploy workflow
+on:
+  push:
+    branches:
+      - 'develop'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'environment'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - staging
+
+run-name: Triggered to deploy on ${{ inputs.environment || 'development' }} by ${{ github.actor }}
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'development' || github.event_name == 'push'
+    concurrency: development
+    environment: development
+    steps:
+      - name: SSH to dev server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ vars.DEV_HOST }}
+          username: ${{ vars.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          port: ${{ vars.DEV_PORT }}
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd marketplace-fe
+            ./deploy
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'staging'
+    concurrency: staging
+    environment: staging
+    steps:
+      - name: SSH to dev server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ vars.STAGING_HOST }}
+          username: ${{ vars.DEV_USERNAME }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          port: ${{ vars.DEV_PORT }}
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd marketplace-fe
+            ./deploy
