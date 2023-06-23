@@ -24,6 +24,7 @@ import { getNextSunday, getThisWeek } from "../../src/utils/common";
 import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
 import { SUI_DECIMAL } from "../../src/api/constants";
 import NotEligible from "../../src/components/molecules/EligibleModal";
+import BuyTicketResponseModal from "../../src/components/molecules/BuyTicketResponseModal";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -53,6 +54,12 @@ const Campaign = () => {
   const api = createAxios();
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
+  const [buy, setBuy] = React.useState<{
+    isOpen: boolean;
+    errorMessage?: string;
+  }>({
+    isOpen: false,
+  });
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
@@ -73,6 +80,7 @@ const Campaign = () => {
       .then((res) => {
         setWeeklyProgress(res.data.data);
       });
+    api.get<MoreTicket>(`/v2/wallet/${address}`);
   };
 
   const fetchLeaderBoard = async (address: string) => {
@@ -92,15 +100,19 @@ const Campaign = () => {
         buyType: type,
         walletAddress: address,
       })
-      .then((res) => {
-        toast.success("Buy ticket success!");
+      .then(() => {
+        setBuy({ isOpen: true });
         if (address) {
           fetchMoreTicketData(address);
           fetchLeaderBoard(address);
         }
       })
       .catch((e) => {
-        toast.error(e.response.data.cause);
+        if (e?.response?.data?.cause) {
+          setBuy({ isOpen: true, errorMessage: e.response.data.cause });
+        } else {
+          setBuy({ isOpen: true, errorMessage: "Something went wrong" });
+        }
       });
   };
 
@@ -124,7 +136,6 @@ const Campaign = () => {
       .then((res) => {
         setMoreTicket(res.data);
         setNumberDynamicNft(res.data.numberDynamicNft);
-        setOpenModal(true);
       });
   };
 
@@ -149,7 +160,23 @@ const Campaign = () => {
               theme === "dark" ? "darkGradient" : "bg-white"
             }`}
           >
-            <p className="text-[30px] font-medium">Daily Task</p>
+            <div className="flex items-start justify-between">
+              <p className="text-[30px] font-medium">Daily Task</p>
+              <p
+                className={`${
+                  numberDynamicNft && numberDynamicNft > 0
+                    ? "text-[#039855] bg-[#D1FADF]"
+                    : "text-[#D92D20] bg-[#FECDCA]"
+                } cursor-pointer px-3  text-center text-sm rounded-full font-normal leading-5 py-[2px]`}
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
+                {numberDynamicNft && numberDynamicNft > 0
+                  ? "Eligible"
+                  : "Not-Eligible"}
+              </p>
+            </div>
             <p className="text-[#667085] dark:text-[#D0D5DD]">
               Track your progress to get more tickets for weekly reward pool
             </p>
@@ -251,6 +278,17 @@ const Campaign = () => {
           />
         )}
       </div>
+      {buy.isOpen && (
+        <BuyTicketResponseModal
+          errorMessage={buy.errorMessage}
+          close={() => {
+            setBuy({
+              isOpen: false,
+              errorMessage: undefined,
+            });
+          }}
+        />
+      )}
     </BaseComponent>
   );
 };
