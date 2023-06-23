@@ -171,7 +171,7 @@ const Campaign = () => {
               theme === "dark" ? "darkGradient" : "bg-white"
             }`}
           >
-            <div className="flex items-start justify-between">
+            <div className="flex items-center justify-between">
               <p className="text-[30px] font-medium">Daily Task</p>
               <p
                 className={`${
