@@ -25,6 +25,7 @@ import { SUI_DECIMAL } from "../../src/api/constants";
 import NotEligible from "../../src/components/molecules/EligibleModal";
 import BuyTicketResponseModal from "../../src/components/molecules/BuyTicketResponseModal";
 import ConfirmBuyTicketModal from "../../src/components/molecules/ConfirmBuyTicketModal";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -182,9 +183,15 @@ const Campaign = () => {
                   setOpenModal(true);
                 }}
               >
-                {numberDynamicNft && numberDynamicNft > 0
-                  ? "Eligible"
-                  : "Not-Eligible"}
+                {moreTicket ? (
+                  <>
+                    {numberDynamicNft && numberDynamicNft > 0
+                      ? "Eligible"
+                      : "Not-Eligible"}
+                  </>
+                ) : (
+                  <LoadingOutlined className="text-[#E23DCC]" size={20} />
+                )}
               </p>
             </div>
             <p className="text-[#667085] dark:text-[#D0D5DD]">
