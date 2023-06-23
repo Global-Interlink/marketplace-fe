@@ -14,7 +14,7 @@ const BuyTicketResponseModal: React.FC<Props> = ({ close, errorMessage }) => {
       centered
       open={true}
       footer={null}
-      width={700}
+      width={590}
       onCancel={close}
       closeIcon={<CloseIcon />}
     >

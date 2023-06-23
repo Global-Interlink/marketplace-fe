@@ -16,7 +16,6 @@ import { useTheme } from "next-themes";
 import MoreTicketList, {
   MoreTicket,
 } from "../../src/components/organisms/MoreTicketList";
-import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
@@ -25,6 +24,7 @@ import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
 import { SUI_DECIMAL } from "../../src/api/constants";
 import NotEligible from "../../src/components/molecules/EligibleModal";
 import BuyTicketResponseModal from "../../src/components/molecules/BuyTicketResponseModal";
+import ConfirmBuyTicketModal from "../../src/components/molecules/ConfirmBuyTicketModal";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -54,12 +54,17 @@ const Campaign = () => {
   const api = createAxios();
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
+  const [currentTGIL, setCurrentTGIL] = React.useState(0);
   const [buy, setBuy] = React.useState<{
     isOpen: boolean;
     errorMessage?: string;
   }>({
     isOpen: false,
   });
+  const [confirmBuy, setConfirmBuy] = React.useState<{
+    isOpen: boolean;
+    type: "forEvery" | "completedAnyTask" | "completedAllTask";
+  }>();
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
@@ -80,7 +85,9 @@ const Campaign = () => {
       .then((res) => {
         setWeeklyProgress(res.data.data);
       });
-    api.get<MoreTicket>(`/v2/wallet/${address}`);
+    api.get(`/v2/wallet/${address}`).then((res) => {
+      setCurrentTGIL(res.data.tokenNumber);
+    });
   };
 
   const fetchLeaderBoard = async (address: string) => {
@@ -195,7 +202,13 @@ const Campaign = () => {
               </p>
               <MoreTicketList
                 data={moreTicket}
-                onHandleBuy={handleBuy}
+                onHandleBuy={(type) => {
+                  setConfirmBuy({
+                    isOpen: true,
+                    type,
+                  });
+                  // handleBuy
+                }}
                 weeklyProgress={weeklyProgress}
               />
             </div>
@@ -289,6 +302,17 @@ const Campaign = () => {
               isOpen: false,
               errorMessage: undefined,
             });
+          }}
+        />
+      )}
+      {confirmBuy?.isOpen && (
+        <ConfirmBuyTicketModal
+          type={confirmBuy.type}
+          currentTGIL={currentTGIL}
+          numberOfNFTs={numberDynamicNft}
+          handleBuy={handleBuy}
+          close={() => {
+            setConfirmBuy({ isOpen: false, type: "forEvery" });
           }}
         />
       )}
