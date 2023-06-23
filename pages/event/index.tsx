@@ -108,7 +108,10 @@ const Campaign = () => {
         }
       })
       .catch((e) => {
-        if (e?.response?.data?.cause) {
+        if (
+          e?.response?.data?.cause &&
+          typeof e?.response?.data?.cause === "string"
+        ) {
           setBuy({ isOpen: true, errorMessage: e.response.data.cause });
         } else {
           setBuy({ isOpen: true, errorMessage: "Something went wrong" });
