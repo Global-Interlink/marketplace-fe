@@ -321,3 +321,122 @@ div.footerC {
   box-shadow: 32px 32px 64px rgba(0, 0, 0, 0.08);
   color: white;
 }
+
+:root {
+	--transition: 0.25s;
+	--spark: 1.8s;
+  --active: 0;
+}
+
+.sparkle1 {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: -5px;
+  bottom: -10px;
+}
+
+.sparkle2 {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: -5px;
+  right: 5px;
+}
+
+.sparkle3 {
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  right: -10px;
+}
+
+.sparkle1 path {
+  scale: 0;
+	transform-box: fill-box;
+	transform-origin: center;
+	fill: #FC5FFF;
+	stroke: #FC5FFF;
+  -webkit-animation-name: bounce;
+	        animation-name: bounce;
+	-webkit-animation-delay: calc((var(--transition) * 1.5) + (var(--delay) * 1s));
+	        animation-delay: calc((var(--transition) * 1.5) + (var(--delay) * 1s));
+	-webkit-animation-duration: 2s;
+	        animation-duration: 2s;
+	transition: color var(--transition);
+  animation-iteration-count: infinite;
+}
+
+.sparkle2 path {
+  scale: 0;
+	transform-box: fill-box;
+	transform-origin: center;
+	fill: #FC5FFF;
+	stroke: #FC5FFF;
+  -webkit-animation-name: bounce;
+	        animation-name: bounce;
+	-webkit-animation-delay: calc((var(--transition) * .5) + (var(--delay) * 1s));
+	        animation-delay: calc((var(--transition) * .5) + (var(--delay) * 1s));
+	-webkit-animation-duration: 2s;
+	        animation-duration: 2s;
+	transition: color var(--transition);
+  animation-iteration-count: infinite;
+}
+
+.sparkle3 path {
+  scale: 0;
+	transform-box: fill-box;
+	transform-origin: center;
+	fill: #FC5FFF;
+	stroke: #FC5FFF;
+  -webkit-animation-name: bounce;
+	        animation-name: bounce;
+	-webkit-animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
+	        animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
+	-webkit-animation-duration: 2s;
+	        animation-duration: 2s;
+	transition: color var(--transition);
+  animation-iteration-count: infinite;
+}
+
+.sparkle3 {
+  position: absolute;
+  top: -15px;
+}
+
+
+@-webkit-keyframes bounce {
+	35%, 65% {
+		scale: var(--scale);
+	}
+  0%, 100% {
+    scale: 0;
+  }
+}
+
+@keyframes bounce {
+	35%, 65% {
+		scale: var(--scale);
+	}
+  0%, 100% {
+    scale: 0;
+  }
+}
+
+.sparkle1 path {
+	--scale: 0.3;
+	--delay: 0.1;
+	--base: 40%;
+}
+
+.sparkle2 path {
+	--scale: 0.3;
+	--delay: 0.2;
+	--base: 20%;
+}
+
+.sparkle3 path {
+	--scale: 0.4;
+	--delay: 0.35;
+	--base: 30%;
+}
