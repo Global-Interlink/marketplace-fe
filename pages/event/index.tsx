@@ -56,6 +56,7 @@ const Campaign = () => {
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
   const [currentTGIL, setCurrentTGIL] = React.useState(0);
+  const [isFetching, setFetching] = React.useState(false);
   const [buy, setBuy] = React.useState<{
     isOpen: boolean;
     errorMessage?: string;
@@ -142,11 +143,16 @@ const Campaign = () => {
   }, [connected]);
 
   const fetchMoreTicketData = (address: string) => {
+    setFetching(true);
     api
       .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
       .then((res) => {
         setMoreTicket(res.data);
         setNumberDynamicNft(res.data.numberDynamicNft);
+        setFetching(false);
+      })
+      .catch(() => {
+        setFetching(false);
       });
   };
 
@@ -183,7 +189,7 @@ const Campaign = () => {
                   setOpenModal(true);
                 }}
               >
-                {moreTicket ? (
+                {!isFetching ? (
                   <>
                     {numberDynamicNft && numberDynamicNft > 0
                       ? "Eligible"
@@ -217,6 +223,7 @@ const Campaign = () => {
                   // handleBuy
                 }}
                 weeklyProgress={weeklyProgress}
+                isFetching={isFetching}
               />
             </div>
           </div>

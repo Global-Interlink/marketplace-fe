@@ -9,6 +9,7 @@ interface Props {
     type: "forEvery" | "completedAnyTask" | "completedAllTask"
   ) => void;
   data?: MoreTicket;
+  isFetching: boolean;
 }
 const MoreTicketItem: React.FC<Props> = ({
   title,
@@ -17,6 +18,7 @@ const MoreTicketItem: React.FC<Props> = ({
   mission,
   onHandleBuy,
   data,
+  isFetching
 }) => {
   const buttonColor = !data
     ? "text-[#D0D5DD] bg-gray-50"
@@ -29,8 +31,10 @@ const MoreTicketItem: React.FC<Props> = ({
     <div className="relative">
       <div className="bg-white dark:bg-boxTaskDarkNew py-2 px-4 md:px-6 border rounded-lg flex justify-between items-center">
         <div>
-          <p className="text-sm font-medium">{title}</p>
-          <p className="text-[12px] text-[#98A2B3]">{description}</p>
+          <p className="text-sm">{title}</p>
+          <p className="text-[12px] text-[#98A2B3] line-clamp-1">
+            {description}
+          </p>
         </div>
         <button
           onClick={() => {
@@ -40,7 +44,7 @@ const MoreTicketItem: React.FC<Props> = ({
           }}
           className={`md:text-sm h-8 min-h-[32px] rounded-full px-3 ${buttonColor}  text-[12px]`}
         >
-          {data ? (
+          {!isFetching ? (
             <>{status === "bought" ? "Bought" : "Buy 1 ticket"}</>
           ) : (
             <LoadingOutlined className="text-[#E23DCC]" size={20} />
@@ -48,7 +52,7 @@ const MoreTicketItem: React.FC<Props> = ({
         </button>
       </div>
       {status === "unavailable" && (
-        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center bg-white/50 dark:bg-transparent">
+        <div className="absolute top-0 px-4 md:px-0 flex w-full h-full items-center justify-center bg-white/5 dark:bg-transparent">
           <div className="bg-[#FEF0C7] px-[10px] p-1 rounded-full flex items-center space-x-2 h-[40px] md:h-[30px]">
             <span className="bg-[#FFFAEB] text-[#B54708] px-2 py-[2px] text-xs rounded-full">
               Notice
@@ -74,7 +78,7 @@ const MoreTicketItem: React.FC<Props> = ({
           }
         }}
       >
-        {data ? (
+        {!isFetching ? (
           <>{status === "bought" ? "Bought" : "Buy 1 ticket"}</>
         ) : (
           <LoadingOutlined className="text-[#E23DCC]" size={20} />
@@ -98,7 +102,7 @@ const MoreTicketItem: React.FC<Props> = ({
           }}
           className={`md:text-sm h-8 min-h-[32px] rounded-full px-3 ${buttonColor}  text-[12px]`}
         >
-          {data ? (
+          {!isFetching ? (
             <>{status === "bought" ? "Bought" : "Buy 3 tickets"}</>
           ) : (
             <LoadingOutlined className="text-[#E23DCC]" size={20} />

@@ -36,9 +36,8 @@ const BuyTicketResponseModal: React.FC<Props> = ({ close, errorMessage }) => {
               best support
             </p>
           ) : (
-            <p className="text-center whitespace-pre-wrap">
-              {`Congratulations! Let's wait to find out if it is your lucky ones.
-              You can check your tickets at this `}
+            <p className="text-center text-[#667085] whitespace-pre-wrap">
+              {`Congratulations! Let's wait to find out if it is your lucky ones. \nYou can check your tickets at this `}
               <Link
                 className="text-[#E23DCC]"
                 href="/event/weekly-reward/tickets"

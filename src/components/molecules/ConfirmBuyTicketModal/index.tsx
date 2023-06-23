@@ -62,7 +62,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
                 <p className="text-[#EB77DC] text-end">{currentTGIL} tGIL</p>
                 {isNotEnoughTGIL && (
                   <p className="text-[#F04438] text-end text-[12px] font-light">
-                    Not enough tGIL
+                    (Not enough tGIL)
                   </p>
                 )}
               </div>
@@ -79,8 +79,11 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
               </p>
             </div>
           </div>
-          <div className="space-x-4">
-            <button className="border rounded-full text-[#344054] h-10 w-40" onClick={close}>
+          <div className="flex w-full flex-col-reverse justify-center space-y-reverse md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <button
+              className="border border-[#D0D5DD] rounded-full text-[#344054] h-10 w-full md:w-40"
+              onClick={close}
+            >
               Cancel
             </button>
             <button
@@ -91,7 +94,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
                 }
                 close && close();
               }}
-              className="rounded-full bg-[#EB77DC] disabled:bg-[#EB77DC]/40 text-white h-10 w-[136px]"
+              className="rounded-full bg-[#EB77DC] disabled:bg-[#EB77DC]/40 text-white h-10 w-full md:w-[136px]"
             >
               Buy
             </button>
