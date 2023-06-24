@@ -26,6 +26,7 @@ import NotEligible from "../../src/components/molecules/EligibleModal";
 import BuyTicketResponseModal from "../../src/components/molecules/BuyTicketResponseModal";
 import ConfirmBuyTicketModal from "../../src/components/molecules/ConfirmBuyTicketModal";
 import { LoadingOutlined } from "@ant-design/icons";
+import Image from "next/image";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -233,7 +234,7 @@ const Campaign = () => {
             }`}
           >
             <div
-              className={`flex flex-col h-full bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
+              className={`flex flex-col h-full md:bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
             >
               <p className="text-[30px] font-medium">Leaderboard</p>
               <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
@@ -249,12 +250,21 @@ const Campaign = () => {
                 ).toLocaleString()}{" "}
                 SUI
               </p>
-              <p className="text-[#667085] dark:text-[#D0D5DD]">
+              <p className="text-[#667085] block md:hidden dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}
                 <Link className="text-[#E23DCC]" href="/event/prize">
                   here.
                 </Link>
               </p>
+              <div className="flex items-center justify-center md:hidden">
+                <Image
+                  width={320}
+                  height={320}
+                  src={"/leader-board.png"}
+                  alt="cup"
+                  className="object-contain"
+                />
+              </div>
               <ListRanking data={leaderBoard} />
               {leaderBoard && leaderBoard.top && leaderBoard.top.length > 0 && (
                 <div className="flex items-center justify-center mt-4">
