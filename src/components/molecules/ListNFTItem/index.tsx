@@ -1,4 +1,4 @@
-import { useWallet } from "@suiet/wallet-kit";
+import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import { Image } from "antd";
 import React from "react";
 import { NFT } from "../../../api/types";
@@ -115,6 +115,7 @@ const ListNFTItem: React.FC<Props> = ({
     data.saleStatus.onSale &&
     data.owner?.address?.address !== address;
   const isShowDelist =
+    address &&
     data?.saleStatus &&
     data.owner?.address?.address === address &&
     data.saleStatus.onSale;
@@ -154,7 +155,7 @@ const ListNFTItem: React.FC<Props> = ({
               </p>
             </div>
 
-            <div className="flex items-center mt-[18px] space-x-[30px] ">
+            <div className="flex items-center mt-[18px] space-x-5 ">
               {data?.saleStatus ? (
                 <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] dark:border-[#897DBC] dark:bg-[#71659C] dark:text-white border rounded-[5px] border-black">
                   Price {Number(data.saleStatus.price).toPrecision()} SUI
@@ -162,7 +163,7 @@ const ListNFTItem: React.FC<Props> = ({
               ) : (
                 <div className="flex-1" />
               )}
-              <div className="flex-1">
+              <div className="flex-1 flex items-center justify-center parent">
                 {isShowList && (
                   <button
                     disabled={!connected || isLoading}
@@ -178,7 +179,7 @@ const ListNFTItem: React.FC<Props> = ({
                     List Now
                   </button>
                 )}
-                {isShowBuy && (
+                {isShowBuy && connected && (
                   <button
                     disabled={!connected || isLoading}
                     className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
@@ -199,6 +200,13 @@ const ListNFTItem: React.FC<Props> = ({
                     )}
                   </button>
                 )}
+                {/* {isShowBuy && <ConnectButton />} */}
+                {!connected && (
+                  <ConnectButton
+                    label="Connect wallet"
+                    className="primaryButton connect-wallet-btn2 !w-full"
+                  />
+                )}
                 {isShowDelist && (
                   <button
                     disabled={!connected || isLoading}
@@ -214,7 +222,7 @@ const ListNFTItem: React.FC<Props> = ({
                     )}
                   </button>
                 )}
-                {!isShowList && !isShowBuy && !isShowDelist && (
+                {!isShowList && !isShowBuy && !isShowDelist && connected && (
                   <div className="h-[36px]" />
                 )}
               </div>

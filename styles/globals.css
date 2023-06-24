@@ -187,6 +187,16 @@ div.footerC {
   margin-right: 40px;
   border-radius: 100px !important;
 }
+div[type='button'] {
+  width: 100%;
+}
+.connect-wallet-btn2 {
+  padding: 0 0px !important;
+  height: 36px;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+}
 
 .wkit-connected-container {
   width: fit-content !important;
