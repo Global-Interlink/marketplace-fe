@@ -50,9 +50,6 @@ const DelistModal: React.FC<Props> = ({
         arguments: [txb.pure(marketId), txb.pure(nftId)],
         typeArguments: [nftType],
       });
-      txb.setGasBudget(
-        Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000
-      );
       const tx = (await signAndExecuteTransactionBlock({
         transactionBlock: txb,
         options: {

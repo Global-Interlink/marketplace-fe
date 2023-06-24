@@ -53,9 +53,6 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
         ],
         typeArguments: [nftType],
       });
-      txb.setGasBudget(
-        Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000
-      );
       const tx = (await signAndExecuteTransactionBlock({
         transactionBlock: txb,
         options: {

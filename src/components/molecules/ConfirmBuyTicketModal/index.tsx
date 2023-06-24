@@ -45,7 +45,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
           <div className="flex flex-col w-full space-y-3">
             <div className="flex items-start justify-between w-full text-[#667085]">
               <div>
-                <p>You are trying to buy :</p>
+                <p>You are trying to buy:</p>
                 {type === "forEvery" && (
                   <p className="text-[12px] font-light">
                     (Dynamic NFT Holder can buy at 1000 tGIL)
@@ -81,7 +81,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
           </div>
           <div className="flex w-full flex-col-reverse justify-center space-y-reverse md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <button
-              className="border border-[#D0D5DD] rounded-full text-[#344054] h-10 w-full md:w-40"
+              className="border border-[#D0D5DD] rounded-full font-semibold text-[#344054] h-10 w-full md:w-40"
               onClick={close}
             >
               Cancel
