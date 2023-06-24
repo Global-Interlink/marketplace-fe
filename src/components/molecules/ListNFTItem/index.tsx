@@ -14,9 +14,9 @@ import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
 interface Props {
   data?: NFT;
-  onListSuccess: () => void;
+  onListSuccess: (onChainId?: string) => void;
   onBuySuccess: () => void;
-  onDelistSuccess: () => void;
+  onDelistSuccess: (onChainId?: string) => void;
 }
 export function validURL(url: string) {
   var pattern = new RegExp(
@@ -230,7 +230,7 @@ const ListNFTItem: React.FC<Props> = ({
           item={data}
           onSuccess={() => {
             setOpenListing(false);
-            onListSuccess();
+            onListSuccess(data.onChainId);
             dispatch(
               setSuccess({
                 isOpen: true,
@@ -251,7 +251,7 @@ const ListNFTItem: React.FC<Props> = ({
           id={data.id}
           onSuccess={() => {
             setOpenDelist(false);
-            onDelistSuccess();
+            onDelistSuccess(data.onChainId);
             dispatch(
               setSuccess({
                 isOpen: true,
