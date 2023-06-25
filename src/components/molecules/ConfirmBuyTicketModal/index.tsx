@@ -43,7 +43,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
             Confirm to buy action
           </p>
           <div className="flex flex-col w-full space-y-3">
-            <div className="flex items-start justify-between w-full text-[#667085]">
+            <div className="flex items-start justify-between w-full text-[#667085] dark:text-white">
               <div>
                 <p>You are trying to buy:</p>
                 {type === "forEvery" && (
@@ -56,7 +56,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
                 {type === "completedAllTask" ? "3" : "1"} ticket x {price} tGIL
               </p>
             </div>
-            <div className="flex items-start justify-between w-full text-[#667085]">
+            <div className="flex items-start justify-between w-full text-[#667085] dark:text-white">
               <p>Current balance:</p>
               <div>
                 <p className="text-[#EB77DC] text-end">{currentTGIL} tGIL</p>
@@ -67,7 +67,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
                 )}
               </div>
             </div>
-            <div className="flex items-start justify-between w-full text-[#667085]">
+            <div className="flex items-start justify-between w-full text-[#667085] dark:text-white">
               <p>New balance:</p>
               <p className="text-[#EB77DC] text-end">
                 {isNotEnoughTGIL
@@ -81,7 +81,7 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
           </div>
           <div className="flex w-full flex-col-reverse justify-center space-y-reverse md:flex-row md:space-x-4 space-y-4 md:space-y-0">
             <button
-              className="border border-[#D0D5DD] rounded-full font-semibold text-[#344054] h-10 w-full md:w-40"
+              className="border border-[#D0D5DD] rounded-full font-semibold text-[#344054] h-10 w-full md:w-40 bg-white"
               onClick={close}
             >
               Cancel
