@@ -82,8 +82,6 @@ const Campaign = () => {
       const { data } = res.data;
       const currentWeek = data.find((i) => i.current);
       const index = currentWeek ? data?.indexOf(currentWeek) : 0;
-      console.log("=index", data.length);
-      console.log("=currentWeek", currentWeek);
       if (data[index - 1]) {
         const week = data[index - 1];
         setRewardWeek(week);
