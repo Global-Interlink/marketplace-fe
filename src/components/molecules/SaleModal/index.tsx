@@ -144,12 +144,8 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
           <p className="text-xl font-bold">Fee</p>
           <div className="bg-white dark:bg-[#514E89] border dark:border-[#897DBC] py-[10px] px-[28px] rounded-[20px]">
             <div className="flex items-center justify-between">
-              <p>Service Fee</p>
-              <p className="font-bold text-lg">0%</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p>Owner Fee</p>
-              <p className="font-bold text-lg">0%</p>
+              <p>Transaction Fee</p>
+              <p className="font-bold text-lg">0.12 SUI</p>
             </div>
           </div>
         </div>

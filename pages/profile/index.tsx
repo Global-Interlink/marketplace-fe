@@ -131,16 +131,16 @@ const Collection = () => {
                         data={i}
                         onBuySuccess={handleFetchData}
                         onDelistSuccess={(onChainId) => {
-                          handleFetchData();
                           setListedNFT(
                             listedNFT.filter((i) => i.onChainId !== onChainId)
                           );
+                          handleFetchData();
                         }}
                         onListSuccess={(onChainId) => {
-                          handleFetchData();
                           setListNFT(
                             listNFT.filter((i) => i.onChainId !== onChainId)
                           );
+                          handleFetchData();
                         }}
                       />
                     );
