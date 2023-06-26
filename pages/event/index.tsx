@@ -27,6 +27,8 @@ import BuyTicketResponseModal from "../../src/components/molecules/BuyTicketResp
 import ConfirmBuyTicketModal from "../../src/components/molecules/ConfirmBuyTicketModal";
 import { LoadingOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { Week } from "./weekly-reward/tickets";
+import dayjs from "dayjs";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -58,6 +60,7 @@ const Campaign = () => {
   const [isOpenModal, setOpenModal] = React.useState(false);
   const [currentTGIL, setCurrentTGIL] = React.useState(0);
   const [isFetching, setFetching] = React.useState(false);
+  const [rewardWeek, setRewardWeek] = React.useState<Week>();
   const [buy, setBuy] = React.useState<{
     isOpen: boolean;
     errorMessage?: string;
@@ -75,6 +78,19 @@ const Campaign = () => {
       .then((res) => {
         setRewards(res.data.data.data);
       });
+    api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
+      const { data } = res.data;
+      const currentWeek = data.find((i) => i.current);
+      const index = currentWeek ? data?.indexOf(currentWeek) : 0;
+      console.log("=index", data.length);
+      console.log("=currentWeek", currentWeek);
+      if (data[index - 1]) {
+        const week = data[index - 1];
+        setRewardWeek(week);
+      } else {
+        setRewardWeek(currentWeek);
+      }
+    });
   };
 
   const fetchAllTask = async (address: string) => {
@@ -285,7 +301,12 @@ const Campaign = () => {
           }`}
         >
           <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
-            {`Weekly Reward \n${getThisWeek()}`}
+            {`Weekly Reward \n${
+              rewardWeek
+                ? `(${dayjs(rewardWeek.start).format("DD/MM")} -
+          ${dayjs(rewardWeek.end).format("DD/MM")})`
+                : ""
+            }`}
           </p>
           <div className="lg:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
             <ListReward
