@@ -120,7 +120,7 @@ const Header = () => {
           <div className="relative hidden md:block">
             <SearchForm />
           </div>
-          <Dropdown
+          {/* <Dropdown
             menu={{
               items,
               onClick: handleMenuClick,
@@ -131,7 +131,7 @@ const Header = () => {
               <span className="block">Launchpad</span>
               <BiChevronDown />
             </div>
-          </Dropdown>
+          </Dropdown> */}
         </div>
         <Link href={"/event"} className="hidden lg2:block">
           <div className="flex items-center space-x-2 relative">
