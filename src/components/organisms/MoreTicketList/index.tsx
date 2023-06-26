@@ -31,7 +31,7 @@ const MoreTicketList: React.FC<Props> = ({
   const for_every = data?.data?.forEvery;
   const completed_all_task = data?.data?.completedAllTask;
   const weeklyTask = Object.values(weeklyProgress || {});
-  const isNotCompletedAllWeeklyTask = weeklyProgress
+  const isNotCompletedAllWeeklyTask = !weeklyProgress
     ? true
     : weeklyTask.filter((i) => i !== 3).length > 0;
   const isCompletedAtLeastOneTask = weeklyTask.filter((i) => i > 0).length > 0;
