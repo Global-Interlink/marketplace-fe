@@ -10,6 +10,7 @@ import Header from "../Header";
 import jwt_decode from "jwt-decode";
 import SearchForm from "../../molecules/Search";
 import SuccessModal from "../../molecules/SuccessModal";
+import AccountBalance from "../../molecules/AccountBalance";
 
 interface Props {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ interface Props {
 }
 const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
   const { isOpenMenu, success } = useAppSelector((store) => store.app);
-  const { disconnect, connected } = useWallet();
+  const { disconnect, connected, chain } = useWallet();
   const dispatch = useAppDispatch();
 
   const accessToken = LocalStorage.get(LocalStorageKey.ACCESS_TOKEN);
@@ -92,12 +93,21 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
               />
             </button>
           </div>
-          <SearchForm />
+          <div className="flex items-center justify-center">
+            <SearchForm />
+          </div>
           <div className="flex w-full justify-center items-center bg-transparent">
-            <ConnectButton
-              label="Connect Wallet"
-              className="primaryButton !rounded-md"
-            />
+            {!connected ? (
+              <ConnectButton
+                label="Connect Wallet"
+                className="primaryButton !rounded-md"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <AccountBalance />
+                <p>{chain?.name}</p>
+              </div>
+            )}
           </div>
           {connected && (
             <button

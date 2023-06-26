@@ -121,7 +121,7 @@ button.hoverCommon:hover {
 }
 
 button.primaryButton:disabled {
-  background:  grey;
+  background: grey;
   color: rgba(255, 255, 255, 0.3);
   cursor: not-allowed;
   box-shadow: none;
@@ -187,8 +187,11 @@ div.footerC {
   margin-right: 40px;
   border-radius: 100px !important;
 }
-div[type='button'] {
+div[type="button"] {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .connect-wallet-btn2 {
   padding: 0 0px !important;
@@ -333,8 +336,8 @@ div[type='button'] {
 }
 
 :root {
-	--transition: 0.25s;
-	--spark: 1.8s;
+  --transition: 0.25s;
+  --spark: 1.8s;
   --active: 0;
 }
 
@@ -363,49 +366,53 @@ div[type='button'] {
 
 .sparkle1 path {
   scale: 0;
-	transform-box: fill-box;
-	transform-origin: center;
-	fill: #FC5FFF;
-	stroke: #FC5FFF;
+  transform-box: fill-box;
+  transform-origin: center;
+  fill: #fc5fff;
+  stroke: #fc5fff;
   -webkit-animation-name: bounce;
-	        animation-name: bounce;
-	-webkit-animation-delay: calc((var(--transition) * 1.5) + (var(--delay) * 1s));
-	        animation-delay: calc((var(--transition) * 1.5) + (var(--delay) * 1s));
-	-webkit-animation-duration: 2s;
-	        animation-duration: 2s;
-	transition: color var(--transition);
+  animation-name: bounce;
+  -webkit-animation-delay: calc(
+    (var(--transition) * 1.5) + (var(--delay) * 1s)
+  );
+  animation-delay: calc((var(--transition) * 1.5) + (var(--delay) * 1s));
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  transition: color var(--transition);
   animation-iteration-count: infinite;
 }
 
 .sparkle2 path {
   scale: 0;
-	transform-box: fill-box;
-	transform-origin: center;
-	fill: #FC5FFF;
-	stroke: #FC5FFF;
+  transform-box: fill-box;
+  transform-origin: center;
+  fill: #fc5fff;
+  stroke: #fc5fff;
   -webkit-animation-name: bounce;
-	        animation-name: bounce;
-	-webkit-animation-delay: calc((var(--transition) * .5) + (var(--delay) * 1s));
-	        animation-delay: calc((var(--transition) * .5) + (var(--delay) * 1s));
-	-webkit-animation-duration: 2s;
-	        animation-duration: 2s;
-	transition: color var(--transition);
+  animation-name: bounce;
+  -webkit-animation-delay: calc(
+    (var(--transition) * 0.5) + (var(--delay) * 1s)
+  );
+  animation-delay: calc((var(--transition) * 0.5) + (var(--delay) * 1s));
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  transition: color var(--transition);
   animation-iteration-count: infinite;
 }
 
 .sparkle3 path {
   scale: 0;
-	transform-box: fill-box;
-	transform-origin: center;
-	fill: #FC5FFF;
-	stroke: #FC5FFF;
+  transform-box: fill-box;
+  transform-origin: center;
+  fill: #fc5fff;
+  stroke: #fc5fff;
   -webkit-animation-name: bounce;
-	        animation-name: bounce;
-	-webkit-animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
-	        animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
-	-webkit-animation-duration: 2s;
-	        animation-duration: 2s;
-	transition: color var(--transition);
+  animation-name: bounce;
+  -webkit-animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
+  animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  transition: color var(--transition);
   animation-iteration-count: infinite;
 }
 
@@ -414,39 +421,42 @@ div[type='button'] {
   top: -15px;
 }
 
-
 @-webkit-keyframes bounce {
-	35%, 65% {
-		scale: var(--scale);
-	}
-  0%, 100% {
+  35%,
+  65% {
+    scale: var(--scale);
+  }
+  0%,
+  100% {
     scale: 0;
   }
 }
 
 @keyframes bounce {
-	35%, 65% {
-		scale: var(--scale);
-	}
-  0%, 100% {
+  35%,
+  65% {
+    scale: var(--scale);
+  }
+  0%,
+  100% {
     scale: 0;
   }
 }
 
 .sparkle1 path {
-	--scale: 0.3;
-	--delay: 0.1;
-	--base: 40%;
+  --scale: 0.3;
+  --delay: 0.1;
+  --base: 40%;
 }
 
 .sparkle2 path {
-	--scale: 0.3;
-	--delay: 0.2;
-	--base: 20%;
+  --scale: 0.3;
+  --delay: 0.2;
+  --base: 20%;
 }
 
 .sparkle3 path {
-	--scale: 0.4;
-	--delay: 0.35;
-	--base: 30%;
+  --scale: 0.4;
+  --delay: 0.35;
+  --base: 30%;
 }
