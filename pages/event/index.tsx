@@ -264,7 +264,7 @@ const Campaign = () => {
                 ).toLocaleString()}{" "}
                 SUI
               </p>
-              <p className="text-[#667085] block md:hidden dark:text-[#D0D5DD]">
+              <p className="text-[#667085]  dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}
                 <Link className="text-[#E23DCC]" href="/event/prize">
                   here.
