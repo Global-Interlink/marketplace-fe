@@ -22,6 +22,7 @@ import { FetchStatus } from "../../src/api/APIFunctions";
 import CollectionDetailTopSkeleton from "../../src/components/molecules/CollectionDetailTopSkeleton";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
+import { getUnique } from "../../src/utils/localStorage";
 
 const Collection = () => {
   const router = useRouter();
@@ -104,11 +105,11 @@ const Collection = () => {
       }
     }
   }, [collectionData]);
-
+  console.log("==", listNFT);
   React.useEffect(() => {
     if (response?.data) {
       setListNFT((s) => {
-        return [...s, ...response.data];
+        return getUnique([...s, ...response.data], "id");
       });
     }
   }, [response]);

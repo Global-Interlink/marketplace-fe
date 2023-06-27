@@ -6,6 +6,7 @@ import Empty from "../src/components/molecules/EmptyView";
 import ListCollectionItem from "../src/components/molecules/ListCollectionItem";
 import BaseComponent from "../src/components/organisms/BaseComponent";
 import {
+  clear,
   fetchListCollection,
   fetchListCollectionLoadmore,
 } from "../src/redux/home/homeSlice";
@@ -29,6 +30,13 @@ const Home = () => {
       })
     );
   }, [sort]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(clear());
+    };
+  }, []);
+
   const isShowEvent = process.env.NEXT_PUBLIC_EVENT_STARTED === "true";
 
   return status === FetchStatus.idle ||

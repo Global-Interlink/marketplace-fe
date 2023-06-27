@@ -49,7 +49,7 @@ export const fetchCollectionDetail = createAsyncThunk(
   }
 );
 export const fetchListNFTOfCollection = createAsyncThunk(
-  "home/collections",
+  "collection/collections",
   async (params: FetchListCollectionNFTPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListCollectionNFTSuccess>(
