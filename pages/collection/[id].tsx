@@ -114,7 +114,7 @@ const Collection = () => {
       }
     }
   }, [collectionData]);
-  console.log("==", listNFT);
+  // console.log("==", listNFT);
   React.useEffect(() => {
     if (response?.data) {
       setListNFT((s) => {
@@ -229,7 +229,6 @@ const Collection = () => {
                     defaultValue={[0, 100]}
                     className="w-[189px]"
                     onChange={(value) => {
-                      console.log("value", value);
                       setIsMinPrice(String(value[0] === 0 ? 1 : value[0]));
                       setIsMaxPrice(String(value[1]));
                     }}
