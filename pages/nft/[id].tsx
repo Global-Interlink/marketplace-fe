@@ -188,9 +188,9 @@ const NFT = () => {
                     <p className="text-[20px]">Current Price :</p>
                     <p className="text-[20px] md:text-[24px] font-bold">
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
-                      {`(~ $${Number(
+                      {/* {`(~ $${Number(
                         nftData.saleStatus.usdPrice
-                      ).toPrecision()})`}
+                      ).toPrecision()})`} */}
                     </p>
                   </div>
                 ) : (
@@ -287,16 +287,16 @@ const NFT = () => {
                 )}
                 <div className="text-black dark:text-white flex items-center justify-between">
                   <span>Transaction Fee</span>
-                  <span className="text-[18px] font-bold ">0%</span>
+                  <span className="text-[18px] font-bold ">0.12 SUI</span>
                 </div>
                 <div className="text-black dark:text-white flex items-center justify-between">
                   <span>Royalties Fee</span>
                   <span className="text-[18px] font-bold ">0%</span>
                 </div>
-                <div className="text-black dark:text-white flex items-center justify-between">
+                {/* <div className="text-black dark:text-white flex items-center justify-between">
                   <span>Listing/Bidding/Cancel</span>
                   <span className="text-[18px] font-bold ">Free</span>
-                </div>
+                </div> */}
               </div>
               {nftData?.properties && nftData.properties.length > 0 && (
                 <div className="mt-[36px] space-y-[10px]">
