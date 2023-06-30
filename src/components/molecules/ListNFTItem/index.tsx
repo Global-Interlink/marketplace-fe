@@ -19,6 +19,10 @@ interface Props {
   onDelistSuccess: (onChainId?: string) => void;
 }
 export function validURL(url: string) {
+  let ipfs_pattern = new RegExp('^ipfs:\/\/')
+  if(ipfs_pattern.test(url)) {
+    url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+  }
   var pattern = new RegExp(
     "^(https?:\\/\\/)?" + // protocol
       "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
