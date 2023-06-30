@@ -131,7 +131,7 @@ const Collection = () => {
                 className="flex w-full aspect-[1300/220] rounded-[20px] object-cover my-5"
                 alt="banner"
             />
-            <div className="bg-white rounded-[10px] my-4 mx-20 p-8 mt-[-100px] z-10 shadow-2xl relative dark:bg-[#1F0844] !pb-4">
+            <div className="bg-white rounded-[10px] my-4 mx-20 p-8 mt-[-100px] z-10 shadow-2xl relative dark:bg-[#1F0844]">
               <div className="flex space-y-5 md:items-center flex-col md:flex-row md:justify-between md:space-x-10">
                 <div className="flex w-full md:items-start space-x-2 md:space-x-4">
                   <div className="">
