@@ -21,7 +21,7 @@ interface Props {
 export function validURL(url: string) {
   let ipfs_pattern = new RegExp('^ipfs:\/\/')
   if(ipfs_pattern.test(url)) {
-    url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
   }
   var pattern = new RegExp(
     "^(https?:\\/\\/)?" + // protocol
