@@ -193,9 +193,7 @@ const Collection = () => {
               </button>
               <Image
                 src={
-                  collectionData.banner && validURL(collectionData.banner)
-                    ? collectionData.banner
-                    : "/default.jpeg"
+                  validURL(collectionData.banner || "/default.jpeg")
                 }
                 width={2000}
                 height={2000}

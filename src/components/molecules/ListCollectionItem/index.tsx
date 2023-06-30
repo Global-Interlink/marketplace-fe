@@ -14,9 +14,7 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
       <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] hover:-translate-y-1 transition duration-300 ease-in-out">
         <Image
           src={
-            data?.featuredImage && validURL(data?.featuredImage)
-              ? data?.featuredImage
-              : "/default.jpeg"
+            validURL(data?.featuredImage || "/default.jpeg")
           }
           width={500}
           height={500}
