@@ -155,10 +155,15 @@ const ListNFTItem: React.FC<Props> = ({
               </p>
             </div>
 
-            <div className="flex items-center mt-[18px] space-x-5 ">
+            <div className="flex items-center mt-[18px] space-x-5 h-[48px]">
               {data?.saleStatus ? (
-                <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] dark:border-[#897DBC] dark:bg-[#71659C] dark:text-white border rounded-[5px] border-black">
-                  Price {Number(data.saleStatus.price).toPrecision()} SUI
+                <div>
+                  <div className="flex-1 text-[16px] font-normal text-[#475467] ] dark:bg-[#71659C] dark:text-white">
+                    Price
+                  </div>
+                  <div className="flex-1 text-[16px] font-semibold text-[#1D2939] ] dark:bg-[#71659C] dark:text-white">
+                    {Number(data.saleStatus.price).toPrecision()} SUI
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1" />
@@ -182,7 +187,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {isShowBuy && connected && (
                   <button
                     disabled={!connected || isLoading}
-                    className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
+                    className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-full "
                     onClick={() => {
                       if (data) {
                         handleBuyNow(

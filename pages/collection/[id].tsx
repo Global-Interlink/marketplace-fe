@@ -23,6 +23,7 @@ import CollectionDetailTopSkeleton from "../../src/components/molecules/Collecti
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
+import { Slider } from "antd";
 
 const Collection = () => {
   const router = useRouter();
@@ -40,6 +41,8 @@ const Collection = () => {
   const [showMore, setShowMore] = React.useState(false);
   const [isShow, setIsShow] = React.useState(false);
   const [listNFT, setListNFT] = React.useState<NFT[]>([]);
+  const [isMinPrice, setIsMinPrice] = React.useState<string>("1");
+  const [isMaxPrice, setIsMaxPrice] = React.useState<string>("100");
 
   React.useEffect(() => {
     if (id) {
@@ -63,6 +66,8 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          minPrice: isMinPrice,
+          maxPrice: isMaxPrice,
         })
       );
     }
@@ -76,6 +81,8 @@ const Collection = () => {
           page: currentPage,
           limit: LIMIT,
           sort: sort,
+          minPrice: isMinPrice,
+          maxPrice: isMaxPrice,
         })
       );
     }
@@ -91,6 +98,8 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          minPrice: isMinPrice,
+          maxPrice: isMaxPrice,
         })
       );
     }
@@ -105,7 +114,7 @@ const Collection = () => {
       }
     }
   }, [collectionData]);
-  console.log("==", listNFT);
+  // console.log("==", listNFT);
   React.useEffect(() => {
     if (response?.data) {
       setListNFT((s) => {
@@ -213,6 +222,19 @@ const Collection = () => {
             <>
               <div className="flex items-center justify-between">
                 <p className="text-black dark:text-white font-bold">Items</p>
+                <div className="flex h-[36px] rounded-[100px] bg-white text-[#475467] text-sm font-normal">
+                  <div className="w-[68px] text-center my-auto">1 SUI</div>
+                  <Slider
+                    range
+                    defaultValue={[0, 100]}
+                    className="w-[189px]"
+                    onChange={(value) => {
+                      setIsMinPrice(String(value[0] === 0 ? 1 : value[0]));
+                      setIsMaxPrice(String(value[1]));
+                    }}
+                  />
+                  <div className="w-[68px] text-center my-auto">100 SUI</div>
+                </div>
                 <Sort
                   onChange={(sort) => {
                     setSort(sort);
@@ -256,6 +278,8 @@ const Collection = () => {
                           page: response?.meta.currentPage + 1,
                           limit: LIMIT,
                           sort: sort,
+                          minPrice: isMinPrice,
+                          maxPrice: isMaxPrice,
                         })
                       );
                     }
