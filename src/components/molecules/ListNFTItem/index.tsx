@@ -157,11 +157,11 @@ const ListNFTItem: React.FC<Props> = ({
 
             <div className="flex items-center mt-[18px] space-x-5 h-[48px]">
               {data?.saleStatus ? (
-                <div>
-                  <div className="flex-1 text-[16px] font-normal text-[#475467] ] dark:bg-[#71659C] dark:text-white">
+                <div className="">
+                  <div className="flex-1 text-[16px] font-normal text-[#475467] ] dark:text-white">
                     Price
                   </div>
-                  <div className="flex-1 text-[16px] font-semibold text-[#1D2939] ] dark:bg-[#71659C] dark:text-white">
+                  <div className="flex-1 text-[16px] font-semibold text-[#1D2939] ] dark:text-white">
                     {Number(data.saleStatus.price).toPrecision()} SUI
                   </div>
                 </div>
