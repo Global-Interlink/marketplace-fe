@@ -150,9 +150,7 @@ const NFT = () => {
             <div className="w-full md:w-[40%] min-w-[40%]">
               <Image
                 src={
-                  nftData?.image && validURL(nftData?.image)
-                    ? nftData?.image
-                    : "/default.jpeg"
+                  validURL(nftData?.image || "/default.jpeg")
                 }
                 width={200}
                 height={200}

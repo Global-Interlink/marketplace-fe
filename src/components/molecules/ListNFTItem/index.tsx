@@ -133,7 +133,7 @@ const ListNFTItem: React.FC<Props> = ({
       <div className="flex flex-col w-full rounded-[20px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
         <div className="flex w-full">
           <Image
-            src={validURL(data?.image)}
+            src={validURL(data?.image || '/default.jpeg')}
             className="rounded-t-[20px] object-cover cursor-pointer  aspect-[310/216] "
             height={"auto"}
             alt="mock"
