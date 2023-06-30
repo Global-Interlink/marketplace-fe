@@ -128,10 +128,10 @@ const Collection = () => {
                 }
                 width={2000}
                 height={2000}
-                className="flex w-full aspect-[1300/220] rounded-[20px] object-cover my-5"
+                className="flex w-full aspect-[1300/220] rounded-[20px] object-cover my-5 max-[600px]:rounded-[8px]"
                 alt="banner"
             />
-            <div className="bg-white rounded-[10px] my-4 mx-20 p-8 mt-[-100px] z-10 shadow-2xl relative dark:bg-[#1F0844]">
+            <div className="bg-white rounded-[10px] my-4 mx-20 p-8 mt-[-100px] z-10 shadow-2xl relative dark:bg-[#1F0844] max-[600px]:mx-4 max-[600px]:mt-[-30px] max-[600px]:p-4">
               <div className="flex space-y-5 md:items-center flex-col md:flex-row md:justify-between md:space-x-10">
                 <div className="flex w-full md:items-start space-x-2 md:space-x-4">
                   <div className="">
@@ -140,7 +140,7 @@ const Collection = () => {
                       src={collectionData?.logo}
                       width={1000}
                       height={1000}
-                      className="w-8 min-w-[32px] h-8 mt-2 md:mt-0 md:min-w-[160px] md:w-[160px] md:h-[160px] object-cover rounded-[10px]"
+                      className="w-8 min-w-[32px] h-8 mt-2 md:mt-0 md:min-w-[160px] md:w-[160px] md:h-[160px] object-cover rounded-[10px] max-[600px]:h-[40px] max-[600px]:min-w-[40px] max-[600px]:w-[40px]"
                     />
                   </div>
                   <div className="w-full">
@@ -158,10 +158,10 @@ const Collection = () => {
                       </div>
                     </div>
 
-                    <div className="flex text-black dark:text-white md:mt-2">
+                    <div className="flex text-black dark:text-white md:mt-2 max-[600px]:text-[12px]">
                       Items {Number(collectionData?.totalNfts).toLocaleString()}
                     </div>
-                    <div className="flex lg:hidden items-center space-x-3 mt-[28px]">
+                    <div className="flex lg:hidden items-center space-x-3 mt-[28px] max-[600px]:mt-[0px]">
                       <SocialView response={collectionData} />
                     </div>
                     <div className="mt-[10px]">
@@ -178,7 +178,7 @@ const Collection = () => {
                       </ReactMarkdown>
                     </div>
                     <div
-                      className={` text-black dark:text-white transition-all duration-300 ${
+                      className={` text-black dark:text-white transition-all duration-300 max-[600px]:text-[12px] ${
                         showMore ? "" : "ellipsis-multi"
                       }`}
                     >
