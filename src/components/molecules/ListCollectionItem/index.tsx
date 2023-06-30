@@ -18,10 +18,10 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
           }
           width={500}
           height={500}
-          className="flex w-full aspect-[310/216] rounded-t-[20px] object-cover"
+          className="flex w-full aspect-[310/216] object-cover p-4 !rounded-[32px]"
           alt="mock"
         />
-        <div className="flex p-5 w-full space-x-[14px] dark:bg-bgLinearCollectionItem bg-bgLinearLight  dark:border-none rounded-b-[20px]">
+        <div className="flex p-5 w-full space-x-[14px] dark:bg-bgLinearCollectionItem bg-bgLinearLight  dark:border-none rounded-b-[20px] pt-0">
           <Image
             src={data.logo}
             width={500}

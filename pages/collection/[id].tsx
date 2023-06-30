@@ -116,12 +116,21 @@ const Collection = () => {
 
   return collectionData ? (
     <BaseComponent>
-      <div className="py-4 md:py-8">
+      <div className="">
         {collectionStatus === FetchStatus.idle ||
         collectionStatus === FetchStatus.pending ? (
           <CollectionDetailTopSkeleton />
         ) : (
           <>
+            <Image
+                src={
+                  validURL(collectionData.banner || "/default.jpeg")
+                }
+                width={2000}
+                height={2000}
+                className="flex w-full aspect-[1300/220] rounded-[20px] object-cover my-5"
+                alt="banner"
+            />
             <div className="flex space-y-5 md:items-center flex-col md:flex-row md:justify-between md:space-x-10">
               <div className="flex w-full md:items-start space-x-2 md:space-x-4">
                 <div className="">
@@ -191,15 +200,6 @@ const Collection = () => {
                 {showMore ? "Show less" : "Show more"}{" "}
                 {showMore ? <BsChevronUp /> : <BsChevronDown />}
               </button>
-              <Image
-                src={
-                  validURL(collectionData.banner || "/default.jpeg")
-                }
-                width={2000}
-                height={2000}
-                className="flex w-full aspect-[1300/500] rounded-[20px] object-cover mt-5"
-                alt="banner"
-              />
             </div>
           </>
         )}
