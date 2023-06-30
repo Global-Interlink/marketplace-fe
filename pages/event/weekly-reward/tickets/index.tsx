@@ -125,8 +125,6 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
-        console.log("res", res);
-
         setMyTickets(res.data.data.numberTicketsMySelf);
         setAllTickets(res.data.data.totalTickets);
         setLeaderBoard(res.data.data.leaderboard);
