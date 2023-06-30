@@ -1,4 +1,4 @@
-import { useWallet } from "@suiet/wallet-kit";
+import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import { Image } from "antd";
 import React from "react";
 import { NFT } from "../../../api/types";
@@ -14,21 +14,30 @@ import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
 interface Props {
   data?: NFT;
-  onListSuccess: () => void;
+  onListSuccess: (onChainId?: string) => void;
   onBuySuccess: () => void;
-  onDelistSuccess: () => void;
+  onDelistSuccess: (onChainId?: string) => void;
 }
 export function validURL(url: string) {
-  var pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  ); // fragment locator
-  return !!pattern.test(url);
+  if (url) {
+    let ipfs_pattern = new RegExp('^ipfs:\/\/')
+    if(ipfs_pattern.test(url)) {
+      url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    }
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    if(!!pattern.test(url)) {
+      return url;
+    }
+  }
+  return "/default.jpeg";
 }
 const ListNFTItem: React.FC<Props> = ({
   data,
@@ -115,6 +124,7 @@ const ListNFTItem: React.FC<Props> = ({
     data.saleStatus.onSale &&
     data.owner?.address?.address !== address;
   const isShowDelist =
+    address &&
     data?.saleStatus &&
     data.owner?.address?.address === address &&
     data.saleStatus.onSale;
@@ -123,11 +133,7 @@ const ListNFTItem: React.FC<Props> = ({
       <div className="flex flex-col w-full rounded-[20px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
         <div className="flex w-full">
           <Image
-            src={
-              data?.image && validURL(data?.image)
-                ? data?.image
-                : "/default.jpeg"
-            }
+            src={validURL(data?.image || '/default.jpeg')}
             className="rounded-t-[20px] object-cover cursor-pointer  aspect-[310/216] "
             height={"auto"}
             alt="mock"
@@ -154,15 +160,20 @@ const ListNFTItem: React.FC<Props> = ({
               </p>
             </div>
 
-            <div className="flex items-center mt-[18px] space-x-[30px] ">
+            <div className="flex items-center mt-[18px] space-x-5 h-[48px]">
               {data?.saleStatus ? (
-                <div className="h-[36px] flex-1 text-center text-[12px] py-2 text-[#4B5563] dark:border-[#897DBC] dark:bg-[#71659C] dark:text-white border rounded-[5px] border-black">
-                  Price {Number(data.saleStatus.price).toPrecision()} SUI
+                <div className="">
+                  <div className="flex-1 text-[16px] font-normal text-[#475467] ] dark:text-white">
+                    Price
+                  </div>
+                  <div className="flex-1 text-[16px] font-semibold text-[#1D2939] ] dark:text-white">
+                    {Number(data.saleStatus.price).toPrecision()} SUI
+                  </div>
                 </div>
               ) : (
                 <div className="flex-1" />
               )}
-              <div className="flex-1">
+              <div className="flex-1 flex items-center justify-center parent">
                 {isShowList && (
                   <button
                     disabled={!connected || isLoading}
@@ -178,10 +189,10 @@ const ListNFTItem: React.FC<Props> = ({
                     List Now
                   </button>
                 )}
-                {isShowBuy && (
+                {isShowBuy && connected && (
                   <button
                     disabled={!connected || isLoading}
-                    className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
+                    className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-full "
                     onClick={() => {
                       if (data) {
                         handleBuyNow(
@@ -199,6 +210,13 @@ const ListNFTItem: React.FC<Props> = ({
                     )}
                   </button>
                 )}
+                {/* {isShowBuy && <ConnectButton />} */}
+                {!connected && (
+                  <ConnectButton
+                    label="Connect wallet"
+                    className="primaryButton connect-wallet-btn2 !w-full"
+                  />
+                )}
                 {isShowDelist && (
                   <button
                     disabled={!connected || isLoading}
@@ -214,7 +232,7 @@ const ListNFTItem: React.FC<Props> = ({
                     )}
                   </button>
                 )}
-                {!isShowList && !isShowBuy && !isShowDelist && (
+                {!isShowList && !isShowBuy && !isShowDelist && connected && (
                   <div className="h-[36px]" />
                 )}
               </div>
@@ -230,7 +248,7 @@ const ListNFTItem: React.FC<Props> = ({
           item={data}
           onSuccess={() => {
             setOpenListing(false);
-            onListSuccess();
+            onListSuccess(data.onChainId);
             dispatch(
               setSuccess({
                 isOpen: true,
@@ -251,7 +269,7 @@ const ListNFTItem: React.FC<Props> = ({
           id={data.id}
           onSuccess={() => {
             setOpenDelist(false);
-            onDelistSuccess();
+            onDelistSuccess(data.onChainId);
             dispatch(
               setSuccess({
                 isOpen: true,

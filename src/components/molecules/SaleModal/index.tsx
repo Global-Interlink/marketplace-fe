@@ -53,9 +53,6 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
         ],
         typeArguments: [nftType],
       });
-      txb.setGasBudget(
-        Number(process.env.NEXT_PUBLIC_SUI_GAS_BUDGET) || 100000
-      );
       const tx = (await signAndExecuteTransactionBlock({
         transactionBlock: txb,
         options: {
@@ -102,17 +99,17 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
         <div className="mt-8 space-y-2">
           <p className="text-[24px] font-bold text-left break-all">{item?.name}</p>
           {item?.collection && (
-            <div className="flex w-full items-start space-x-2">
+            <div className="flex w-full items-center space-x-2">
               <div className="">
                 <Image
                   alt="logo-lp"
                   src={item?.collection?.logo || ""}
                   width={512}
                   height={512}
-                  className="w-[36px] h-[36px] min-w-[36px] mt-2 object-cover rounded-full"
+                  className="w-[36px] h-[36px] min-w-[36px] object-cover rounded-full"
                 />
               </div>
-              <span className="external md:text-[20px] text-black dark:text-white font-display break-all">
+              <span className="external md:text-[20px] text-black dark:text-white font-display break-all line-clamp-2">
                 {item?.collection?.name}
               </span>
             </div>
@@ -147,12 +144,8 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
           <p className="text-xl font-bold">Fee</p>
           <div className="bg-white dark:bg-[#514E89] border dark:border-[#897DBC] py-[10px] px-[28px] rounded-[20px]">
             <div className="flex items-center justify-between">
-              <p>Service Fee</p>
-              <p className="font-bold text-lg">0%</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p>Owner Fee</p>
-              <p className="font-bold text-lg">0%</p>
+              <p>Transaction Fee</p>
+              <p className="font-bold text-lg">0.12 SUI</p>
             </div>
           </div>
         </div>

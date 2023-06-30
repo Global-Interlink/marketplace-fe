@@ -16,7 +16,6 @@ import { useTheme } from "next-themes";
 import MoreTicketList, {
   MoreTicket,
 } from "../../src/components/organisms/MoreTicketList";
-import { toast } from "react-toastify";
 import { useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
@@ -24,6 +23,12 @@ import { getNextSunday, getThisWeek } from "../../src/utils/common";
 import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
 import { SUI_DECIMAL } from "../../src/api/constants";
 import NotEligible from "../../src/components/molecules/EligibleModal";
+import BuyTicketResponseModal from "../../src/components/molecules/BuyTicketResponseModal";
+import ConfirmBuyTicketModal from "../../src/components/molecules/ConfirmBuyTicketModal";
+import { LoadingOutlined } from "@ant-design/icons";
+import Image from "next/image";
+import { Week } from "./weekly-reward/tickets";
+import dayjs from "dayjs";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -53,6 +58,19 @@ const Campaign = () => {
   const api = createAxios();
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
+  const [currentTGIL, setCurrentTGIL] = React.useState(0);
+  const [isFetching, setFetching] = React.useState(false);
+  const [rewardWeek, setRewardWeek] = React.useState<Week>();
+  const [buy, setBuy] = React.useState<{
+    isOpen: boolean;
+    errorMessage?: string;
+  }>({
+    isOpen: false,
+  });
+  const [confirmBuy, setConfirmBuy] = React.useState<{
+    isOpen: boolean;
+    type: "forEvery" | "completedAnyTask" | "completedAllTask";
+  }>();
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
@@ -60,6 +78,17 @@ const Campaign = () => {
       .then((res) => {
         setRewards(res.data.data.data);
       });
+    api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
+      const { data } = res.data;
+      const currentWeek = data.find((i) => i.current);
+      const index = currentWeek ? data?.indexOf(currentWeek) : 0;
+      if (data[index - 1]) {
+        const week = data[index - 1];
+        setRewardWeek(week);
+      } else {
+        setRewardWeek(currentWeek);
+      }
+    });
   };
 
   const fetchAllTask = async (address: string) => {
@@ -73,6 +102,9 @@ const Campaign = () => {
       .then((res) => {
         setWeeklyProgress(res.data.data);
       });
+    api.get(`/v2/wallet/${address}`).then((res) => {
+      setCurrentTGIL(res.data.tokenNumber);
+    });
   };
 
   const fetchLeaderBoard = async (address: string) => {
@@ -92,15 +124,22 @@ const Campaign = () => {
         buyType: type,
         walletAddress: address,
       })
-      .then((res) => {
-        toast.success("Buy ticket success!");
+      .then(() => {
+        setBuy({ isOpen: true });
         if (address) {
           fetchMoreTicketData(address);
           fetchLeaderBoard(address);
         }
       })
       .catch((e) => {
-        toast.error(e.response.data.cause);
+        if (
+          e?.response?.data?.cause &&
+          typeof e?.response?.data?.cause === "string"
+        ) {
+          setBuy({ isOpen: true, errorMessage: e.response.data.cause });
+        } else {
+          setBuy({ isOpen: true, errorMessage: "Something went wrong" });
+        }
       });
   };
 
@@ -119,12 +158,16 @@ const Campaign = () => {
   }, [connected]);
 
   const fetchMoreTicketData = (address: string) => {
+    setFetching(true);
     api
       .get<MoreTicket>(`/more-tickets/current?walletAddress=${address}`)
       .then((res) => {
         setMoreTicket(res.data);
         setNumberDynamicNft(res.data.numberDynamicNft);
-        setOpenModal(true);
+        setFetching(false);
+      })
+      .catch(() => {
+        setFetching(false);
       });
   };
 
@@ -149,7 +192,29 @@ const Campaign = () => {
               theme === "dark" ? "darkGradient" : "bg-white"
             }`}
           >
-            <p className="text-[30px] font-medium">Daily Task</p>
+            <div className="flex items-center justify-between">
+              <p className="text-[30px] font-medium">Daily Task</p>
+              <p
+                className={`${
+                  numberDynamicNft && numberDynamicNft > 0
+                    ? "text-[#039855] bg-[#D1FADF]"
+                    : "text-[#D92D20] bg-[#FECDCA]"
+                } cursor-pointer px-3  text-center text-sm rounded-full font-normal leading-5 py-[2px]`}
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
+                {!isFetching ? (
+                  <>
+                    {numberDynamicNft && numberDynamicNft > 0
+                      ? "Eligible"
+                      : "Not-Eligible"}
+                  </>
+                ) : (
+                  <LoadingOutlined className="text-[#E23DCC]" size={20} />
+                )}
+              </p>
+            </div>
             <p className="text-[#667085] dark:text-[#D0D5DD]">
               Track your progress to get more tickets for weekly reward pool
             </p>
@@ -165,8 +230,15 @@ const Campaign = () => {
               </p>
               <MoreTicketList
                 data={moreTicket}
-                onHandleBuy={handleBuy}
+                onHandleBuy={(type) => {
+                  setConfirmBuy({
+                    isOpen: true,
+                    type,
+                  });
+                  // handleBuy
+                }}
                 weeklyProgress={weeklyProgress}
+                isFetching={isFetching}
               />
             </div>
           </div>
@@ -176,7 +248,7 @@ const Campaign = () => {
             }`}
           >
             <div
-              className={`flex flex-col h-full bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
+              className={`flex flex-col h-full md:bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
             >
               <p className="text-[30px] font-medium">Leaderboard</p>
               <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
@@ -192,12 +264,21 @@ const Campaign = () => {
                 ).toLocaleString()}{" "}
                 SUI
               </p>
-              <p className="text-[#667085] dark:text-[#D0D5DD]">
+              <p className="text-[#667085]  dark:text-[#D0D5DD]">
                 Learn more about prize table{" "}
                 <Link className="text-[#E23DCC]" href="/event/prize">
                   here.
                 </Link>
               </p>
+              <div className="flex items-center justify-center md:hidden">
+                <Image
+                  width={320}
+                  height={320}
+                  src={"/leader-board.png"}
+                  alt="cup"
+                  className="object-contain"
+                />
+              </div>
               <ListRanking data={leaderBoard} />
               {leaderBoard && leaderBoard.top && leaderBoard.top.length > 0 && (
                 <div className="flex items-center justify-center mt-4">
@@ -218,7 +299,12 @@ const Campaign = () => {
           }`}
         >
           <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
-            {`Weekly Reward \n${getThisWeek()}`}
+            {`Weekly Reward \n${
+              rewardWeek
+                ? `(${dayjs(rewardWeek.start).format("DD/MM")} -
+          ${dayjs(rewardWeek.end).format("DD/MM")})`
+                : ""
+            }`}
           </p>
           <div className="lg:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
             <ListReward
@@ -251,6 +337,28 @@ const Campaign = () => {
           />
         )}
       </div>
+      {buy.isOpen && (
+        <BuyTicketResponseModal
+          errorMessage={buy.errorMessage}
+          close={() => {
+            setBuy({
+              isOpen: false,
+              errorMessage: undefined,
+            });
+          }}
+        />
+      )}
+      {confirmBuy?.isOpen && (
+        <ConfirmBuyTicketModal
+          type={confirmBuy.type}
+          currentTGIL={currentTGIL}
+          numberOfNFTs={numberDynamicNft}
+          handleBuy={handleBuy}
+          close={() => {
+            setConfirmBuy({ isOpen: false, type: "forEvery" });
+          }}
+        />
+      )}
     </BaseComponent>
   );
 };

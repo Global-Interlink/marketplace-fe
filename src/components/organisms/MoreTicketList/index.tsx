@@ -18,18 +18,20 @@ interface Props {
     type: "forEvery" | "completedAnyTask" | "completedAllTask"
   ) => void;
   weeklyProgress?: AllTaskDay;
+  isFetching: boolean;
 }
 const MoreTicketList: React.FC<Props> = ({
   data,
   onHandleBuy,
   weeklyProgress,
+  isFetching
 }) => {
   const { connected } = useWallet();
   const completed_any_task = data?.data?.completedAnyTask;
   const for_every = data?.data?.forEvery;
   const completed_all_task = data?.data?.completedAllTask;
   const weeklyTask = Object.values(weeklyProgress || {});
-  const isNotCompletedAllWeeklyTask = weeklyProgress
+  const isNotCompletedAllWeeklyTask = !weeklyProgress
     ? true
     : weeklyTask.filter((i) => i !== 3).length > 0;
   const isCompletedAtLeastOneTask = weeklyTask.filter((i) => i > 0).length > 0;
@@ -42,6 +44,7 @@ const MoreTicketList: React.FC<Props> = ({
         mission="1"
         data={data}
         onHandleBuy={onHandleBuy}
+        isFetching={isFetching}
       />
       <MoreTicketItem
         title="1 ticket (1000 tGIL)"
@@ -58,6 +61,7 @@ const MoreTicketList: React.FC<Props> = ({
         mission="2"
         onHandleBuy={onHandleBuy}
         data={data}
+        isFetching={isFetching}
       />
       <MoreTicketItem
         title="3 tickets"
@@ -74,6 +78,7 @@ const MoreTicketList: React.FC<Props> = ({
         mission="3"
         onHandleBuy={onHandleBuy}
         data={data}
+        isFetching={isFetching}
       />
     </div>
   );

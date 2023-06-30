@@ -21,6 +21,8 @@ import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { FetchStatus } from "../../src/api/APIFunctions";
 import CollectionDetailTopSkeleton from "../../src/components/molecules/CollectionDetailTopSkeleton";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { NFT } from "../../src/api/types";
+import { getUnique } from "../../src/utils/localStorage";
 
 const Collection = () => {
   const router = useRouter();
@@ -37,6 +39,7 @@ const Collection = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [showMore, setShowMore] = React.useState(false);
   const [isShow, setIsShow] = React.useState(false);
+  const [listNFT, setListNFT] = React.useState<NFT[]>([]);
 
   React.useEffect(() => {
     if (id) {
@@ -52,6 +55,8 @@ const Collection = () => {
 
   const handleFetchData = () => {
     if (id) {
+      setListNFT([]);
+      setCurrentPage(1);
       dispatch(
         fetchListNFTOfCollection({
           id: String(id),
@@ -74,7 +79,22 @@ const Collection = () => {
         })
       );
     }
-  }, [currentPage, id, sort]);
+  }, [id]);
+
+  React.useEffect(() => {
+    if (listNFT && listNFT.length > 0) {
+      setListNFT([]);
+      setCurrentPage(1);
+      dispatch(
+        fetchListNFTOfCollection({
+          id: String(id),
+          page: 1,
+          limit: LIMIT,
+          sort: sort,
+        })
+      );
+    }
+  }, [sort]);
 
   React.useEffect(() => {
     const divElement = document.querySelector(".collection-description");
@@ -85,6 +105,14 @@ const Collection = () => {
       }
     }
   }, [collectionData]);
+  // console.log("==", listNFT);
+  React.useEffect(() => {
+    if (response?.data) {
+      setListNFT((s) => {
+        return getUnique([...s, ...response.data], "id");
+      });
+    }
+  }, [response]);
 
   return collectionData ? (
     <BaseComponent>
@@ -165,9 +193,7 @@ const Collection = () => {
               </button>
               <Image
                 src={
-                  collectionData.banner && validURL(collectionData.banner)
-                    ? collectionData.banner
-                    : "/default.jpeg"
+                  validURL(collectionData.banner || "/default.jpeg")
                 }
                 width={2000}
                 height={2000}
@@ -192,9 +218,9 @@ const Collection = () => {
                   sort={sort}
                 />
               </div>
-              {response && response.data && response.data.length > 0 ? (
+              {listNFT && listNFT.length > 0 ? (
                 <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {response?.data.map((i) => {
+                  {listNFT.map((i) => {
                     return (
                       <ListNFTItem
                         key={i.id}
@@ -211,8 +237,9 @@ const Collection = () => {
               )}
             </>
           )}
-          {response &&
-            response.data &&
+          {listNFT &&
+            listNFT.length > 0 &&
+            response &&
             currentPage < response.meta.totalPages && (
               <div className="mt-[70px] flex justify-center">
                 <button
@@ -221,6 +248,14 @@ const Collection = () => {
                       response?.meta.currentPage < response?.meta.totalPages
                     ) {
                       setCurrentPage(response?.meta.currentPage + 1);
+                      dispatch(
+                        fetchListNFTOfCollection({
+                          id: String(id),
+                          page: response?.meta.currentPage + 1,
+                          limit: LIMIT,
+                          sort: sort,
+                        })
+                      );
                     }
                   }}
                   className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"

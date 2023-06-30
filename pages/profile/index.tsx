@@ -130,14 +130,24 @@ const Collection = () => {
                         key={i.onChainId}
                         data={i}
                         onBuySuccess={handleFetchData}
-                        onDelistSuccess={handleFetchData}
-                        onListSuccess={handleFetchData}
+                        onDelistSuccess={(onChainId) => {
+                          setListedNFT(
+                            listedNFT.filter((i) => i.onChainId !== onChainId)
+                          );
+                          handleFetchData();
+                        }}
+                        onListSuccess={(onChainId) => {
+                          setListNFT(
+                            listNFT.filter((i) => i.onChainId !== onChainId)
+                          );
+                          handleFetchData();
+                        }}
                       />
                     );
                   })}
                 </div>
               ) : (
-                <Empty />
+                status !== FetchStatus.pending && <Empty />
               )}
               {response &&
                 response.data &&
@@ -197,7 +207,7 @@ const Collection = () => {
                   })}
                 </div>
               ) : (
-                <Empty />
+                status !== FetchStatus.pending && <Empty />
               )}
               {listed &&
                 listed.data &&

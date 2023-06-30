@@ -30,7 +30,7 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       {data.slice(0, 4).map((i) => {
         return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />;
       })}
-      <div className="absolute -right-[70px] md:-right-[160px] md:-top-[40px] w-[140px] md:w-[300px] md:h-[240px]">
+      <div className="absolute -right-[65px] md:-right-[160px] md:-top-[40px] w-[160px] md:w-[300px] md:h-[240px]">
         <Image
           src={
             rank === "gold"

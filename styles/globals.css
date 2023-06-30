@@ -121,7 +121,7 @@ button.hoverCommon:hover {
 }
 
 button.primaryButton:disabled {
-  background:  grey;
+  background: grey;
   color: rgba(255, 255, 255, 0.3);
   cursor: not-allowed;
   box-shadow: none;
@@ -186,6 +186,19 @@ div.footerC {
   font-weight: 500 !important;
   margin-right: 40px;
   border-radius: 100px !important;
+}
+div[type="button"] {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.connect-wallet-btn2 {
+  padding: 0 0px !important;
+  height: 36px;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
 }
 
 .wkit-connected-container {
@@ -320,4 +333,130 @@ div.footerC {
   );
   box-shadow: 32px 32px 64px rgba(0, 0, 0, 0.08);
   color: white;
+}
+
+:root {
+  --transition: 0.25s;
+  --spark: 1.8s;
+  --active: 0;
+}
+
+.sparkle1 {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: -5px;
+  bottom: -10px;
+}
+
+.sparkle2 {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: -5px;
+  right: 5px;
+}
+
+.sparkle3 {
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  right: -10px;
+}
+
+.sparkle1 path {
+  scale: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  fill: #fc5fff;
+  stroke: #fc5fff;
+  -webkit-animation-name: bounce;
+  animation-name: bounce;
+  -webkit-animation-delay: calc(
+    (var(--transition) * 1.5) + (var(--delay) * 1s)
+  );
+  animation-delay: calc((var(--transition) * 1.5) + (var(--delay) * 1s));
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  transition: color var(--transition);
+  animation-iteration-count: infinite;
+}
+
+.sparkle2 path {
+  scale: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  fill: #fc5fff;
+  stroke: #fc5fff;
+  -webkit-animation-name: bounce;
+  animation-name: bounce;
+  -webkit-animation-delay: calc(
+    (var(--transition) * 0.5) + (var(--delay) * 1s)
+  );
+  animation-delay: calc((var(--transition) * 0.5) + (var(--delay) * 1s));
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  transition: color var(--transition);
+  animation-iteration-count: infinite;
+}
+
+.sparkle3 path {
+  scale: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  fill: #fc5fff;
+  stroke: #fc5fff;
+  -webkit-animation-name: bounce;
+  animation-name: bounce;
+  -webkit-animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
+  animation-delay: calc((var(--transition) * 2) + (var(--delay) * 1s));
+  -webkit-animation-duration: 2s;
+  animation-duration: 2s;
+  transition: color var(--transition);
+  animation-iteration-count: infinite;
+}
+
+.sparkle3 {
+  position: absolute;
+  top: -15px;
+}
+
+@-webkit-keyframes bounce {
+  35%,
+  65% {
+    scale: var(--scale);
+  }
+  0%,
+  100% {
+    scale: 0;
+  }
+}
+
+@keyframes bounce {
+  35%,
+  65% {
+    scale: var(--scale);
+  }
+  0%,
+  100% {
+    scale: 0;
+  }
+}
+
+.sparkle1 path {
+  --scale: 0.3;
+  --delay: 0.1;
+  --base: 40%;
+}
+
+.sparkle2 path {
+  --scale: 0.3;
+  --delay: 0.2;
+  --base: 20%;
+}
+
+.sparkle3 path {
+  --scale: 0.4;
+  --delay: 0.35;
+  --base: 30%;
 }

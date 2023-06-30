@@ -49,11 +49,11 @@ export const fetchCollectionDetail = createAsyncThunk(
   }
 );
 export const fetchListNFTOfCollection = createAsyncThunk(
-  "home/collections",
+  "collection/collections",
   async (params: FetchListCollectionNFTPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListCollectionNFTSuccess>(
-        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=createdDate:${params.sort}`
+        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=saleItems.price:${params.sort}`
       );
       return response.data;
     } catch (err: any) {

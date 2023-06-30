@@ -11,7 +11,23 @@ import Breadcrumbs from "../../../../src/components/molecules/Breadcrumb";
 import { debounce } from "lodash";
 import { LoadingOutlined } from "@ant-design/icons";
 import { start } from "repl";
+import * as jose from "jose";
 
+const getAccessToken = async (walletAddress: string) => {
+  const secret = new TextEncoder().encode("ABCCD");
+  const alg = "HS256";
+  const token = await new jose.SignJWT({
+    walletAddress: walletAddress,
+    role: "user",
+    userId: 1,
+    timeExpires: new Date().toUTCString(),
+  })
+    .setProtectedHeader({ alg })
+    .setIssuedAt()
+    .setExpirationTime("2m")
+    .sign(secret);
+  return token;
+};
 interface Ticket {
   ticketId: number;
   walletAddress: string;
@@ -19,6 +35,12 @@ interface Ticket {
   targetDate: string;
   createdAt: string;
   deletedAt?: string;
+}
+interface LeaderBoard {
+  no: number;
+  numberTickets: string;
+  percent: string;
+  walletAddress: string;
 }
 interface Meta {
   pagination: {
@@ -28,7 +50,6 @@ interface Meta {
     totalPages: number;
   };
 }
-
 export interface Week {
   start: string;
   end: string;
@@ -42,6 +63,9 @@ const Tickets = () => {
   const [nextPage, setNextPage] = React.useState(1);
   const [isLoading, setLoading] = React.useState(false);
   const [week, setWeek] = React.useState<Week[]>();
+  const [myTickets, setMyTickets] = React.useState<string>();
+  const [allTickets, setAllTickets] = React.useState<string>();
+  const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard[]>();
   const [filterWeek, setFilterWeek] = React.useState<{
     start: string;
     end: string;
@@ -75,6 +99,43 @@ const Tickets = () => {
       });
   };
 
+  const fetchDataLeaderBoard = async (keyword?: string) => {
+    if (!address) {
+      return;
+    }
+    const token = await getAccessToken(address);
+    const api = createAxios(token);
+    const params = {
+      page: nextPage,
+      ...(keyword ? { walletAddress: keyword } : {}),
+      ...(filterWeek
+        ? { startDate: filterWeek.start, endDate: filterWeek.end }
+        : {}),
+    };
+    setLoading(true);
+    api
+      .get<{
+        data: {
+          leaderboard: LeaderBoard[];
+          meta: Meta;
+          numberTicketsMySelf: string;
+          totalTickets: string;
+        };
+      }>("/ticket/leaderboard/all", {
+        params: params,
+      })
+      .then((res) => {
+        setMyTickets(res.data.data.numberTicketsMySelf);
+        setAllTickets(res.data.data.totalTickets);
+        setLeaderBoard(res.data.data.leaderboard);
+        setLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setLoading(false);
+      });
+  };
+
   React.useEffect(() => {
     api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
       setWeek(res.data.data);
@@ -85,9 +146,11 @@ const Tickets = () => {
     debounce((nextValue) => {
       if (nextValue.length === 0) {
         fetchData();
+        fetchDataLeaderBoard();
         return;
       }
       fetchData(nextValue);
+      fetchDataLeaderBoard(nextValue);
     }, 1000),
     []
   );
@@ -103,6 +166,7 @@ const Tickets = () => {
     } else {
       fetchData();
     }
+    fetchDataLeaderBoard();
   }, [address, activeTab, nextPage, filterWeek]);
 
   return (
@@ -122,11 +186,15 @@ const Tickets = () => {
               items={[
                 {
                   key: "1",
-                  title: "My tickets",
+                  title: `You (${myTickets?myTickets:0})`,
                 },
                 {
                   key: "2",
-                  title: "All tickets",
+                  title: `All (${allTickets?allTickets:0})`,
+                },
+                {
+                  key: "3",
+                  title: `Leaderboard`,
                 },
               ]}
               onChangeKey={setActiveTab}
@@ -148,33 +216,69 @@ const Tickets = () => {
             <table className="w-full whitespace-pre-wrap block md:table overflow-x-auto">
               <thead className="bg-gray-50 text-[#667085]">
                 <tr className="text-left">
-                  <th className="px-6 py-2 font-normal text-xs rounded-tl-lg w-1/4">
-                    Ticket No.
+                  <th
+                    className={`px-6 py-2 font-normal text-xs rounded-tl-lg ${
+                      activeTab === "3" ? "w-1/5" : "w-1/4"
+                    }`}
+                  >
+                    {activeTab === "3" ? "Rank" : "Ticket No."}
                   </th>
-                  <th className="px-6 py-2 font-normal text-xs w-2/4">
+                  <th
+                    className={`px-6 py-2 font-normal text-xs ${
+                      activeTab === "3" ? "w-2/5" : "w-2/4"
+                    }`}
+                  >
                     Wallet Address
                   </th>
-                  <th className="px-6 py-2 font-normal text-xs w-1/4">
-                    Created
-                  </th>
+                  {activeTab === "3" ? (
+                    <>
+                      <th className="px-6 py-2 font-normal text-xs w-1/5">
+                        Ticket No.
+                      </th>
+                      <th className="px-6 py-2 font-normal text-xs w-1/5">
+                        Ratio
+                      </th>
+                    </>
+                  ) : (
+                    <th className="px-6 py-2 font-normal text-xs w-1/4">
+                      Created
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {tickets.map((i) => {
-                  return (
-                    <tr className="text-sm border-b" key={i.ticketId}>
-                      <td className="px-6 py-4 text-[#101828]">
-                        {i.ticketNumber}
-                      </td>
-                      <td className="px-6 py-4 text-[#667085]">
-                        {formatAddress(i.walletAddress)}
-                      </td>
-                      <td className="px-6 py-4 text-[#667085]">
-                        {dayjs(i.createdAt).format("HH:mm:ss YYYY-MM-DD")}
-                      </td>
-                    </tr>
-                  );
-                })}
+                {activeTab === "3"
+                  ? leaderBoard?.map((i) => {
+                      return (
+                        <tr className="text-sm border-b" key={i.no}>
+                          <td className="px-6 py-4 text-[#101828]">{i.no}</td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {formatAddress(i.walletAddress)}
+                          </td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {i.numberTickets}
+                          </td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {i.percent}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  : tickets.map((i) => {
+                      return (
+                        <tr className="text-sm border-b" key={i.ticketId}>
+                          <td className="px-6 py-4 text-[#101828]">
+                            {i.ticketNumber}
+                          </td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {formatAddress(i.walletAddress)}
+                          </td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {dayjs(i.createdAt).format("HH:mm:ss YYYY-MM-DD")}
+                          </td>
+                        </tr>
+                      );
+                    })}
               </tbody>
             </table>
             {activeTab === "1" && !address && (

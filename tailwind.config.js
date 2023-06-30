@@ -58,7 +58,7 @@ module.exports = {
         collectionItem: "0px 10px 20px 5px rgba(17, 17, 17, 0.2)",
       },
       screens: {
-        s_1440: "1440px",
+        lg2: "1081px",
       },
     },
     fontFamily: {

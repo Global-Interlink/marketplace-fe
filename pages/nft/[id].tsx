@@ -150,9 +150,7 @@ const NFT = () => {
             <div className="w-full md:w-[40%] min-w-[40%]">
               <Image
                 src={
-                  nftData?.image && validURL(nftData?.image)
-                    ? nftData?.image
-                    : "/default.jpeg"
+                  validURL(nftData?.image || "/default.jpeg")
                 }
                 width={200}
                 height={200}
@@ -188,17 +186,18 @@ const NFT = () => {
                     <p className="text-[20px]">Current Price :</p>
                     <p className="text-[20px] md:text-[24px] font-bold">
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
-                      {`(~ $${Number(
+                      {/* {`(~ $${Number(
                         nftData.saleStatus.usdPrice
-                      ).toPrecision()})`}
+                      ).toPrecision()})`} */}
                     </p>
                   </div>
                 ) : (
                   <div />
                 )}
-                {nftData &&
+                {nftData && nftData.owner?.address &&
+                  nftData.owner &&
                   !nftData?.saleStatus &&
-                  nftData.owner.address.address === address && (
+                  nftData.owner?.address?.address === address && (
                     <button
                       className=" primaryButton text-white text-[20px] h-[45px] px-10 rounded-full  w-full mt-5 md:mt-0 md:w-auto"
                       onClick={() => {
@@ -212,9 +211,9 @@ const NFT = () => {
                       List Now
                     </button>
                   )}
-                {nftData?.saleStatus &&
+                {nftData?.saleStatus && nftData.owner?.address && 
                   nftData.saleStatus.onSale &&
-                  nftData.owner.address.address !== address && (
+                  nftData.owner?.address.address !== address && (
                     <button
                       disabled={isLoading || !connected}
                       className="primaryButton text-white text-[20px] h-[45px] px-10 rounded-full  w-full mt-5 md:mt-0 md:w-auto"
@@ -237,8 +236,8 @@ const NFT = () => {
                       )}
                     </button>
                   )}
-                {nftData?.saleStatus &&
-                  nftData.owner.address.address === address &&
+                {nftData?.saleStatus && nftData.owner?.address &&
+                  nftData.owner?.address.address === address &&
                   nftData.saleStatus.onSale && (
                     <button
                       disabled={isLoading || !connected}
@@ -263,18 +262,18 @@ const NFT = () => {
                 </p>
                 <hr className="border-none bg-[#C9C6C6] h-[1px]" />
 
-                {nftData?.owner && (
+                {nftData?.owner && nftData.owner?.address && (
                   <div className="text-black dark:text-white flex items-center justify-between">
                     <span>Owner Address</span>
                     <div className="flex items-center space-x-1">
                       <span className="text-[18px] font-bold ">
-                        {formatLongString(nftData.owner.address.address)}
+                        {formatLongString(nftData.owner?.address.address)}
                       </span>
                       <div
                         className="cursor-pointer"
                         onClick={() => {
                           navigator.clipboard.writeText(
-                            nftData.owner.address.address
+                            nftData.owner?.address.address
                           );
                           toast.info("Copied to clipboard!");
                         }}
@@ -286,16 +285,16 @@ const NFT = () => {
                 )}
                 <div className="text-black dark:text-white flex items-center justify-between">
                   <span>Transaction Fee</span>
-                  <span className="text-[18px] font-bold ">0%</span>
+                  <span className="text-[18px] font-bold ">0.12 SUI</span>
                 </div>
                 <div className="text-black dark:text-white flex items-center justify-between">
                   <span>Royalties Fee</span>
                   <span className="text-[18px] font-bold ">0%</span>
                 </div>
-                <div className="text-black dark:text-white flex items-center justify-between">
+                {/* <div className="text-black dark:text-white flex items-center justify-between">
                   <span>Listing/Bidding/Cancel</span>
                   <span className="text-[18px] font-bold ">Free</span>
-                </div>
+                </div> */}
               </div>
               {nftData?.properties && nftData.properties.length > 0 && (
                 <div className="mt-[36px] space-y-[10px]">
