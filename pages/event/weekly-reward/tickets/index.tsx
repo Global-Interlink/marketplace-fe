@@ -188,11 +188,11 @@ const Tickets = () => {
               items={[
                 {
                   key: "1",
-                  title: `You (${myTickets})`,
+                  title: `You (${myTickets?myTickets:0})`,
                 },
                 {
                   key: "2",
-                  title: `All (${allTickets})`,
+                  title: `All (${allTickets?allTickets:0})`,
                 },
                 {
                   key: "3",
