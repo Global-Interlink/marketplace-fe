@@ -177,7 +177,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {isShowList && (
                   <button
                     disabled={!connected || isLoading}
-                    className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px]"
+                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white rounded-full max-w-[120px]"
                     onClick={() => {
                       if (data.collection) {
                         setOpenListing(true);
@@ -214,13 +214,13 @@ const ListNFTItem: React.FC<Props> = ({
                 {!connected && (
                   <ConnectButton
                     label="Connect wallet"
-                    className="primaryButton connect-wallet-btn2 !w-full"
+                    className="primaryButton h-[36px] w-full text-center !text-[12px] text-white !rounded-full max-w-[160px] !p-0 uppercase"
                   />
                 )}
                 {isShowDelist && (
                   <button
                     disabled={!connected || isLoading}
-                    className="primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-[5px] "
+                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white rounded-full max-w-[120px]"
                     onClick={(e: any) => {
                       setOpenDelist(true);
                     }}
