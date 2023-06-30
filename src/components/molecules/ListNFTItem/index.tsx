@@ -19,20 +19,25 @@ interface Props {
   onDelistSuccess: (onChainId?: string) => void;
 }
 export function validURL(url: string) {
-  let ipfs_pattern = new RegExp('^ipfs:\/\/')
-  if(ipfs_pattern.test(url)) {
-    url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+  if (url) {
+    let ipfs_pattern = new RegExp('^ipfs:\/\/')
+    if(ipfs_pattern.test(url)) {
+      url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    }
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    if(!!pattern.test(url)) {
+      return url;
+    }
   }
-  var pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  ); // fragment locator
-  return !!pattern.test(url);
+  return "/default.jpeg";
 }
 const ListNFTItem: React.FC<Props> = ({
   data,
@@ -128,11 +133,7 @@ const ListNFTItem: React.FC<Props> = ({
       <div className="flex flex-col w-full rounded-[20px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
         <div className="flex w-full">
           <Image
-            src={
-              data?.image && validURL(data?.image)
-                ? data?.image
-                : "/default.jpeg"
-            }
+            src={validURL(data?.image)}
             className="rounded-t-[20px] object-cover cursor-pointer  aspect-[310/216] "
             height={"auto"}
             alt="mock"
