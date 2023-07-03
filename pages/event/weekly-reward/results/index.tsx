@@ -12,7 +12,6 @@ import { debounce } from "lodash";
 import { LoadingOutlined } from "@ant-design/icons";
 import { start } from "repl";
 import * as jose from "jose";
-import { Reward } from "../../../../src/components/organisms/ListReward";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -29,14 +28,6 @@ const getAccessToken = async (walletAddress: string) => {
     .sign(secret);
   return token;
 };
-interface Ticket {
-  ticketId: number;
-  walletAddress: string;
-  ticketNumber: number;
-  targetDate: string;
-  createdAt: string;
-  deletedAt?: string;
-}
 
 interface Meta {
   pagination: {
@@ -46,6 +37,18 @@ interface Meta {
     totalPages: number;
   };
 }
+export interface Rewards {
+  winPrizeId: number;
+  walletAddress: string;
+  currency: string;
+  amount: number;
+  winPrizeOrder: number;
+  ticketNumber: number;
+  targetDate: string;
+  meta?: Meta;
+}
+
+
 export interface Week {
   start: string;
   end: string;
@@ -54,7 +57,9 @@ export interface Week {
 
 const Results = () => {
   const { address } = useWallet();
-  const [meta, setMeta] = React.useState<Meta>();
+  const [meta1, setMeta1] = React.useState<Meta>();
+  const [meta2, setMeta2] = React.useState<Meta>();
+  const [meta3, setMeta3] = React.useState<Meta>();
   const [activeTab, setActiveTab] = React.useState("1");
   const [nextPage, setNextPage] = React.useState(1);
   const [isLoading, setLoading] = React.useState(false);
@@ -63,7 +68,9 @@ const Results = () => {
     start: string;
     end: string;
   }>();
-  const [rewards, setRewards] = React.useState<Reward[]>([]);
+  const [rewards1, setRewards1] = React.useState<Rewards[]>([]);
+  const [rewards2, setRewards2] = React.useState<Rewards[]>([]);
+  const [rewards3, setRewards3] = React.useState<Rewards[]>([]);
   const [rewardWeek, setRewardWeek] = React.useState<Week>();
 
   const api = createAxios();
@@ -80,23 +87,50 @@ const Results = () => {
   const fetchData = async (keyword?: string) => {
     const params = {
       page: nextPage,
-      ...(keyword ? { walletAddress: keyword } : {}),
-      ...(rewardWeek ? { start: rewardWeek.start, end: rewardWeek.end } : {}),
+      walletAddress: keyword,
+      start: rewardWeek?.start,
+      end: rewardWeek?.end,
     };
 
     setLoading(true);
     api
-      .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar", {
-        params: params,
-      })
+      .get<{ data: any }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&orderPrize=${1}`)
       .then((res) => {
-        setRewards(res.data.data.data);
-        console.log(res.data.data.data);
-
+        setMeta1(res.data.data?.meta)
         setLoading(false);
       });
     api
-      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5", {
+      .get<{ data: any }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&orderPrize=${2}`)
+      .then((res) => {
+        setMeta2(res.data.data?.meta)
+        setLoading(false);
+      });
+    api
+      .get<{ data: any }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&orderPrize=${3}`)
+      .then((res) => {
+        setMeta3(res.data.data?.meta)
+        setLoading(false);
+      });
+    api
+      .get<{ data: { data: Rewards[] } }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&limit=10&orderPrize=${1}`)
+      .then((res) => {
+        setRewards1(res.data.data.data);
+        setLoading(false);
+      });
+    api
+      .get<{ data: { data: Rewards[] } }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&limit=10&orderPrize=${2}`)
+      .then((res) => {
+        setRewards2(res.data.data.data);
+        setLoading(false);
+      });
+    api
+      .get<{ data: { data: Rewards[] } }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&limit=10&orderPrize=${3}`)
+      .then((res) => {
+        setRewards3(res.data.data.data);
+        setLoading(false);
+      });
+    api
+      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=1", {
         params: params,
       })
       .then((res) => {
@@ -107,21 +141,13 @@ const Results = () => {
             formatDate(new Date(filterWeek?.start || ""))
         );
 
-        // const index = currentWeek ? data?.indexOf(currentWeek) : 0;
-        // if (data[index]) {
-        //   const week = data[index];
-        //   setRewardWeek(week);
-        // } else {
-        //   setRewardWeek(currentWeek);
-        // }
-        // setRewardWeek(data[index]);
         setRewardWeek(currentWeek);
         setLoading(false);
       });
   };
 
   React.useEffect(() => {
-    api.get<{ data: Week[] }>("/ticket/weekly?numberWeeks=4").then((res) => {
+    api.get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${1}`).then((res) => {
       setWeek(res.data.data);
     });
   }, []);
@@ -139,7 +165,9 @@ const Results = () => {
 
   React.useEffect(() => {
     fetchData();
-  }, [address, activeTab, nextPage, filterWeek]);
+  }, [address, nextPage, filterWeek]);
+
+  // console.log("filterWeek", filterWeek);
 
   return (
     <BaseComponent>
@@ -159,24 +187,24 @@ const Results = () => {
                 {
                   key: "1",
                   title: `Tier 1 (${
-                    rewards
-                      ? rewards.filter((i) => i.winPrizeOrder === 1).length
+                    rewards1
+                      ? rewards1.length
                       : 0
                   })`,
                 },
                 {
                   key: "2",
                   title: `Tier 2 (${
-                    rewards
-                      ? rewards.filter((i) => i.winPrizeOrder === 2).length
+                    rewards2
+                      ? rewards2.length
                       : 0
                   })`,
                 },
                 {
                   key: "3",
                   title: `Tier 3 (${
-                    rewards
-                      ? rewards.filter((i) => i.winPrizeOrder === 3).length
+                    rewards3
+                      ? rewards3.length
                       : 0
                   })`,
                 },
@@ -222,8 +250,39 @@ const Results = () => {
                 </tr>
               </thead>
               <tbody>
-                {rewards
-                  .filter((i) => i.winPrizeOrder === Number(activeTab))
+                {Number(activeTab) === 1 && rewards1 && rewards1
+                  .map((i) => {
+                    return (
+                      <tr className="text-sm border-b" key={i.winPrizeId}>
+                        <td className="px-6 py-4 text-[#101828]">
+                          {i.ticketNumber}
+                        </td>
+                        <td className="px-6 py-4 text-[#667085]">
+                          {formatAddress(i.walletAddress)}
+                        </td>
+                        <td className="px-6 py-4 text-[#667085] text-center">
+                          {i.amount} SUI
+                        </td>
+                      </tr>
+                    );
+                  })}
+                {Number(activeTab) === 2 && rewards2 && rewards2
+                  .map((i) => {
+                    return (
+                      <tr className="text-sm border-b" key={i.winPrizeId}>
+                        <td className="px-6 py-4 text-[#101828]">
+                          {i.ticketNumber}
+                        </td>
+                        <td className="px-6 py-4 text-[#667085]">
+                          {formatAddress(i.walletAddress)}
+                        </td>
+                        <td className="px-6 py-4 text-[#667085] text-center">
+                          {i.amount} SUI
+                        </td>
+                      </tr>
+                    );
+                  })}
+                {Number(activeTab) === 3 && rewards3 && rewards3
                   .map((i) => {
                     return (
                       <tr className="text-sm border-b" key={i.winPrizeId}>
@@ -241,26 +300,32 @@ const Results = () => {
                   })}
               </tbody>
             </table>
-            {rewards.length === 0 && (
+            {Number(activeTab) === 1 && rewards1.length === 0 && (
+              <p className="text-sm p-4 text-center text-[#667085]">No data</p>
+            )}
+            {Number(activeTab) === 2 && rewards2.length === 0 && (
+              <p className="text-sm p-4 text-center text-[#667085]">No data</p>
+            )}
+            {Number(activeTab) === 3 && rewards3.length === 0 && (
               <p className="text-sm p-4 text-center text-[#667085]">No data</p>
             )}
           </div>
-          {meta?.pagination && meta?.pagination.totalPages > 1 && (
+          { Number(activeTab) === 1 && meta1?.pagination && meta1?.pagination.totalPages > 1 && (
             <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
               <p>
-                Page {meta?.pagination.currentPage} of{" "}
-                {meta?.pagination.totalPages}
+                Page {meta1?.pagination.currentPage} of{" "}
+                {meta1?.pagination.totalPages}
               </p>
               <div className="space-x-3">
                 <button
                   className={`rounded-full border py-2 px-[14px] ${
-                    meta?.pagination.currentPage === 1
+                    meta1?.pagination.currentPage === 1
                       ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
                       : ""
                   }`}
                   onClick={() => {
-                    if (meta?.pagination.currentPage > 1) {
-                      setNextPage(meta?.pagination.currentPage - 1);
+                    if (meta1?.pagination.currentPage > 1) {
+                      setNextPage(meta1?.pagination.currentPage - 1);
                     }
                   }}
                 >
@@ -268,15 +333,95 @@ const Results = () => {
                 </button>
                 <button
                   className={`rounded-full border py-2 px-[14px] ${
-                    meta?.pagination.currentPage === meta?.pagination.totalPages
+                    meta1?.pagination.currentPage === meta1?.pagination.totalPages
                       ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
                       : ""
                   }`}
                   onClick={() => {
                     if (
-                      meta?.pagination.currentPage < meta?.pagination.totalPages
+                      meta1?.pagination.currentPage < meta1?.pagination.totalPages
                     ) {
-                      setNextPage(meta?.pagination.currentPage + 1);
+                      setNextPage(meta1?.pagination.currentPage + 1);
+                    }
+                  }}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+          { Number(activeTab) === 2 && meta2?.pagination && meta2?.pagination.totalPages > 1 && (
+            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+              <p>
+                Page {meta2?.pagination.currentPage} of{" "}
+                {meta2?.pagination.totalPages}
+              </p>
+              <div className="space-x-3">
+                <button
+                  className={`rounded-full border py-2 px-[14px] ${
+                    meta2?.pagination.currentPage === 1
+                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (meta2?.pagination.currentPage > 1) {
+                      setNextPage(meta2?.pagination.currentPage - 1);
+                    }
+                  }}
+                >
+                  Previous
+                </button>
+                <button
+                  className={`rounded-full border py-2 px-[14px] ${
+                    meta2?.pagination.currentPage === meta2?.pagination.totalPages
+                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (
+                      meta2?.pagination.currentPage < meta2?.pagination.totalPages
+                    ) {
+                      setNextPage(meta2?.pagination.currentPage + 1);
+                    }
+                  }}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+          { Number(activeTab) === 3 && meta3?.pagination && meta3?.pagination.totalPages > 1 && (
+            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+              <p>
+                Page {meta3?.pagination.currentPage} of{" "}
+                {meta3?.pagination.totalPages}
+              </p>
+              <div className="space-x-3">
+                <button
+                  className={`rounded-full border py-2 px-[14px] ${
+                    meta3?.pagination.currentPage === 1
+                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (meta3?.pagination.currentPage > 1) {
+                      setNextPage(meta3?.pagination.currentPage - 1);
+                    }
+                  }}
+                >
+                  Previous
+                </button>
+                <button
+                  className={`rounded-full border py-2 px-[14px] ${
+                    meta3?.pagination.currentPage === meta3?.pagination.totalPages
+                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    if (
+                      meta3?.pagination.currentPage < meta3?.pagination.totalPages
+                    ) {
+                      setNextPage(meta3?.pagination.currentPage + 1);
                     }
                   }}
                 >

@@ -1,6 +1,7 @@
 import { Image } from "antd";
 import RewardItem from "../../molecules/RewardItem";
 import Link from "next/link";
+import { Meta } from '../../../api/types';
 
 export interface Reward {
   winPrizeId: number;
@@ -12,6 +13,8 @@ export interface Reward {
   targetDate: string;
   createdAt: string;
   deletedAt: null;
+  metg: string
+  meta?: Meta;
 }
 interface Props {
   rank: "gold" | "silver" | "bronze";
