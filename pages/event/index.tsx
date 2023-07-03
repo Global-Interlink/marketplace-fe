@@ -59,7 +59,9 @@ const Campaign = () => {
   const [isOpenModal, setOpenModal] = React.useState(false);
   const [currentTGIL, setCurrentTGIL] = React.useState(0);
   const [isFetching, setFetching] = React.useState(false);
-  const [rewards, setRewards] = React.useState<Reward[]>([]);
+  const [rewards1, setRewards1] = React.useState<Reward[]>([]);
+  const [rewards2, setRewards2] = React.useState<Reward[]>([]);
+  const [rewards3, setRewards3] = React.useState<Reward[]>([]);
   const [rewardWeek, setRewardWeek] = React.useState<Week>();
   const [buy, setBuy] = React.useState<{
     isOpen: boolean;
@@ -74,10 +76,19 @@ const Campaign = () => {
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
-      .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar")
+      .get<{ data: { data: Reward[] } }>(`/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${rewardWeek?.end}&orderPrize=${1}`)
       .then((res) => {
-        setRewards(res.data.data.data);
-        console.log(res.data.data.data);
+        setRewards1(res.data.data.data);
+      });
+    api
+      .get<{ data: { data: Reward[] } }>(`/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${rewardWeek?.end}&orderPrize=${2}`)
+      .then((res) => {
+        setRewards2(res.data.data.data);
+      });
+    api
+      .get<{ data: { data: Reward[] } }>(`/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${rewardWeek?.end}&orderPrize=${3}`)
+      .then((res) => {
+        setRewards3(res.data.data.data);
       });
     api.get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5").then((res) => {
       const { data } = res.data;
@@ -149,7 +160,7 @@ const Campaign = () => {
 
   React.useEffect(() => {
     fetchData();
-  }, []);
+  }, [rewardWeek]);
 
   React.useEffect(() => {
     if (!connected && isFetched) {
@@ -312,15 +323,15 @@ const Campaign = () => {
           </p>
           <div className="lg:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
             <ListReward
-              data={rewards.filter((i) => i.winPrizeOrder === 1)}
+              data={rewards1}
               rank="gold"
             />
             <ListReward
-              data={rewards.filter((i) => i.winPrizeOrder === 2)}
+              data={rewards2}
               rank="silver"
             />
             <ListReward
-              data={rewards.filter((i) => i.winPrizeOrder === 3)}
+              data={rewards3}
               rank="bronze"
             />
             <img
