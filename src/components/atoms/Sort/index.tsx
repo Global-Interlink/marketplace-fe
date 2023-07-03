@@ -29,7 +29,7 @@ const Sort: React.FC<Props> = ({ onChange, sort }) => {
           setOpen(true);
         }}
       >
-        <p>{currentSort === "DESC" ? "High to low" : "Low to high"}</p>
+        <p>{currentSort === "DESC" ? "Newest" : "Oldest"}</p>
         <ArrowDown />
       </div>
       {open && (
@@ -42,7 +42,7 @@ const Sort: React.FC<Props> = ({ onChange, sort }) => {
             }}
             className="flex text-xs leading-5 text-[#5B5B5B] dark:text-white bg-white items-center justify-between dark:bg-[#514E89] w-[155px] h-10 px-5 rounded-full cursor-pointer"
           >
-            {currentSort !== "DESC" ? "High to low" : "Low to high"}
+            {currentSort !== "DESC" ? "Newest" : "Oldest"}
           </p>
         </div>
       )}
