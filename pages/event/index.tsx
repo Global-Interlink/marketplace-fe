@@ -53,13 +53,13 @@ const Campaign = () => {
   const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>([]);
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
   const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
-  const [rewards, setRewards] = React.useState<Reward[]>([]);
   const [isFetched, setFetched] = React.useState(false);
   const api = createAxios();
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
   const [currentTGIL, setCurrentTGIL] = React.useState(0);
   const [isFetching, setFetching] = React.useState(false);
+  const [rewards, setRewards] = React.useState<Reward[]>([]);
   const [rewardWeek, setRewardWeek] = React.useState<Week>();
   const [buy, setBuy] = React.useState<{
     isOpen: boolean;
@@ -77,17 +77,21 @@ const Campaign = () => {
       .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar")
       .then((res) => {
         setRewards(res.data.data.data);
+        console.log(res.data.data.data);
       });
-    api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
+    api.get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5").then((res) => {
       const { data } = res.data;
+      
       const currentWeek = data.find((i) => i.current);
+
       const index = currentWeek ? data?.indexOf(currentWeek) : 0;
-      if (data[index - 1]) {
-        const week = data[index - 1];
-        setRewardWeek(week);
-      } else {
-        setRewardWeek(currentWeek);
-      }
+      // if (data[index - 1]) {
+      //   const week = data[index - 1];
+      //   setRewardWeek(week);
+      // } else {
+      //   setRewardWeek(currentWeek);
+      // }
+      setRewardWeek(data[index + 1]);
     });
   };
 

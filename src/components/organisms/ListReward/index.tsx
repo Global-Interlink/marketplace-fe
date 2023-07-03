@@ -1,5 +1,6 @@
 import { Image } from "antd";
 import RewardItem from "../../molecules/RewardItem";
+import Link from "next/link";
 
 export interface Reward {
   winPrizeId: number;
@@ -46,12 +47,16 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       </div>
       {data.length > 4 && (
         <div className="absolute w-full flex -bottom-[26px] h-8 justify-center items-center">
-          <Image
-            preview={false}
-            src={"/more-icon.svg"}
-            alt="more"
-            className="cursor-pointer"
-          />
+          <Link
+            href={"/event/weekly-reward/results"}
+          >
+            <Image
+              preview={false}
+              src={"/more-icon.svg"}
+              alt="more"
+              className="cursor-pointer"
+            />
+          </Link>
         </div>
       )}
       {data.length === 0 && (

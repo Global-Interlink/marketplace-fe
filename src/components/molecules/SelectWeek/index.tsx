@@ -46,7 +46,7 @@ const SelectWeek: React.FC<Props> = ({ week, onChangeWeek }) => {
     <Dropdown menu={{ items }} placement="bottom" arrow>
       <div className="inline-flex cursor-pointer text-sm text-[#344054] py-3 px-4 rounded-full border space-x-3 font-semibold">
         <CalendarIcon />
-        <p>{`Week${index + 1} (${dayjs(selectedWeek?.start).format(
+        <p>{`Week (${dayjs(selectedWeek?.start).format(
           "DD/MM"
         )} - ${dayjs(selectedWeek?.end).format("DD/MM")})`}</p>
       </div>
