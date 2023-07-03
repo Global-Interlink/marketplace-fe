@@ -56,6 +56,7 @@ export interface Week {
   current?: boolean;
 }
 const Tickets = () => {
+  const numberOfWeek = 1;
   const { address } = useWallet();
   const [tickets, setTicketData] = React.useState<Ticket[]>([]);
   const [meta, setMeta] = React.useState<Meta>();
@@ -137,9 +138,11 @@ const Tickets = () => {
   };
 
   React.useEffect(() => {
-    api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
-      setWeek(res.data.data);
-    });
+    api
+      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${numberOfWeek}`)
+      .then((res) => {
+        setWeek(res.data.data);
+      });
   }, []);
 
   const debounceSearch = React.useCallback(
@@ -186,11 +189,11 @@ const Tickets = () => {
               items={[
                 {
                   key: "1",
-                  title: `You (${myTickets?myTickets:0})`,
+                  title: `You (${myTickets ? myTickets : 0})`,
                 },
                 {
                   key: "2",
-                  title: `All (${allTickets?allTickets:0})`,
+                  title: `All (${allTickets ? allTickets : 0})`,
                 },
                 {
                   key: "3",
@@ -201,6 +204,7 @@ const Tickets = () => {
             />
             <SelectWeek
               week={week}
+              numberOfWeek={numberOfWeek}
               onChangeWeek={(s, e) => {
                 setFilterWeek({ start: s, end: e });
               }}
@@ -233,7 +237,7 @@ const Tickets = () => {
                   {activeTab === "3" ? (
                     <>
                       <th className="px-6 py-2 font-normal text-xs w-1/5">
-                        Ticket No.
+                        Total Ticket
                       </th>
                       <th className="px-6 py-2 font-normal text-xs w-1/5">
                         Ratio
