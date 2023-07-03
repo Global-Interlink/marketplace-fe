@@ -48,25 +48,29 @@ const RankItem: React.FC<Props> = ({
           {formatedAddress}
           {isYou ? " (you)" : ""}
         </div>
-        <div className="flex items-center justify-start space-x-2 w-[90px]">
+        <div className="flex items-center space-x-1 w-24">
           <Image
             preview={false}
             width={48}
             height={48}
             src="/ticket.svg"
             alt="ticket"
+            className="!w-6 !min-w-[24px] lg:!w-8 lg:!min-w-[32px] xl:!w-12 xl:!min-w-[48px]"
           />
-          <p>{tickets}</p>
+          <div className="flex w-full">{tickets}2</div>
         </div>
-        <div className="flex items-center space-x-2  justify-start w-[130px]">
+        <div className="flex items-center space-x-1  justify-start w-32">
           <Image
             preview={false}
             width={48}
             height={48}
             src="/medal.svg"
             alt="medal"
+            className="!w-6 !min-w-[24px] lg:!w-8 lg:!min-w-[32px] xl:!w-12 xl:!min-w-[48px]"
           />
-          <p className="text-[#D92D20]">{Number(percent).toFixed(2)}%</p>
+          <div className="text-[#D92D20] flex w-full">
+            {Number(percent).toFixed(2)}%
+          </div>
         </div>
       </div>
     </div>
