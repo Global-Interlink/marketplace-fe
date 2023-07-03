@@ -63,27 +63,25 @@ const Results = () => {
     start: string;
     end: string;
   }>();
-  const [rewards, setRewards] = React.useState<Reward[]>([]); 
+  const [rewards, setRewards] = React.useState<Reward[]>([]);
   const [rewardWeek, setRewardWeek] = React.useState<Week>();
 
   const api = createAxios();
 
-  function formatDate (date: Date) {
-    let d = new Date(date)  
-    const year = d.getFullYear()
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-  
-    return `${year}-${month}-${day}`
+  function formatDate(date: Date) {
+    let d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   }
 
   const fetchData = async (keyword?: string) => {
     const params = {
       page: nextPage,
       ...(keyword ? { walletAddress: keyword } : {}),
-      ...(rewardWeek
-        ? { start: rewardWeek.start, end: rewardWeek.end }
-        : {}),
+      ...(rewardWeek ? { start: rewardWeek.start, end: rewardWeek.end } : {}),
     };
 
     setLoading(true);
@@ -94,7 +92,7 @@ const Results = () => {
       .then((res) => {
         setRewards(res.data.data.data);
         console.log(res.data.data.data);
-        
+
         setLoading(false);
       });
     api
@@ -103,7 +101,11 @@ const Results = () => {
       })
       .then((res) => {
         const { data } = res.data;
-        const currentWeek = data.find((i) => formatDate(new Date(i?.start)) === formatDate(new Date(filterWeek?.start || '')));
+        const currentWeek = data.find(
+          (i) =>
+            formatDate(new Date(i?.start)) ===
+            formatDate(new Date(filterWeek?.start || ""))
+        );
 
         // const index = currentWeek ? data?.indexOf(currentWeek) : 0;
         // if (data[index]) {
@@ -113,7 +115,7 @@ const Results = () => {
         //   setRewardWeek(currentWeek);
         // }
         // setRewardWeek(data[index]);
-        setRewardWeek(currentWeek)
+        setRewardWeek(currentWeek);
         setLoading(false);
       });
   };
@@ -186,6 +188,7 @@ const Results = () => {
               onChangeWeek={(s, e) => {
                 setFilterWeek({ start: s, end: e });
               }}
+              numberOfWeek={0}
             />
             <SearchTicket
               onChangeText={(keyword) => {
@@ -219,21 +222,23 @@ const Results = () => {
                 </tr>
               </thead>
               <tbody>
-                {rewards.filter((i) => i.winPrizeOrder === Number(activeTab)).map((i) => {
-                  return (
-                    <tr className="text-sm border-b" key={i.winPrizeId}>
-                      <td className="px-6 py-4 text-[#101828]">
-                        {i.ticketNumber}
-                      </td>
-                      <td className="px-6 py-4 text-[#667085]">
-                        {formatAddress(i.walletAddress)}
-                      </td>
-                      <td className="px-6 py-4 text-[#667085] text-center">
-                        {i.amount} SUI
-                      </td>
-                    </tr>
-                  );
-                })}
+                {rewards
+                  .filter((i) => i.winPrizeOrder === Number(activeTab))
+                  .map((i) => {
+                    return (
+                      <tr className="text-sm border-b" key={i.winPrizeId}>
+                        <td className="px-6 py-4 text-[#101828]">
+                          {i.ticketNumber}
+                        </td>
+                        <td className="px-6 py-4 text-[#667085]">
+                          {formatAddress(i.walletAddress)}
+                        </td>
+                        <td className="px-6 py-4 text-[#667085] text-center">
+                          {i.amount} SUI
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
             {rewards.length === 0 && (
