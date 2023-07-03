@@ -85,7 +85,7 @@ const Results = () => {
         ? { start: rewardWeek.start, end: rewardWeek.end }
         : {}),
     };
-    
+
     setLoading(true);
     api
       .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar", {
@@ -103,7 +103,7 @@ const Results = () => {
       })
       .then((res) => {
         const { data } = res.data;
-        const currentWeek = data.find((i) => formatDate(i?.start) === formatDate(filterWeek?.start));
+        const currentWeek = data.find((i) => formatDate(new Date(i?.start)) === formatDate(new Date(filterWeek?.start || '')));
 
         // const index = currentWeek ? data?.indexOf(currentWeek) : 0;
         // if (data[index]) {
