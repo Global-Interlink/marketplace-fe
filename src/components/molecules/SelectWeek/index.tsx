@@ -6,12 +6,13 @@ import React from "react";
 
 interface Props {
   week?: Week[];
+  numberOfWeek: number;
   onChangeWeek: (start: string, end: string) => void;
 }
-const SelectWeek: React.FC<Props> = ({ week, onChangeWeek }) => {
+const SelectWeek: React.FC<Props> = ({ week, numberOfWeek, onChangeWeek }) => {
   const [selectedWeek, setSelectedWeek] = React.useState<Week>();
 
-  const index = selectedWeek && week ? week?.indexOf(selectedWeek) : 0;
+  // const index = selectedWeek && week ? week?.indexOf(selectedWeek) : 0;
   const items: MenuProps["items"] = week?.map((i, idx) => {
     return {
       key: idx,
@@ -26,8 +27,7 @@ const SelectWeek: React.FC<Props> = ({ week, onChangeWeek }) => {
             );
           }}
         >
-          Week{idx + 1} {dayjs(i.start).format("DD/MM")} -{" "}
-          {dayjs(i.end).format("DD/MM")}
+          Week {dayjs(i.start).format("DD/MM")} - {dayjs(i.end).format("DD/MM")}
         </p>
       ),
     };
@@ -46,9 +46,9 @@ const SelectWeek: React.FC<Props> = ({ week, onChangeWeek }) => {
     <Dropdown menu={{ items }} placement="bottom" arrow>
       <div className="inline-flex cursor-pointer text-sm text-[#344054] py-3 px-4 rounded-full border space-x-3 font-semibold">
         <CalendarIcon />
-        <p>{`Week (${dayjs(selectedWeek?.start).format(
-          "DD/MM"
-        )} - ${dayjs(selectedWeek?.end).format("DD/MM")})`}</p>
+        <p>{`Week ${dayjs(selectedWeek?.start).format("DD/MM")} - ${dayjs(
+          selectedWeek?.end
+        ).format("DD/MM")}`}</p>
       </div>
     </Dropdown>
   );
