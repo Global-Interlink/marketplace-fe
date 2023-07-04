@@ -160,7 +160,7 @@ const Campaign = () => {
 
   React.useEffect(() => {
     fetchData();
-  }, [rewardWeek]);
+  }, []);
 
   React.useEffect(() => {
     if (!connected && isFetched) {
@@ -198,6 +198,7 @@ const Campaign = () => {
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
+  
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
