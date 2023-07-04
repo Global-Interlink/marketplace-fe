@@ -160,7 +160,7 @@ const Campaign = () => {
 
   React.useEffect(() => {
     fetchData();
-  }, [rewardWeek]);
+  }, []);
 
   React.useEffect(() => {
     if (!connected && isFetched) {
