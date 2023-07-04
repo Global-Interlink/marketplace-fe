@@ -1,5 +1,7 @@
 import { Image } from "antd";
 import RewardItem from "../../molecules/RewardItem";
+import Link from "next/link";
+import { Meta } from '../../../api/types';
 
 export interface Reward {
   winPrizeId: number;
@@ -11,6 +13,8 @@ export interface Reward {
   targetDate: string;
   createdAt: string;
   deletedAt: null;
+  metg: string
+  meta?: Meta;
 }
 interface Props {
   rank: "gold" | "silver" | "bronze";
@@ -46,12 +50,16 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       </div>
       {data.length > 4 && (
         <div className="absolute w-full flex -bottom-[26px] h-8 justify-center items-center">
-          <Image
-            preview={false}
-            src={"/more-icon.svg"}
-            alt="more"
-            className="cursor-pointer"
-          />
+          <Link
+            href={"/event/weekly-reward/results"}
+          >
+            <Image
+              preview={false}
+              src={"/more-icon.svg"}
+              alt="more"
+              className="cursor-pointer"
+            />
+          </Link>
         </div>
       )}
       {data.length === 0 && (
