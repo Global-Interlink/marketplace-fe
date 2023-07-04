@@ -10,9 +10,9 @@ const ArrowRight = () => {
       <path
         d="M8.00004 2L10.4546 4.45454L8.00004 6.90909"
         stroke="#E329DA"
-        stroke-width="1.5"
-        stroke-linecap="square"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="square"
+        strokeLinejoin="round"
       />
       <path
         d="M10 4.45454H1"

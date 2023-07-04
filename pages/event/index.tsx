@@ -75,19 +75,38 @@ const Campaign = () => {
   }>();
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
+    let weekData: any;
+    await api
+      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5")
+      .then((res) => {
+        const { data } = res.data;
+        weekData = data[1];
+        // const currentWeek = data.find((i) => i.current);
+        // const index = currentWeek ? data?.indexOf(currentWeek) : 0;
+        // if (data[index - 1]) {
+        //   const week = data[index - 1];
+        //   setRewardWeek(week);
+        // } else {
+        //   setRewardWeek(currentWeek);
+        // }
+        setRewardWeek(data[1]);
+      })
+      .catch((e) => console.log(e));
+
     api
       .get<{ data: { data: Reward[] } }>(
-        `/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${
-          rewardWeek?.end
+        `/win-prize/weekly-rewar?start=${weekData?.start}&end=${
+          weekData?.end
         }&orderPrize=${1}`
       )
       .then((res) => {
         setRewards1(res.data.data.data);
-      });
+      })
+      .catch((e) => console.log(e));
     api
       .get<{ data: { data: Reward[] } }>(
-        `/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${
-          rewardWeek?.end
+        `/win-prize/weekly-rewar?start=${weekData?.start}&end=${
+          weekData?.end
         }&orderPrize=${2}`
       )
       .then((res) => {
@@ -95,27 +114,13 @@ const Campaign = () => {
       });
     api
       .get<{ data: { data: Reward[] } }>(
-        `/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${
-          rewardWeek?.end
+        `/win-prize/weekly-rewar?start=${weekData?.start}&end=${
+          weekData?.end
         }&orderPrize=${3}`
       )
       .then((res) => {
         setRewards3(res.data.data.data);
       });
-    api.get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5").then((res) => {
-      const { data } = res.data;
-
-      const currentWeek = data.find((i) => i.current);
-
-      const index = currentWeek ? data?.indexOf(currentWeek) : 0;
-      // if (data[index - 1]) {
-      //   const week = data[index - 1];
-      //   setRewardWeek(week);
-      // } else {
-      //   setRewardWeek(currentWeek);
-      // }
-      setRewardWeek(data[index + 1]);
-    });
   };
 
   const fetchAllTask = async (address: string) => {
