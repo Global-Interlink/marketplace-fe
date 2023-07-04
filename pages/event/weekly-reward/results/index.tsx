@@ -3,7 +3,7 @@ import SelectWeek from "../../../../src/components/molecules/SelectWeek";
 import Tabs from "../../../../src/components/molecules/Tabs";
 import BaseComponent from "../../../../src/components/organisms/BaseComponent";
 import { useWallet } from "@suiet/wallet-kit";
-import React from "react";
+import React, { useEffect } from "react";
 import { formatAddress } from "../../../../src/contract-abi/consts";
 import dayjs from "dayjs";
 import { createAxios } from "../../../../src/api/axiosWallet";
@@ -12,6 +12,7 @@ import { debounce } from "lodash";
 import { LoadingOutlined } from "@ant-design/icons";
 import { start } from "repl";
 import * as jose from "jose";
+import { useRouter } from "next/router";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -48,7 +49,6 @@ export interface Rewards {
   meta?: Meta;
 }
 
-
 export interface Week {
   start: string;
   end: string;
@@ -57,6 +57,15 @@ export interface Week {
 
 const Results = () => {
   const { address } = useWallet();
+  const router = useRouter();
+  const metaData = {
+    pagination: {
+      currentPage: 1,
+      total: 0,
+      limit: 10,
+      totalPages: 1,
+    },
+  };
   const [meta1, setMeta1] = React.useState<Meta>();
   const [meta2, setMeta2] = React.useState<Meta>();
   const [meta3, setMeta3] = React.useState<Meta>();
@@ -72,6 +81,7 @@ const Results = () => {
   const [rewards2, setRewards2] = React.useState<Rewards[]>([]);
   const [rewards3, setRewards3] = React.useState<Rewards[]>([]);
   const [rewardWeek, setRewardWeek] = React.useState<Week>();
+  const [seeMore, setSeeMore] = React.useState(false);
 
   const api = createAxios();
 
@@ -84,55 +94,21 @@ const Results = () => {
     return `${year}-${month}-${day}`;
   }
 
-  const fetchData = async (keyword?: string) => {
-    const params = {
-      page: nextPage,
-      walletAddress: keyword,
-      start: rewardWeek?.start,
-      end: rewardWeek?.end,
-    };
+  const onChangeTab = (tabId: string) => {
+    setActiveTab(tabId);
+    setNextPage(1);
+  };
 
-    setLoading(true);
-    api
-      .get<{ data: any }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&orderPrize=${1}`)
-      .then((res) => {
-        setMeta1(res.data.data?.meta)
-        setLoading(false);
-      });
-    api
-      .get<{ data: any }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&orderPrize=${2}`)
-      .then((res) => {
-        setMeta2(res.data.data?.meta)
-        setLoading(false);
-      });
-    api
-      .get<{ data: any }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&orderPrize=${3}`)
-      .then((res) => {
-        setMeta3(res.data.data?.meta)
-        setLoading(false);
-      });
-    api
-      .get<{ data: { data: Rewards[] } }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&limit=10&orderPrize=${1}`)
-      .then((res) => {
-        setRewards1(res.data.data.data);
-        setLoading(false);
-      });
-    api
-      .get<{ data: { data: Rewards[] } }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&limit=10&orderPrize=${2}`)
-      .then((res) => {
-        setRewards2(res.data.data.data);
-        setLoading(false);
-      });
-    api
-      .get<{ data: { data: Rewards[] } }>(`/win-prize/weekly-rewar?start=${'2023-06-26 00:00:00' || params.start}&end=${'2023-07-02 23:59:59' || params.end}&page=${params.page}&limit=10&orderPrize=${3}`)
-      .then((res) => {
-        setRewards3(res.data.data.data);
-        setLoading(false);
-      });
-    api
-      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=1", {
-        params: params,
-      })
+  const handleChangeWeek = (s: string, e: string) => {
+    setNextPage(1);
+    setFilterWeek({ start: s, end: e });
+  };
+
+  const fetchData = async (keyword?: string) => {
+    let seeMoreWeek: any;
+
+    await api
+      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=1")
       .then((res) => {
         const { data } = res.data;
         const currentWeek = data.find(
@@ -140,10 +116,113 @@ const Results = () => {
             formatDate(new Date(i?.start)) ===
             formatDate(new Date(filterWeek?.start || ""))
         );
-
-        setRewardWeek(currentWeek);
-        setLoading(false);
+        seeMoreWeek = seeMore
+          ? data.length > 1
+            ? data[1]
+            : data[0]
+          : currentWeek;
+        if (seeMore) {
+          handleChangeWeek(seeMoreWeek?.start, seeMoreWeek?.end);
+        }
       });
+
+    const params = {
+      page: nextPage,
+      walletAddress: keyword,
+      start: filterWeek?.start,
+      end: filterWeek?.end,
+    };
+
+    api
+      .get<{ data: any }>(
+        `/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${
+          params.page
+        }&orderPrize=${1}`
+      )
+      .then((res) => {
+        setMeta1(res.data.data?.meta);
+        setRewards1(res.data.data.data);
+        setLoading(false);
+        setSeeMore(false);
+      })
+      .catch((e) => {
+        setRewards1([]);
+        setMeta1(metaData);
+        setSeeMore(false);
+      });
+
+    api
+      .get<{ data: any }>(
+        `/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${
+          params.page
+        }&orderPrize=${2}`
+      )
+      .then((res) => {
+        setMeta2(res.data.data?.meta);
+        setRewards2(res.data.data.data);
+        setLoading(false);
+        setSeeMore(false);
+      })
+      .catch(() => {
+        setRewards2([]);
+        setMeta2(metaData);
+        setSeeMore(false);
+      });
+
+    api
+      .get<{ data: any }>(
+        `/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${
+          params.page
+        }&orderPrize=${3}`
+      )
+      .then((res) => {
+        setMeta3(res.data.data?.meta);
+        setRewards3(res.data.data.data);
+        setLoading(false);
+        setSeeMore(false);
+      })
+      .catch(() => {
+        setRewards3([]);
+        setMeta3(metaData);
+        setSeeMore(false);
+      });
+    // api
+    //   .get<{ data: { data: Rewards[] } }>(
+    //     `/win-prize/weekly-rewar?start=${
+    //       "2023-06-26 00:00:00" || params.start
+    //     }&end=${"2023-07-02 23:59:59" || params.end}&page=${
+    //       params.page
+    //     }&limit=10&orderPrize=${1}`
+    //   )
+    //   .then((res) => {
+    //     setRewards1(res.data.data.data);
+    //     setLoading(false);
+    //   });
+    // api
+    //   .get<{ data: { data: Rewards[] } }>(
+    //     `/win-prize/weekly-rewar?start=${
+    //       "2023-06-26 00:00:00" || params.start
+    //     }&end=${"2023-07-02 23:59:59" || params.end}&page=${
+    //       params.page
+    //     }&limit=10&orderPrize=${2}`
+    //   )
+    //   .then((res) => {
+    //     setRewards2(res.data.data.data);
+    //     setLoading(false);
+    //   });
+    // api
+    //   .get<{ data: { data: Rewards[] } }>(
+    //     `/win-prize/weekly-rewar?start=${
+    //       "2023-06-26 00:00:00" || params.start
+    //     }&end=${"2023-07-02 23:59:59" || params.end}&page=${
+    //       params.page
+    //     }&limit=10&orderPrize=${3}`
+    //   )
+    //   .then((res) => {
+    //     setRewards3(res.data.data.data);
+    //     setLoading(false);
+    //   });
+    setLoading(false);
   };
 
   React.useEffect(() => {
@@ -167,7 +246,20 @@ const Results = () => {
     fetchData();
   }, [address, nextPage, filterWeek]);
 
-  // console.log("filterWeek", filterWeek);
+  React.useEffect(() => {
+    if (router.query.rank === "") return;
+    setSeeMore(true);
+    switch (router.query.rank) {
+      case "gold":
+        return setActiveTab("1");
+      case "silver":
+        return setActiveTab("2");
+      case "bronze":
+        return setActiveTab("3");
+      default:
+        return setActiveTab("1");
+    }
+  }, [router.query]);
 
   return (
     <BaseComponent>
@@ -186,37 +278,24 @@ const Results = () => {
               items={[
                 {
                   key: "1",
-                  title: `Tier 1 (${
-                    rewards1
-                      ? rewards1.length
-                      : 0
-                  })`,
+                  title: `Tier 1 (${meta1 ? meta1.pagination.total : 0})`,
                 },
                 {
                   key: "2",
-                  title: `Tier 2 (${
-                    rewards2
-                      ? rewards2.length
-                      : 0
-                  })`,
+                  title: `Tier 2 (${meta2 ? meta2.pagination.total : 0})`,
                 },
                 {
                   key: "3",
-                  title: `Tier 3 (${
-                    rewards3
-                      ? rewards3.length
-                      : 0
-                  })`,
+                  title: `Tier 3 (${meta3 ? meta3.pagination.total : 0})`,
                 },
               ]}
-              onChangeKey={setActiveTab}
+              onChangeKey={onChangeTab}
             />
             <SelectWeek
               week={week}
-              onChangeWeek={(s, e) => {
-                setFilterWeek({ start: s, end: e });
-              }}
+              onChangeWeek={(s, e) => handleChangeWeek(s, e)}
               numberOfWeek={0}
+              seeMore={seeMore}
             />
             <SearchTicket
               onChangeText={(keyword) => {
@@ -250,8 +329,9 @@ const Results = () => {
                 </tr>
               </thead>
               <tbody>
-                {Number(activeTab) === 1 && rewards1 && rewards1
-                  .map((i) => {
+                {Number(activeTab) === 1 &&
+                  rewards1 &&
+                  rewards1.map((i) => {
                     return (
                       <tr className="text-sm border-b" key={i.winPrizeId}>
                         <td className="px-6 py-4 text-[#101828]">
@@ -266,8 +346,9 @@ const Results = () => {
                       </tr>
                     );
                   })}
-                {Number(activeTab) === 2 && rewards2 && rewards2
-                  .map((i) => {
+                {Number(activeTab) === 2 &&
+                  rewards2 &&
+                  rewards2.map((i) => {
                     return (
                       <tr className="text-sm border-b" key={i.winPrizeId}>
                         <td className="px-6 py-4 text-[#101828]">
@@ -282,8 +363,9 @@ const Results = () => {
                       </tr>
                     );
                   })}
-                {Number(activeTab) === 3 && rewards3 && rewards3
-                  .map((i) => {
+                {Number(activeTab) === 3 &&
+                  rewards3 &&
+                  rewards3.map((i) => {
                     return (
                       <tr className="text-sm border-b" key={i.winPrizeId}>
                         <td className="px-6 py-4 text-[#101828]">
@@ -310,126 +392,138 @@ const Results = () => {
               <p className="text-sm p-4 text-center text-[#667085]">No data</p>
             )}
           </div>
-          { Number(activeTab) === 1 && meta1?.pagination && meta1?.pagination.totalPages > 1 && (
-            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
-              <p>
-                Page {meta1?.pagination.currentPage} of{" "}
-                {meta1?.pagination.totalPages}
-              </p>
-              <div className="space-x-3">
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta1?.pagination.currentPage === 1
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (meta1?.pagination.currentPage > 1) {
-                      setNextPage(meta1?.pagination.currentPage - 1);
-                    }
-                  }}
-                >
-                  Previous
-                </button>
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta1?.pagination.currentPage === meta1?.pagination.totalPages
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (
-                      meta1?.pagination.currentPage < meta1?.pagination.totalPages
-                    ) {
-                      setNextPage(meta1?.pagination.currentPage + 1);
-                    }
-                  }}
-                >
-                  Next
-                </button>
+          {Number(activeTab) === 1 &&
+            meta1?.pagination &&
+            meta1?.pagination.totalPages > 1 && (
+              <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+                <p>
+                  Page {meta1?.pagination.currentPage} of{" "}
+                  {meta1?.pagination.totalPages}
+                </p>
+                <div className="space-x-3">
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      meta1?.pagination.currentPage === 1
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (meta1?.pagination.currentPage > 1) {
+                        setNextPage(meta1?.pagination.currentPage - 1);
+                      }
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      meta1?.pagination.currentPage ===
+                      meta1?.pagination.totalPages
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (
+                        meta1?.pagination.currentPage <
+                        meta1?.pagination.totalPages
+                      ) {
+                        setNextPage(meta1?.pagination.currentPage + 1);
+                      }
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-          { Number(activeTab) === 2 && meta2?.pagination && meta2?.pagination.totalPages > 1 && (
-            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
-              <p>
-                Page {meta2?.pagination.currentPage} of{" "}
-                {meta2?.pagination.totalPages}
-              </p>
-              <div className="space-x-3">
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta2?.pagination.currentPage === 1
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (meta2?.pagination.currentPage > 1) {
-                      setNextPage(meta2?.pagination.currentPage - 1);
-                    }
-                  }}
-                >
-                  Previous
-                </button>
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta2?.pagination.currentPage === meta2?.pagination.totalPages
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (
-                      meta2?.pagination.currentPage < meta2?.pagination.totalPages
-                    ) {
-                      setNextPage(meta2?.pagination.currentPage + 1);
-                    }
-                  }}
-                >
-                  Next
-                </button>
+            )}
+          {Number(activeTab) === 2 &&
+            meta2?.pagination &&
+            meta2?.pagination.totalPages > 1 && (
+              <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+                <p>
+                  Page {meta2?.pagination.currentPage} of{" "}
+                  {meta2?.pagination.totalPages}
+                </p>
+                <div className="space-x-3">
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      meta2?.pagination.currentPage === 1
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (meta2?.pagination.currentPage > 1) {
+                        setNextPage(meta2?.pagination.currentPage - 1);
+                      }
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      meta2?.pagination.currentPage ===
+                      meta2?.pagination.totalPages
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (
+                        meta2?.pagination.currentPage <
+                        meta2?.pagination.totalPages
+                      ) {
+                        setNextPage(meta2?.pagination.currentPage + 1);
+                      }
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-          { Number(activeTab) === 3 && meta3?.pagination && meta3?.pagination.totalPages > 1 && (
-            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
-              <p>
-                Page {meta3?.pagination.currentPage} of{" "}
-                {meta3?.pagination.totalPages}
-              </p>
-              <div className="space-x-3">
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta3?.pagination.currentPage === 1
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (meta3?.pagination.currentPage > 1) {
-                      setNextPage(meta3?.pagination.currentPage - 1);
-                    }
-                  }}
-                >
-                  Previous
-                </button>
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta3?.pagination.currentPage === meta3?.pagination.totalPages
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (
-                      meta3?.pagination.currentPage < meta3?.pagination.totalPages
-                    ) {
-                      setNextPage(meta3?.pagination.currentPage + 1);
-                    }
-                  }}
-                >
-                  Next
-                </button>
+            )}
+          {Number(activeTab) === 3 &&
+            meta3?.pagination &&
+            meta3?.pagination.totalPages > 1 && (
+              <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+                <p>
+                  Page {meta3?.pagination.currentPage} of{" "}
+                  {meta3?.pagination.totalPages}
+                </p>
+                <div className="space-x-3">
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      meta3?.pagination.currentPage === 1
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (meta3?.pagination.currentPage > 1) {
+                        setNextPage(meta3?.pagination.currentPage - 1);
+                      }
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      meta3?.pagination.currentPage ===
+                      meta3?.pagination.totalPages
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (
+                        meta3?.pagination.currentPage <
+                        meta3?.pagination.totalPages
+                      ) {
+                        setNextPage(meta3?.pagination.currentPage + 1);
+                      }
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {isLoading && (
             <div className="absolute flex w-full h-full items-center justify-center bg-gray-100/50 top-0 left-0">
               <LoadingOutlined
