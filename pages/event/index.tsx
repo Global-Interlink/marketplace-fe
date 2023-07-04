@@ -76,23 +76,35 @@ const Campaign = () => {
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     api
-      .get<{ data: { data: Reward[] } }>(`/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${rewardWeek?.end}&orderPrize=${1}`)
+      .get<{ data: { data: Reward[] } }>(
+        `/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${
+          rewardWeek?.end
+        }&orderPrize=${1}`
+      )
       .then((res) => {
         setRewards1(res.data.data.data);
       });
     api
-      .get<{ data: { data: Reward[] } }>(`/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${rewardWeek?.end}&orderPrize=${2}`)
+      .get<{ data: { data: Reward[] } }>(
+        `/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${
+          rewardWeek?.end
+        }&orderPrize=${2}`
+      )
       .then((res) => {
         setRewards2(res.data.data.data);
       });
     api
-      .get<{ data: { data: Reward[] } }>(`/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${rewardWeek?.end}&orderPrize=${3}`)
+      .get<{ data: { data: Reward[] } }>(
+        `/win-prize/weekly-rewar?start=${rewardWeek?.start}&end=${
+          rewardWeek?.end
+        }&orderPrize=${3}`
+      )
       .then((res) => {
         setRewards3(res.data.data.data);
       });
     api.get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5").then((res) => {
       const { data } = res.data;
-      
+
       const currentWeek = data.find((i) => i.current);
 
       const index = currentWeek ? data?.indexOf(currentWeek) : 0;
@@ -198,7 +210,7 @@ const Campaign = () => {
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
-  
+
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
@@ -323,18 +335,9 @@ const Campaign = () => {
             }`}
           </p>
           <div className="lg:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
-            <ListReward
-              data={rewards1}
-              rank="gold"
-            />
-            <ListReward
-              data={rewards2}
-              rank="silver"
-            />
-            <ListReward
-              data={rewards3}
-              rank="bronze"
-            />
+            <ListReward data={rewards1} rank="gold" />
+            <ListReward data={rewards2} rank="silver" />
+            <ListReward data={rewards3} rank="bronze" />
             <img
               src="/weekly-reward.png"
               className="w-full aspect-square block lg:hidden"
