@@ -57,7 +57,7 @@ const RankItem: React.FC<Props> = ({
             alt="ticket"
             className="!w-6 !min-w-[24px] lg:!w-8 lg:!min-w-[32px] xl:!w-12 xl:!min-w-[48px]"
           />
-          <div className="flex w-full">{tickets}2</div>
+          <div className="flex w-full">{tickets}</div>
         </div>
         <div className="flex items-center space-x-1  justify-start w-32">
           <Image
