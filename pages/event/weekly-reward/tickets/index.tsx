@@ -58,45 +58,107 @@ export interface Week {
 const Tickets = () => {
   const numberOfWeek = 1;
   const { address } = useWallet();
-  const [tickets, setTicketData] = React.useState<Ticket[]>([]);
-  const [meta, setMeta] = React.useState<Meta>();
+  const [allTickets, setAllTicketData] = React.useState<Ticket[]>([]);
+  const [userTickets, setUserTicketData] = React.useState<Ticket[]>([]);
+  const [userMeta, setUserMeta] = React.useState<Meta>();
+  const [allMeta, setAllMeta] = React.useState<Meta>();
+  const [leaderBoardMeta, setLeaderBoardMeta] = React.useState<Meta>();
   const [activeTab, setActiveTab] = React.useState("1");
   const [nextPage, setNextPage] = React.useState(1);
   const [isLoading, setLoading] = React.useState(false);
   const [week, setWeek] = React.useState<Week[]>();
-  const [myTickets, setMyTickets] = React.useState<string>();
-  const [allTickets, setAllTickets] = React.useState<string>();
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard[]>();
   const [filterWeek, setFilterWeek] = React.useState<{
     start: string;
     end: string;
   }>();
+  const [keyword, setKeyword] = React.useState("");
+
+  const onChangeTab = (tabId: string) => {
+    setActiveTab(tabId);
+    setNextPage(1);
+    if (keyword) {
+      fetchAllData(keyword);
+      fetchDataLeaderBoard(keyword);
+    } else {
+      fetchAllData();
+      fetchDataLeaderBoard();
+    }
+  };
+
+  const onChangeWeek = (s: string, e: string) => {
+    setFilterWeek({ start: s, end: e });
+    setNextPage(1);
+    if (keyword) {
+      fetchAllData(keyword);
+      fetchDataLeaderBoard(keyword);
+    } else {
+      fetchAllData();
+      fetchDataLeaderBoard();
+    }
+  };
 
   const api = createAxios();
 
-  const fetchData = async (keyword?: string) => {
+  const fetchWeekData = async () => {
+    await api
+      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${numberOfWeek}`)
+      .then((res) => {
+        setWeek(res.data.data);
+        setFilterWeek({
+          start: res.data.data[0].start,
+          end: res.data.data[0].end,
+        });
+      });
+  };
+
+  const fetchUserData = async () => {
     const params = {
       page: nextPage,
-      walletAddress: keyword ? keyword : "",
-      startDate: filterWeek?.start + " 00:00:00",
-      endDate: filterWeek?.end + " 23:59:59",
+      walletAddress: address,
+      startDate: filterWeek?.start,
+      endDate: filterWeek?.end,
     };
-    console.log("params", params);
 
     setLoading(true);
-    api
+    await api
       .get<{ data: { data: Ticket[]; meta: Meta } }>("/ticket/all/ticket", {
         params: params,
       })
       .then((res) => {
-        setTicketData(res.data.data.data);
-        setMeta(res.data.data.meta);
+        setUserTicketData(res.data.data.data);
+        setUserMeta(res.data.data.meta);
+      })
+      .catch(() => {
+        setUserTicketData([]);
+        setUserMeta(undefined);
+        setLoading(false);
+      });
+  };
+
+  const fetchAllData = async (keyword?: string) => {
+    const params = {
+      page: nextPage,
+      walletAddress: keyword || "",
+      startDate: filterWeek?.start,
+      endDate: filterWeek?.end,
+    };
+
+    console.log("params", params);
+
+    setLoading(true);
+    await api
+      .get<{ data: { data: Ticket[]; meta: Meta } }>("/ticket/all/ticket", {
+        params: params,
+      })
+      .then((res) => {
+        setAllTicketData(res.data.data.data);
+        setAllMeta(res.data.data.meta);
         setLoading(false);
       })
       .catch((e) => {
-        console.error(e);
-        setTicketData([]);
-        setMeta(undefined);
+        setAllTicketData([]);
+        setAllMeta(undefined);
         setLoading(false);
       });
   };
@@ -107,26 +169,23 @@ const Tickets = () => {
     }
     const token = await getAccessToken(address);
     const api = createAxios(token);
-    // console.log("filterWeek", filterWeek);
-
-    const params = {
-      page: nextPage,
-      walletAddress: keyword ? keyword : address,
-      startDate: filterWeek?.start + " 00:00:00",
-      endDate: filterWeek?.end + " 23:59:59",
-    };
 
     // const params = {
     //   page: nextPage,
-    //   walletAddress: keyword,
-    //   start: filterWeek?.start,
-    //   end: filterWeek?.end,
+    //   walletAddress: keyword ? keyword : address,
+    //   startDate: filterWeek?.start + " 00:00:00",
+    //   endDate: filterWeek?.end + " 23:59:59",
     // };
 
-    // .get<{ data: { data: Reward[] } }>(/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${params.page}&limit=10&orderPrize=${params.orderPrize})
+    const params = {
+      page: nextPage,
+      walletAddress: keyword,
+      start: filterWeek?.start,
+      end: filterWeek?.end,
+    };
 
     setLoading(true);
-    api
+    await api
       .get<{
         data: {
           leaderboard: LeaderBoard[];
@@ -138,65 +197,47 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
-        setMyTickets(res.data.data.numberTicketsMySelf);
-        setAllTickets(res.data.data.totalTickets);
         setLeaderBoard(res.data.data.leaderboard);
+        setLeaderBoardMeta(res.data.data.meta);
         setLoading(false);
       })
       .catch((e) => {
         console.error(e);
+        setLeaderBoard([]);
         setLoading(false);
       });
   };
 
   React.useEffect(() => {
-    api
-      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${numberOfWeek}`)
-      .then((res) => {
-        // console.log("res", res);
-
-        setWeek(res.data.data);
-        setFilterWeek({
-          start: dayjs(res.data.data[0].start).format("YYYY-MM-DD"),
-          end: dayjs(res.data.data[0].end).format("YYYY-MM-DD"),
-        });
-      });
+    fetchWeekData();
   }, []);
 
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
-      console.log("activeTab", activeTab);
-
-      if (activeTab === "1") return;
+      if (activeTab === "1") {
+        return;
+      }
       if (nextValue.length === 0) {
-        fetchData();
+        fetchAllData();
         fetchDataLeaderBoard();
         return;
       }
-      fetchData(nextValue);
+      fetchAllData(nextValue);
       fetchDataLeaderBoard(nextValue);
     }, 1000),
-    []
+    [activeTab, filterWeek]
   );
 
   React.useEffect(() => {
-    if (activeTab === "1") {
-      if (!address) {
-        setTicketData([]);
-        setMeta(undefined);
-      } else {
-        fetchData(address);
-      }
+    if (!address) {
+      setUserTicketData([]);
+      setUserMeta(undefined);
     } else {
-      fetchData();
+      fetchUserData();
     }
+    fetchAllData();
     fetchDataLeaderBoard();
-  }, [address, activeTab, nextPage, filterWeek]);
-
-  // console.log("leaderBoard", leaderBoard);
-  // console.log("week", week);
-
-  console.log("filterWeek", filterWeek);
+  }, [address, nextPage, filterWeek]);
 
   return (
     <BaseComponent>
@@ -215,28 +256,27 @@ const Tickets = () => {
               items={[
                 {
                   key: "1",
-                  title: `You (${myTickets ? myTickets : 0})`,
+                  title: `You (${userMeta?.pagination.total || 0})`,
                 },
                 {
                   key: "2",
-                  title: `All (${allTickets ? allTickets : 0})`,
+                  title: `All (${allMeta?.pagination.total || 0})`,
                 },
                 {
                   key: "3",
                   title: `Leaderboard`,
                 },
               ]}
-              onChangeKey={setActiveTab}
+              onChangeKey={onChangeTab}
             />
             <SelectWeek
               week={week}
               numberOfWeek={numberOfWeek}
-              onChangeWeek={(s, e) => {
-                setFilterWeek({ start: s, end: e });
-              }}
+              onChangeWeek={(s, e) => onChangeWeek(s, e)}
             />
             <SearchTicket
               onChangeText={(keyword) => {
+                setKeyword(keyword);
                 setNextPage(1);
                 debounceSearch(keyword);
               }}
@@ -294,7 +334,23 @@ const Tickets = () => {
                         </tr>
                       );
                     })
-                  : tickets.map((i) => {
+                  : activeTab === "1"
+                  ? userTickets.map((i) => {
+                      return (
+                        <tr className="text-sm border-b" key={i.ticketId}>
+                          <td className="px-6 py-4 text-[#101828]">
+                            {i.ticketNumber}
+                          </td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {formatAddress(i.walletAddress)}
+                          </td>
+                          <td className="px-6 py-4 text-[#667085]">
+                            {dayjs(i.createdAt).format("HH:mm:ss YYYY-MM-DD")}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  : allTickets.map((i) => {
                       return (
                         <tr className="text-sm border-b" key={i.ticketId}>
                           <td className="px-6 py-4 text-[#101828]">
@@ -316,50 +372,146 @@ const Tickets = () => {
                 Please connect wallet
               </p>
             )}
-            {tickets.length === 0 && (
+            {userTickets.length === 0 && (
               <p className="text-sm p-4 text-center text-[#667085]">No data</p>
             )}
           </div>
-          {meta?.pagination && meta?.pagination.totalPages > 1 && (
-            <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
-              <p>
-                Page {meta?.pagination.currentPage} of{" "}
-                {meta?.pagination.totalPages}
-              </p>
-              <div className="space-x-3">
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta?.pagination.currentPage === 1
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (meta?.pagination.currentPage > 1) {
-                      setNextPage(meta?.pagination.currentPage - 1);
-                    }
-                  }}
-                >
-                  Previous
-                </button>
-                <button
-                  className={`rounded-full border py-2 px-[14px] ${
-                    meta?.pagination.currentPage === meta?.pagination.totalPages
-                      ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (
-                      meta?.pagination.currentPage < meta?.pagination.totalPages
-                    ) {
-                      setNextPage(meta?.pagination.currentPage + 1);
-                    }
-                  }}
-                >
-                  Next
-                </button>
+          {Number(activeTab) === 1 &&
+            userMeta?.pagination &&
+            userMeta?.pagination.totalPages > 1 && (
+              <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+                <p>
+                  Page {userMeta?.pagination.currentPage} of{" "}
+                  {userMeta?.pagination.totalPages}
+                </p>
+                <div className="space-x-3">
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      userMeta?.pagination.currentPage === 1
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (userMeta?.pagination.currentPage > 1) {
+                        setNextPage(userMeta?.pagination.currentPage - 1);
+                      }
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      userMeta?.pagination.currentPage ===
+                      userMeta?.pagination.totalPages
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (
+                        userMeta?.pagination.currentPage <
+                        userMeta?.pagination.totalPages
+                      ) {
+                        setNextPage(userMeta?.pagination.currentPage + 1);
+                      }
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          {Number(activeTab) === 2 &&
+            allMeta?.pagination &&
+            allMeta?.pagination.totalPages > 1 && (
+              <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+                <p>
+                  Page {allMeta?.pagination.currentPage} of{" "}
+                  {allMeta?.pagination.totalPages}
+                </p>
+                <div className="space-x-3">
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      allMeta?.pagination.currentPage === 1
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (allMeta?.pagination.currentPage > 1) {
+                        setNextPage(allMeta?.pagination.currentPage - 1);
+                      }
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      allMeta?.pagination.currentPage ===
+                      allMeta?.pagination.totalPages
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (
+                        allMeta?.pagination.currentPage <
+                        allMeta?.pagination.totalPages
+                      ) {
+                        setNextPage(allMeta?.pagination.currentPage + 1);
+                      }
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+          {Number(activeTab) === 3 &&
+            leaderBoardMeta?.pagination &&
+            leaderBoardMeta?.pagination.totalPages > 1 && (
+              <div className="text-sm text-[#344054] flex items-center justify-between mt-[28px]">
+                <p>
+                  Page {leaderBoardMeta?.pagination.currentPage} of{" "}
+                  {leaderBoardMeta?.pagination.totalPages}
+                </p>
+                <div className="space-x-3">
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      leaderBoardMeta?.pagination.currentPage === 1
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (leaderBoardMeta?.pagination.currentPage > 1) {
+                        setNextPage(
+                          leaderBoardMeta?.pagination.currentPage - 1
+                        );
+                      }
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className={`rounded-full border py-2 px-[14px] ${
+                      leaderBoardMeta?.pagination.currentPage ===
+                      leaderBoardMeta?.pagination.totalPages
+                        ? "bg-gray-50 text-[#98A2B3] cursor-not-allowed"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      if (
+                        leaderBoardMeta?.pagination.currentPage <
+                        leaderBoardMeta?.pagination.totalPages
+                      ) {
+                        setNextPage(
+                          leaderBoardMeta?.pagination.currentPage + 1
+                        );
+                      }
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           {isLoading && (
             <div className="absolute flex w-full h-full items-center justify-center bg-gray-100/50 top-0 left-0">
               <LoadingOutlined
