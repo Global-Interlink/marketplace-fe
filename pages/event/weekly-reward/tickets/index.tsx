@@ -77,11 +77,12 @@ const Tickets = () => {
   const fetchData = async (keyword?: string) => {
     const params = {
       page: nextPage,
-      ...(keyword ? { walletAddress: keyword } : {}),
-      ...(filterWeek
-        ? { startDate: filterWeek.start, endDate: filterWeek.end }
-        : {}),
+      walletAddress: keyword ? keyword : "",
+      startDate: filterWeek?.start + " 00:00:00",
+      endDate: filterWeek?.end + " 23:59:59",
     };
+    console.log("params", params);
+
     setLoading(true);
     api
       .get<{ data: { data: Ticket[]; meta: Meta } }>("/ticket/all/ticket", {
@@ -106,13 +107,24 @@ const Tickets = () => {
     }
     const token = await getAccessToken(address);
     const api = createAxios(token);
+    // console.log("filterWeek", filterWeek);
+
     const params = {
       page: nextPage,
-      ...(keyword ? { walletAddress: keyword } : {}),
-      ...(filterWeek
-        ? { startDate: filterWeek.start, endDate: filterWeek.end }
-        : {}),
+      walletAddress: keyword ? keyword : address,
+      startDate: filterWeek?.start + " 00:00:00",
+      endDate: filterWeek?.end + " 23:59:59",
     };
+
+    // const params = {
+    //   page: nextPage,
+    //   walletAddress: keyword,
+    //   start: filterWeek?.start,
+    //   end: filterWeek?.end,
+    // };
+
+    // .get<{ data: { data: Reward[] } }>(/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${params.page}&limit=10&orderPrize=${params.orderPrize})
+
     setLoading(true);
     api
       .get<{
@@ -141,12 +153,21 @@ const Tickets = () => {
     api
       .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${numberOfWeek}`)
       .then((res) => {
+        // console.log("res", res);
+
         setWeek(res.data.data);
+        setFilterWeek({
+          start: dayjs(res.data.data[0].start).format("YYYY-MM-DD"),
+          end: dayjs(res.data.data[0].end).format("YYYY-MM-DD"),
+        });
       });
   }, []);
 
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
+      console.log("activeTab", activeTab);
+
+      if (activeTab === "1") return;
       if (nextValue.length === 0) {
         fetchData();
         fetchDataLeaderBoard();
@@ -171,6 +192,11 @@ const Tickets = () => {
     }
     fetchDataLeaderBoard();
   }, [address, activeTab, nextPage, filterWeek]);
+
+  // console.log("leaderBoard", leaderBoard);
+  // console.log("week", week);
+
+  console.log("filterWeek", filterWeek);
 
   return (
     <BaseComponent>
