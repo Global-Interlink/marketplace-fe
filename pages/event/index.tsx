@@ -248,7 +248,7 @@ const Campaign = () => {
             }`}
           >
             <div
-              className={`flex flex-col h-full md:bg-bgLeaderBoard bg-no-repeat bg-right-top bg-[length:320px_320px]`}
+              className={`flex flex-col h-full xl:bg-bgLeaderBoard bg-no-repeat bg-right-top 2xl:bg-[length:320px_320px] xl2:bg-[length:280px_280px] xl:bg-[length:240px_240px]`}
             >
               <p className="text-[30px] font-medium">Leaderboard</p>
               <p className="mt-4 text-[#344054] mb-2 dark:text-[#EAECF0]">
@@ -270,7 +270,7 @@ const Campaign = () => {
                   here.
                 </Link>
               </p>
-              <div className="flex items-center justify-center md:hidden">
+              <div className="flex items-center justify-center xl:hidden">
                 <Image
                   width={320}
                   height={320}
@@ -301,12 +301,11 @@ const Campaign = () => {
           <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
             {`Weekly Reward \n${
               rewardWeek
-                ? `(${dayjs(rewardWeek.start).format("DD/MM")} -
-          ${dayjs(rewardWeek.end).format("DD/MM")})`
+                ? `(${dayjs(rewardWeek.start).format("DD/MM")} - ${dayjs(rewardWeek.end).format("DD/MM")})`
                 : ""
             }`}
           </p>
-          <div className="lg:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
+          <div className="xl:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
             <ListReward
               data={rewards.filter((i) => i.winPrizeOrder === 1)}
               rank="gold"
@@ -319,9 +318,11 @@ const Campaign = () => {
               data={rewards.filter((i) => i.winPrizeOrder === 3)}
               rank="bronze"
             />
-            <img
+            <Image
+             width={657}
+             height={817}
               src="/weekly-reward.png"
-              className="w-full aspect-square block lg:hidden"
+              className="w-full aspect-square block xl:hidden"
               alt="reward"
             />
           </div>
