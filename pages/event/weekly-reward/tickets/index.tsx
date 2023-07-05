@@ -12,6 +12,7 @@ import { debounce } from "lodash";
 import { LoadingOutlined } from "@ant-design/icons";
 import { start } from "repl";
 import * as jose from "jose";
+import { useRouter } from "next/router";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -58,6 +59,7 @@ export interface Week {
 const Tickets = () => {
   const numberOfWeek = 1;
   const { address } = useWallet();
+  const router = useRouter();
   const [allTickets, setAllTicketData] = React.useState<Ticket[]>([]);
   const [userTickets, setUserTicketData] = React.useState<Ticket[]>([]);
   const [userMeta, setUserMeta] = React.useState<Meta>();
@@ -126,6 +128,8 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
+        console.log("userRes", res.request.responseURL);
+
         setUserTicketData(res.data.data.data);
         setUserMeta(res.data.data.meta);
       })
@@ -143,8 +147,6 @@ const Tickets = () => {
       startDate: filterWeek?.start,
       endDate: filterWeek?.end,
     };
-
-    console.log("params", params);
 
     setLoading(true);
     await api
@@ -180,8 +182,8 @@ const Tickets = () => {
     const params = {
       page: nextPage,
       walletAddress: keyword,
-      start: filterWeek?.start,
-      end: filterWeek?.end,
+      startDate: filterWeek?.start,
+      endDate: filterWeek?.end,
     };
 
     setLoading(true);
@@ -225,7 +227,7 @@ const Tickets = () => {
       fetchAllData(nextValue);
       fetchDataLeaderBoard(nextValue);
     }, 1000),
-    [activeTab, filterWeek]
+    [activeTab]
   );
 
   React.useEffect(() => {
@@ -235,9 +237,21 @@ const Tickets = () => {
     } else {
       fetchUserData();
     }
-    fetchAllData();
-    fetchDataLeaderBoard();
+
+    if (keyword) {
+      fetchAllData(keyword);
+      fetchDataLeaderBoard(keyword);
+    } else {
+      fetchAllData();
+      fetchDataLeaderBoard();
+    }
   }, [address, nextPage, filterWeek]);
+
+  React.useEffect(() => {
+    if (router.query.tab === "3") {
+      setActiveTab("3");
+    }
+  }, [router.query]);
 
   return (
     <BaseComponent>
@@ -372,9 +386,11 @@ const Tickets = () => {
                 Please connect wallet
               </p>
             )}
-            {userTickets.length === 0 && (
+            {(activeTab === "1" && userTickets?.length === 0) ||
+            (activeTab === "2" && allTickets?.length === 0) ||
+            (activeTab === "3" && leaderBoard?.length === 0) ? (
               <p className="text-sm p-4 text-center text-[#667085]">No data</p>
-            )}
+            ) : null}
           </div>
           {Number(activeTab) === 1 &&
             userMeta?.pagination &&
