@@ -124,11 +124,9 @@ const Collection = () => {
         ) : (
           <div className="relative">
             <Image
-              src={
-                collectionData.banner && validURL(collectionData.banner)
-                  ? collectionData.banner
-                  : "/default.jpeg"
-              }
+            src={
+              validURL(collectionData.banner || "/default.jpeg")
+            }
               width={1305}
               height={228}
               className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
