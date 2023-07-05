@@ -23,6 +23,7 @@ import CollectionDetailTopSkeleton from "../../src/components/molecules/Collecti
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
+import SearchForm from "../../src/components/molecules/Search";
 
 const Collection = () => {
   const router = useRouter();
@@ -121,98 +122,98 @@ const Collection = () => {
         collectionStatus === FetchStatus.pending ? (
           <CollectionDetailTopSkeleton />
         ) : (
-          <>
-            <div className="flex space-y-5 md:items-center flex-col md:flex-row md:justify-between md:space-x-10">
-              <div className="flex w-full md:items-start space-x-2 md:space-x-4">
-                <div className="">
-                  <Image
-                    alt="logo-lp"
-                    src={collectionData?.logo}
-                    width={1000}
-                    height={1000}
-                    className="w-8 min-w-[32px] h-8 mt-2 md:mt-0 md:min-w-[64px] md:w-[64px] md:h-[64px] object-cover rounded-full"
-                  />
-                </div>
-                <div className="w-full">
-                  <div className="w-full flex items-center justify-between">
-                    <div className="md:w-4/5">
-                      <p
-                        className="text-xl md:text-[32px] external leading-8 font-semibold text-black dark:text-white font-display break-all"
-                        title={collectionData?.name}
-                      >
-                        {collectionData?.name}
-                      </p>
-                    </div>
-                    <div className="hidden lg:flex items-center space-x-3 md:space-x-6">
-                      <SocialView response={collectionData} />
-                    </div>
-                  </div>
-
-                  <div className="flex text-black dark:text-white md:mt-2">
-                    Items {Number(collectionData?.totalNfts).toLocaleString()}
-                  </div>
-                  <div className="flex lg:hidden items-center space-x-3 mt-[28px]">
-                    <SocialView response={collectionData} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-[30px]">
-              <div
-                className={
-                  "collection-description text-transparent absolute -z-10 break-all"
-                }
-              >
-                <ReactMarkdown
-                  rehypePlugins={[rehypeRaw]}
-                  remarkPlugins={[remarkGfm]}
-                >
-                  {collectionData.description}
-                </ReactMarkdown>
-              </div>
-              <div
-                className={` text-black dark:text-white transition-all duration-300 ${
-                  showMore ? "" : "ellipsis-multi"
-                }`}
-              >
-                <ReactMarkdown
-                  rehypePlugins={[rehypeRaw]}
-                  remarkPlugins={[remarkGfm]}
-                >
-                  {collectionData.description}
-                </ReactMarkdown>
-              </div>
-              <button
-                className={`${
-                  isShow ? "flex" : "hidden"
-                } gap-1 justify-between items-center text-[#f626d1] py-2 px-3 rounded-[100px] mx-auto text-sm `}
-                onClick={() => setShowMore(!showMore)}
-              >
-                {showMore ? "Show less" : "Show more"}{" "}
-                {showMore ? <BsChevronUp /> : <BsChevronDown />}
-              </button>
+          <div className="relative">
+            <Image
+              src={
+                collectionData.banner && validURL(collectionData.banner)
+                  ? collectionData.banner
+                  : "/default.jpeg"
+              }
+              width={1305}
+              height={228}
+              className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
+              alt="banner"
+            />
+            <div className="flex h-[208px] w-[80%] mx-[10%] bg-white rounded-[10px] absolute -mt-14">
               <Image
-                src={
-                  collectionData.banner && validURL(collectionData.banner)
-                    ? collectionData.banner
-                    : "/default.jpeg"
-                }
-                width={2000}
-                height={2000}
-                className="flex w-full aspect-[1300/500] rounded-[20px] object-cover mt-5"
-                alt="banner"
+                alt="logo-lp"
+                src={collectionData?.logo}
+                width={160}
+                height={160}
+                className="md:w-[160px] md:h-[160px] rounded-[10px] m-[24px]"
               />
+
+              <div className="w-full my-auto">
+                <div className="w-full flex items-center justify-between">
+                  <div className="md:w-4/5">
+                    <p
+                      className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all"
+                      title={collectionData?.name}
+                    >
+                      {collectionData?.name}
+                    </p>
+                  </div>
+                  {/* <div className="hidden lg:flex items-center space-x-3 md:space-x-6">
+                      <SocialView response={collectionData} />
+                    </div> */}
+                </div>
+
+                <div className="mt-[12px] mr-[12px]">
+                  <div
+                    className={
+                      "collection-description text-transparent absolute -z-10 break-all"
+                    }
+                  >
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw]}
+                      remarkPlugins={[remarkGfm]}
+                    >
+                      {collectionData.description}
+                    </ReactMarkdown>
+                  </div>
+                  <div
+                    className={` text-black dark:text-white transition-all duration-300 ${
+                      showMore ? "" : "ellipsis-multi"
+                    }`}
+                  >
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw]}
+                      remarkPlugins={[remarkGfm]}
+                    >
+                      {collectionData.description}
+                    </ReactMarkdown>
+                  </div>
+                  {/* <button
+                    className={`${
+                      isShow ? "flex" : "hidden"
+                    } gap-1 justify-between items-center text-[#f626d1] py-2 px-3 rounded-[100px] mx-auto text-sm `}
+                    onClick={() => setShowMore(!showMore)}
+                  >
+                    {showMore ? "Show less" : "Show more"}{" "}
+                    {showMore ? <BsChevronUp /> : <BsChevronDown />}
+                  </button> */}
+                </div>
+                <div className="flex items-center space-x-3 mt-[12px]">
+                  <SocialView response={collectionData} />
+                </div>
+                {/* <div className="flex text-black dark:text-white md:mt-2">
+                    Items {Number(collectionData?.totalNfts).toLocaleString()}
+                  </div> */}
+              </div>
             </div>
-          </>
+          </div>
         )}
 
-        <div className="mt-10 md:mt-[114px]">
+        <div className="mt-[200px]">
           {status === FetchStatus.idle || status === FetchStatus.pending ? (
             <NFTListSkeleton />
           ) : (
             <>
               <div className="flex items-center justify-between">
-                <p className="text-black dark:text-white font-bold">Items</p>
+                {/* <p className="text-black dark:text-white font-bold">Items</p> */}
+                <div className="text-black">
+                  <SearchForm />
+                </div>
                 <Sort
                   onChange={(sort) => {
                     setSort(sort);
