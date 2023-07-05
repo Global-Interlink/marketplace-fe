@@ -48,7 +48,7 @@ const RankItem: React.FC<Props> = ({
           {formatedAddress}
           {isYou ? " (you)" : ""}
         </div>
-        <div className="flex items-center space-x-1 w-24">
+        <div className="flex items-center space-x-1 w-36">
           <Image
             preview={false}
             width={48}
@@ -59,7 +59,7 @@ const RankItem: React.FC<Props> = ({
           />
           <div className="flex w-full">{tickets}</div>
         </div>
-        <div className="flex items-center space-x-1  justify-start w-32">
+        <div className="flex items-center space-x-1  justify-start w-60">
           <Image
             preview={false}
             width={48}

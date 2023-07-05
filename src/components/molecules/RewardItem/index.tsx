@@ -14,7 +14,7 @@ const RewardItem: React.FC<Props> = ({ rank, reward }) => {
       : "bg-[#EFE5DE] dark:bg-boxRewardBronzeItem";
   return (
     <div
-      className={`flex items-center mt-4 justify-between w-full md:w-[417px] py-2 px-5 rounded-lg ${bgColor}`}
+      className={`flex items-center mt-4 justify-around w-full xl:w-[417px] py-2 px-5 rounded-lg ${bgColor}`}
     >
       <p>{formatRewardAddress(reward.walletAddress)}</p>
       <p>{reward.amount} {reward.currency.toUpperCase()}</p>

@@ -376,6 +376,7 @@ const Campaign = () => {
       {buy.isOpen && (
         <BuyTicketResponseModal
           errorMessage={buy.errorMessage}
+          type={confirmBuy?.type}
           close={() => {
             setBuy({
               isOpen: false,
