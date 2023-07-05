@@ -259,7 +259,7 @@ const Results = () => {
       default:
         return setActiveTab("1");
     }
-  }, [router.query]);
+  }, []);
 
   return (
     <BaseComponent>

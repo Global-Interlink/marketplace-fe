@@ -29,6 +29,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { Week } from "./weekly-reward/tickets";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -49,6 +50,7 @@ const getAccessToken = async (walletAddress: string) => {
 const Campaign = () => {
   const { address, connected } = useWallet();
   const { theme } = useTheme();
+  const router = useRouter();
   const [weeklyProgress, setWeeklyProgress] = React.useState<AllTaskDay>();
   const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>([]);
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
@@ -315,12 +317,19 @@ const Campaign = () => {
               <ListRanking data={leaderBoard} />
               {leaderBoard && leaderBoard.top && leaderBoard.top.length > 0 && (
                 <div className="flex items-center justify-center mt-4">
-                  <Link
-                    href={"/event/weekly-reward/tickets"}
-                    className="text-sm rounded-full border py-2 px-[14px]"
+                  <div
+                    className="text-sm rounded-full border py-2 px-[14px] cursor-pointer hover:text-blue-500"
+                    onClick={() =>
+                      router.push({
+                        pathname: "/event/weekly-reward/tickets",
+                        query: {
+                          tab: "3",
+                        },
+                      })
+                    }
                   >
                     View All
-                  </Link>
+                  </div>
                 </div>
               )}
             </div>
@@ -334,7 +343,9 @@ const Campaign = () => {
           <p className="text-[30px] font-medium whitespace-pre-wrap md:whitespace-normal">
             {`Weekly Reward \n${
               rewardWeek
-                ? `(${dayjs(rewardWeek.start).format("DD/MM")} - ${dayjs(rewardWeek.end).format("DD/MM")})`
+                ? `(${dayjs(rewardWeek.start).format("DD/MM")} - ${dayjs(
+                    rewardWeek.end
+                  ).format("DD/MM")})`
                 : ""
             }`}
           </p>
@@ -343,8 +354,8 @@ const Campaign = () => {
             <ListReward data={rewards2} rank="silver" />
             <ListReward data={rewards3} rank="bronze" />
             <Image
-             width={657}
-             height={817}
+              width={657}
+              height={817}
               src="/weekly-reward.png"
               className="w-full aspect-square block xl:hidden"
               alt="reward"
