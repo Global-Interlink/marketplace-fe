@@ -196,9 +196,14 @@ const Tickets = () => {
     fetchDataLeaderBoard();
   }, [address, activeTab, nextPage, filterWeek]);
 
+  React.useEffect(() => {
+    setNextPage(1);
+  }, [ activeTab]);
+
   // console.log("leaderBoard", leaderBoard);
   // console.log("week", week);
-
+  // console.log("meta", meta);
+  // console.log("nextPage", nextPage);
   // console.log("filterWeek", filterWeek);
 
   return (
