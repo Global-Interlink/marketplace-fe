@@ -141,6 +141,9 @@ const Tickets = () => {
         setMyTickets(res.data.data.numberTicketsMySelf);
         setAllTickets(res.data.data.totalTickets);
         setLeaderBoard(res.data.data.leaderboard);
+        if (activeTab === "3") {
+          setMeta(res.data.data.meta);
+        }
         setLoading(false);
       })
       .catch((e) => {
