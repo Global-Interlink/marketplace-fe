@@ -53,13 +53,15 @@ const Campaign = () => {
   const [statusTasks, setStatusTasks] = React.useState<StatusTask[]>([]);
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
   const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
-  const [rewards, setRewards] = React.useState<Reward[]>([]);
   const [isFetched, setFetched] = React.useState(false);
   const api = createAxios();
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
   const [currentTGIL, setCurrentTGIL] = React.useState(0);
   const [isFetching, setFetching] = React.useState(false);
+  const [rewards1, setRewards1] = React.useState<Reward[]>([]);
+  const [rewards2, setRewards2] = React.useState<Reward[]>([]);
+  const [rewards3, setRewards3] = React.useState<Reward[]>([]);
   const [rewardWeek, setRewardWeek] = React.useState<Week>();
   const [buy, setBuy] = React.useState<{
     isOpen: boolean;
@@ -73,22 +75,52 @@ const Campaign = () => {
   }>();
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
-    api
-      .get<{ data: { data: Reward[] } }>("/win-prize/weekly-rewar")
+    let weekData: any;
+    await api
+      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=5")
       .then((res) => {
-        setRewards(res.data.data.data);
+        const { data } = res.data;
+        weekData = data[1];
+        // const currentWeek = data.find((i) => i.current);
+        // const index = currentWeek ? data?.indexOf(currentWeek) : 0;
+        // if (data[index - 1]) {
+        //   const week = data[index - 1];
+        //   setRewardWeek(week);
+        // } else {
+        //   setRewardWeek(currentWeek);
+        // }
+        setRewardWeek(data[1]);
+      })
+      .catch((e) => console.log(e));
+
+    api
+      .get<{ data: { data: Reward[] } }>(
+        `/win-prize/weekly-rewar?start=${weekData?.start}&end=${
+          weekData?.end
+        }&orderPrize=${1}`
+      )
+      .then((res) => {
+        setRewards1(res.data.data.data);
+      })
+      .catch((e) => console.log(e));
+    api
+      .get<{ data: { data: Reward[] } }>(
+        `/win-prize/weekly-rewar?start=${weekData?.start}&end=${
+          weekData?.end
+        }&orderPrize=${2}`
+      )
+      .then((res) => {
+        setRewards2(res.data.data.data);
       });
-    api.get<{ data: Week[] }>("/ticket/weekly").then((res) => {
-      const { data } = res.data;
-      const currentWeek = data.find((i) => i.current);
-      const index = currentWeek ? data?.indexOf(currentWeek) : 0;
-      if (data[index - 1]) {
-        const week = data[index - 1];
-        setRewardWeek(week);
-      } else {
-        setRewardWeek(currentWeek);
-      }
-    });
+    api
+      .get<{ data: { data: Reward[] } }>(
+        `/win-prize/weekly-rewar?start=${weekData?.start}&end=${
+          weekData?.end
+        }&orderPrize=${3}`
+      )
+      .then((res) => {
+        setRewards3(res.data.data.data);
+      });
   };
 
   const fetchAllTask = async (address: string) => {
@@ -183,6 +215,7 @@ const Campaign = () => {
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
+
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
@@ -306,18 +339,9 @@ const Campaign = () => {
             }`}
           </p>
           <div className="xl:bg-bgWeeklyReward bg-center lg:bg-right w-full h-full space-y-[55px] md:bg-[length:375px_375px] lg:bg-[length:435px_435px]  bg-no-repeat mt-10 xl:bg-[length:575px_575px] 2xl:bg-[length:675px_675px]">
-            <ListReward
-              data={rewards.filter((i) => i.winPrizeOrder === 1)}
-              rank="gold"
-            />
-            <ListReward
-              data={rewards.filter((i) => i.winPrizeOrder === 2)}
-              rank="silver"
-            />
-            <ListReward
-              data={rewards.filter((i) => i.winPrizeOrder === 3)}
-              rank="bronze"
-            />
+            <ListReward data={rewards1} rank="gold" />
+            <ListReward data={rewards2} rank="silver" />
+            <ListReward data={rewards3} rank="bronze" />
             <Image
              width={657}
              height={817}

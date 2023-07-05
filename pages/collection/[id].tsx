@@ -117,7 +117,7 @@ const Collection = () => {
 
   return collectionData ? (
     <BaseComponent>
-      <div className="py-4 md:py-8">
+      <div className="">
         {collectionStatus === FetchStatus.idle ||
         collectionStatus === FetchStatus.pending ? (
           <CollectionDetailTopSkeleton />

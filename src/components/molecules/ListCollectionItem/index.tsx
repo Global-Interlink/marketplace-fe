@@ -14,11 +14,9 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
       <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] hover:-translate-y-1 transition duration-300 ease-in-out">
         <div className="relative">
           <Image
-            src={
-              data?.featuredImage && validURL(data?.featuredImage)
-                ? data?.featuredImage
-                : "/default.jpeg"
-            }
+           src={
+            validURL(data?.featuredImage || "/default.jpeg")
+          }
             width={500}
             height={500}
             className="flex w-full aspect-[310/216] rounded-t-[20px] p-[20px] object-cover dark:bg-bgLinearCollectionItem bg-bgLinearLight"

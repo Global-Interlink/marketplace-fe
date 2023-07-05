@@ -19,16 +19,25 @@ interface Props {
   onDelistSuccess: (onChainId?: string) => void;
 }
 export function validURL(url: string) {
-  var pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  ); // fragment locator
-  return !!pattern.test(url);
+  if (url) {
+    let ipfs_pattern = new RegExp('^ipfs:\/\/')
+    if(ipfs_pattern.test(url)) {
+      url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    }
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    if(!!pattern.test(url)) {
+      return url;
+    }
+  }
+  return "/default.jpeg";
 }
 const ListNFTItem: React.FC<Props> = ({
   data,
@@ -121,15 +130,11 @@ const ListNFTItem: React.FC<Props> = ({
     data.saleStatus.onSale;
   return (
     <div>
-      <div className="flex flex-col w-full rounded-[20px]  bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem  backdrop-blur-[12.5px]  shadow-collectionItem hover:-translate-y-1 transition duration-300 ease-in-out">
+      <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl hover:-translate-y-1 duration-100">
         <div className="flex w-full">
           <Image
-            src={
-              data?.image && validURL(data?.image)
-                ? data?.image
-                : "/default.jpeg"
-            }
-            className="rounded-t-[20px] object-cover cursor-pointer  aspect-[310/216] "
+            src={validURL(data?.image || '/default.jpeg')}
+            className="rounded-[32px] object-cover cursor-pointer aspect-[1/1] p-4"
             height={"auto"}
             alt="mock"
             preview={false}
@@ -139,7 +144,7 @@ const ListNFTItem: React.FC<Props> = ({
             fallback="/default.jpeg"
           />
         </div>
-        <div className="flex p-5 space-x-[14px]  rounded-b-[20px]">
+        <div className="flex p-5 space-x-[14px]  rounded-b-[20px] pt-0">
           <div className="w-full">
             <div
               onClick={(e: any) => {
@@ -158,21 +163,21 @@ const ListNFTItem: React.FC<Props> = ({
             <div className="flex items-center mt-[18px] space-x-5 h-[48px]">
               {data?.saleStatus ? (
                 <div className="">
-                  <div className="flex-1 text-[16px] font-normal text-[#475467] ] dark:text-white">
+                  <div className="flex-1 text-[14px] font-normal text-[#475467] ] dark:text-white">
                     Price
                   </div>
-                  <div className="flex-1 text-[16px] font-semibold text-[#1D2939] ] dark:text-white">
+                  <div className="flex-1 text-[14px] font-semibold text-[#1D2939] ] dark:text-white">
                     {Number(data.saleStatus.price).toPrecision()} SUI
                   </div>
                 </div>
               ) : (
                 <div className="flex-1" />
               )}
-              <div className="flex-1 flex items-center justify-center parent">
+              <div className="flex-1 flex items-center justify-end parent">
                 {isShowList && (
                   <button
                     disabled={!connected || isLoading}
-                    className=" primaryButton h-[36px] w-full text-center text-[12px] py-2 text-white border dark:border-none rounded-[5px] "
+                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white rounded-full max-w-[120px]"
                     onClick={() => {
                       if (data.collection) {
                         setOpenListing(true);
@@ -187,7 +192,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {isShowBuy && connected && (
                   <button
                     disabled={!connected || isLoading}
-                    className=" primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-full "
+                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white rounded-full max-w-[120px]"
                     onClick={() => {
                       if (data) {
                         handleBuyNow(
@@ -201,7 +206,7 @@ const ListNFTItem: React.FC<Props> = ({
                     {isLoading ? (
                       <LoadingOutlined className="text-white" size={20} />
                     ) : (
-                      "Buy Now"
+                      "BUY"
                     )}
                   </button>
                 )}
@@ -209,7 +214,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {!connected && (
                   <ConnectButton
                     label="Connect wallet"
-                    className="primaryButton connect-wallet-btn2 !w-full"
+                    className="primaryButton h-[36px] w-full text-center !text-[12px] text-white !rounded-full max-w-[160px] !p-0 uppercase"
                   />
                 )}
                 {isShowDelist && (
