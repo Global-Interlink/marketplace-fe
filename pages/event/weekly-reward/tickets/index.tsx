@@ -91,13 +91,13 @@ const Tickets = () => {
   const onChangeWeek = (s: string, e: string) => {
     setFilterWeek({ start: s, end: e });
     setNextPage(1);
-    if (keyword) {
-      fetchAllData(keyword);
-      fetchDataLeaderBoard(keyword);
-    } else {
-      fetchAllData();
-      fetchDataLeaderBoard();
-    }
+    // if (keyword) {
+    //   fetchAllData(keyword);
+    //   fetchDataLeaderBoard(keyword);
+    // } else {
+    //   fetchAllData();
+    //   fetchDataLeaderBoard();
+    // }
   };
 
   const api = createAxios();
@@ -128,8 +128,6 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
-        console.log("userRes", res.request.responseURL);
-
         setUserTicketData(res.data.data.data);
         setUserMeta(res.data.data.meta);
       })
@@ -227,11 +225,11 @@ const Tickets = () => {
       fetchAllData(nextValue);
       fetchDataLeaderBoard(nextValue);
     }, 1000),
-    [activeTab]
+    [activeTab, filterWeek]
   );
 
   React.useEffect(() => {
-    if (!address) {
+    if (!address && !keyword) {
       setUserTicketData([]);
       setUserMeta(undefined);
     } else {
@@ -251,7 +249,7 @@ const Tickets = () => {
     if (router.query.tab === "3") {
       setActiveTab("3");
     }
-  }, [router.query]);
+  }, []);
 
   return (
     <BaseComponent>
