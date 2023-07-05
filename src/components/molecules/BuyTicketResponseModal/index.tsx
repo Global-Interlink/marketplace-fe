@@ -6,9 +6,14 @@ import Link from "next/link";
 interface Props {
   close?: () => void;
   errorMessage?: string;
+  type?: string;
 }
 
-const BuyTicketResponseModal: React.FC<Props> = ({ close, errorMessage }) => {
+const BuyTicketResponseModal: React.FC<Props> = ({
+  close,
+  errorMessage,
+  type,
+}) => {
   return (
     <Modal
       centered
@@ -27,7 +32,11 @@ const BuyTicketResponseModal: React.FC<Props> = ({ close, errorMessage }) => {
             height={100}
           />
           <p className="text-[20px] md:text-[30px] font-medium">
-            {errorMessage ? errorMessage : "Successfully buy 1 ticket"}
+            {errorMessage
+              ? errorMessage
+              : `Successfully buy ${
+                  type === "completedAllTask" ? "3" : "1"
+                } ticket`}
           </p>
           {errorMessage ? (
             <p className="text-center whitespace-pre-wrap">
