@@ -46,8 +46,12 @@ export function getNextSunday() {
   // Lấy ngày hiện tại
   var currentDay = today.getUTCDay();
 
-  // Tính số ngày cần thêm để đến Chủ nhật kế tiếp
-  var daysToAdd = 7 - currentDay;
+  if (currentDay === 0) {
+    var daysToAdd = currentDay;
+  } else {
+    // Tính số ngày cần thêm để đến Chủ nhật kế tiếp
+    var daysToAdd = 7 - currentDay;
+  }
 
   // Đặt nextSunday thành ngày hiện tại + số ngày cần thêm
   nextSunday.setUTCDate(today.getUTCDate() + daysToAdd);
@@ -58,21 +62,22 @@ export function getNextSunday() {
   return nextSunday;
 }
 
-
 export function getThisWeek() {
   var today = new Date();
 
   // Tính toán ngày đầu tiên của tuần hiện tại (tính từ thứ 2)
-  var startOfWeek = new Date(today.getTime() - (today.getUTCDay() - 1) * 24 * 60 * 60 * 1000);
-  
+  var startOfWeek = new Date(
+    today.getTime() - (today.getUTCDay() - 1) * 24 * 60 * 60 * 1000
+  );
+
   // Tính toán ngày cuối cùng của tuần hiện tại (tính đến Chủ nhật)
   var endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
-  
+
   // Lấy thông tin ngày, tháng và năm của ngày bắt đầu và kết thúc
   var startDate = startOfWeek.getUTCDate();
   var startMonth = startOfWeek.getUTCMonth() + 1; // Tháng trong JavaScript được đếm từ 0
-  
+
   var endDate = endOfWeek.getUTCDate();
   var endMonth = endOfWeek.getUTCMonth() + 1; // Tháng trong JavaScript được đếm từ 0
-return `(${startDate}/${startMonth} - ${endDate}/${endMonth})`
+  return `(${startDate}/${startMonth} - ${endDate}/${endMonth})`;
 }
