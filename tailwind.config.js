@@ -59,6 +59,7 @@ module.exports = {
       },
       screens: {
         lg2: "1081px",
+        xl2:"1408px",
       },
     },
     fontFamily: {
