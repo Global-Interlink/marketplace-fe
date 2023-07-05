@@ -81,7 +81,7 @@ const Tickets = () => {
       startDate: filterWeek?.start + " 00:00:00",
       endDate: filterWeek?.end + " 23:59:59",
     };
-    console.log("params", params);
+    // console.log("params", params);
 
     setLoading(true);
     api
@@ -165,7 +165,7 @@ const Tickets = () => {
 
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
-      console.log("activeTab", activeTab);
+      // console.log("activeTab", activeTab);
 
       if (activeTab === "1") return;
       if (nextValue.length === 0) {
@@ -196,7 +196,7 @@ const Tickets = () => {
   // console.log("leaderBoard", leaderBoard);
   // console.log("week", week);
 
-  console.log("filterWeek", filterWeek);
+  // console.log("filterWeek", filterWeek);
 
   return (
     <BaseComponent>
