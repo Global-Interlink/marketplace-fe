@@ -32,7 +32,7 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       : "bg-[#FFF9F4] dark:bg-boxRewardBronze";
   return (
     <div
-      className={`relative flex flex-col w-full min-h-[260px] lg:w-[380px] xl:w-[480px] 2xl:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
+      className={`relative flex flex-col w-full min-h-[260px] xl:w-[480px] 2xl:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
     >
       {data.slice(0, 4).map((i) => {
         return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />;

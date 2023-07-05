@@ -220,7 +220,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {isShowDelist && (
                   <button
                     disabled={!connected || isLoading}
-                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white rounded-full max-w-[120px]"
+                    className="primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-full "
                     onClick={(e: any) => {
                       setOpenDelist(true);
                     }}
