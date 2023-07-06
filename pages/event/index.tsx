@@ -75,6 +75,7 @@ const Campaign = () => {
     isOpen: boolean;
     type: "forEvery" | "completedAnyTask" | "completedAllTask";
   }>();
+  const [confirmBuyType, setConfirmBuyType] = React.useState<string>("");
   const { totalBalance } = usePizePoolBalance();
   const fetchData = async () => {
     let weekData: any;
@@ -389,7 +390,7 @@ const Campaign = () => {
       {buy.isOpen && (
         <BuyTicketResponseModal
           errorMessage={buy.errorMessage}
-          type={confirmBuy?.type}
+          type={confirmBuyType}
           close={() => {
             setBuy({
               isOpen: false,
@@ -405,6 +406,7 @@ const Campaign = () => {
           numberOfNFTs={numberDynamicNft}
           handleBuy={handleBuy}
           close={() => {
+            setConfirmBuyType(confirmBuy.type)
             setConfirmBuy({ isOpen: false, type: "forEvery" });
           }}
         />
