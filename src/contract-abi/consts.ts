@@ -28,8 +28,8 @@ export const formatAddress = (longString: string) => {
 };
 
 export const formatRewardAddress = (longString: string) => {
-  return `${longString?.slice(0, 8)}...${longString?.slice(
-    longString?.length - 8,
+  return `${longString?.slice(0, 6)}...${longString?.slice(
+    longString?.length - 6,
     longString?.length
   )}`;
 };
