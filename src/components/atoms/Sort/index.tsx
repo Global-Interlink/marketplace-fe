@@ -4,8 +4,15 @@ import { useDetectClickOutside } from "react-detect-click-outside";
 interface Props {
   onChange: (sort: "ASC" | "DESC") => void;
   sort: "ASC" | "DESC";
+  firstChoose: string;
+  secondChoose: string;
 }
-const Sort: React.FC<Props> = ({ onChange, sort }) => {
+const Sort: React.FC<Props> = ({
+  onChange,
+  sort,
+  firstChoose,
+  secondChoose,
+}) => {
   const ref = useDetectClickOutside({
     onTriggered: () => {
       setOpen(false);
@@ -29,7 +36,7 @@ const Sort: React.FC<Props> = ({ onChange, sort }) => {
           setOpen(true);
         }}
       >
-        <p>{currentSort === "DESC" ? "Newest" : "Oldest"}</p>
+        <p>{currentSort === "DESC" ? firstChoose : secondChoose}</p>
         <ArrowDown />
       </div>
       {open && (
@@ -42,7 +49,7 @@ const Sort: React.FC<Props> = ({ onChange, sort }) => {
             }}
             className="flex text-xs leading-5 text-[#5B5B5B] dark:text-white bg-white items-center justify-between dark:bg-[#514E89] w-[155px] h-10 px-5 rounded-full cursor-pointer"
           >
-            {currentSort !== "DESC" ? "Newest" : "Oldest"}
+            {currentSort !== "DESC" ? firstChoose : secondChoose}
           </p>
         </div>
       )}

@@ -66,7 +66,8 @@ const Home = () => {
   }, [response, sort]);
 
   const loadMore = () => {
-    if (response&&
+    if (
+      response &&
       response?.meta.currentPage < response?.meta.totalPages &&
       status !== FetchStatus.pending
     ) {
@@ -103,7 +104,12 @@ const Home = () => {
               </Link>
             )}
             <div className="flex items-center justify-end">
-              <Sort onChange={setSort} sort={sort} />
+              <Sort
+                onChange={setSort}
+                sort={sort}
+                firstChoose="Newest"
+                secondChoose="Oldest"
+              />
             </div>
             {response && response.data && response.data.length > 0 ? (
               <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
