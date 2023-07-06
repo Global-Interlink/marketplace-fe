@@ -223,7 +223,7 @@ const Campaign = () => {
       <div className="py-4 md:py-8">
         <div className="w-full flex flex-col lg:flex-row  space-y-10 lg:space-y-0 lg:space-x-8 xl:space-x-12 text-[#101828]">
           <div
-            className={`w-full lg:w-1/2 p-4 md:p-8  rounded-lg campaignboxshadow ${
+            className={`w-full lg:w-1/2 p-4 md:p-8  rounded-lg campaignboxshadow relative ${
               theme === "dark" ? "darkGradient" : "bg-white"
             }`}
           >
@@ -257,6 +257,19 @@ const Campaign = () => {
               <p className="dark:text-[#EAECF0]">Weekly progression</p>
               <WeeklyProgress data={weeklyProgress} />
             </div>
+            {!connected ? (
+              <div className="bg-white shadow-2xl shadow-gray-800/60 p-10 rounded-xl flex flex-col items-center absolute z-10 mx-[6%]">
+                <div className="text-[30px] font-medium">
+                  Wallet not connected
+                </div>
+                <div className="text-[#667085] dark:text-[#D0D5DD] py-4">
+                  Please connect wallet to check about daily tasks and so on
+                </div>
+                <button className="primaryButton rounded-full w-[180px] sm:w-[240px] h-[40px] text-white">
+                  Connect wallet
+                </button>
+              </div>
+            ) : null}
             <div className="mt-5">
               <ListTodayTask data={statusTasks} />
               <p className="text-[30px] mt-8 font-medium">Get more tickets</p>
