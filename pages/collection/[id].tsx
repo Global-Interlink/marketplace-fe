@@ -217,6 +217,8 @@ const Collection = () => {
                     setSort(sort);
                   }}
                   sort={sort}
+                  firstChoose="High to low"
+                  secondChoose="Low to high"
                 />
               </div>
               {listNFT && listNFT.length > 0 ? (
