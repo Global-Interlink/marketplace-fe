@@ -39,6 +39,10 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    setCurrentPage(1)
+  }, [sort]);
+
+  useEffect(() => {
     const options = {
       root: null,
       rootMargin: "0px",
