@@ -106,7 +106,7 @@ const Collection = () => {
       }
     }
   }, [collectionData]);
-  // console.log("==", listNFT);
+
   React.useEffect(() => {
     if (response?.data) {
       setListNFT((s) => {
@@ -124,38 +124,27 @@ const Collection = () => {
         ) : (
           <div className="relative">
             <Image
-            src={
-              validURL(collectionData.banner || "/default.jpeg")
-            }
+              src={validURL(collectionData.banner || "/default.jpeg")}
               width={1305}
               height={228}
               className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
               alt="banner"
             />
-            <div className="flex h-[208px] w-[80%] mx-[10%] bg-white rounded-[10px] absolute -mt-14">
+            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] absolute -mt-14 z-50">
               <Image
                 alt="logo-lp"
                 src={collectionData?.logo}
                 width={160}
                 height={160}
-                className="md:w-[160px] md:h-[160px] rounded-[10px] m-[24px]"
+                className="md:w-[160px] md:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[24px]"
               />
-
               <div className="w-full my-auto">
-                <div className="w-full flex items-center justify-between">
-                  <div className="md:w-4/5">
-                    <p
-                      className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all"
-                      title={collectionData?.name}
-                    >
-                      {collectionData?.name}
-                    </p>
-                  </div>
-                  {/* <div className="hidden lg:flex items-center space-x-3 md:space-x-6">
-                      <SocialView response={collectionData} />
-                    </div> */}
-                </div>
-
+                <p
+                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px]"
+                  title={collectionData?.name}
+                >
+                  {collectionData?.name}
+                </p>
                 <div className="mt-[12px] mr-[12px]">
                   <div
                     className={
@@ -181,7 +170,7 @@ const Collection = () => {
                       {collectionData.description}
                     </ReactMarkdown>
                   </div>
-                  {/* <button
+                  <button
                     className={`${
                       isShow ? "flex" : "hidden"
                     } gap-1 justify-between items-center text-[#f626d1] py-2 px-3 rounded-[100px] mx-auto text-sm `}
@@ -189,26 +178,21 @@ const Collection = () => {
                   >
                     {showMore ? "Show less" : "Show more"}{" "}
                     {showMore ? <BsChevronUp /> : <BsChevronDown />}
-                  </button> */}
+                  </button>
                 </div>
-                <div className="flex items-center space-x-3 mt-[12px]">
+                <div className="flex items-center space-x-3 my-[12px]">
                   <SocialView response={collectionData} />
                 </div>
-                {/* <div className="flex text-black dark:text-white md:mt-2">
-                    Items {Number(collectionData?.totalNfts).toLocaleString()}
-                  </div> */}
               </div>
             </div>
           </div>
         )}
-
         <div className="mt-[200px]">
           {status === FetchStatus.idle || status === FetchStatus.pending ? (
             <NFTListSkeleton />
           ) : (
             <>
               <div className="flex items-center justify-between">
-                {/* <p className="text-black dark:text-white font-bold">Items</p> */}
                 <div className="text-black">
                   <SearchForm />
                 </div>
