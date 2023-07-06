@@ -29,6 +29,7 @@ import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
 import { APIFunctions, FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
+import { createAxiosCoinGecko } from "../../src/api/axiosWallet";
 
 const NFT = () => {
   const router = useRouter();
@@ -42,6 +43,25 @@ const NFT = () => {
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
+  const [dataCoingecko, setDataCoingecko] = React.useState<number>();
+  const api = createAxiosCoinGecko();
+
+  const fetchDataCoinGecko = async () => {
+    api
+      .get<{
+        [x: string]: any;
+        data: any;
+      }>("/coins/sui")
+      .then((res) => {
+        setDataCoingecko(res.data.market_data.current_price.usd);
+      })
+      .catch(() => {});
+  };
+
+  React.useEffect(() => {
+    fetchDataCoinGecko();
+  }, []);
+
   React.useEffect(() => {
     if (id) {
       dispatch(fetchNFTDetail({ id: String(id) }));
@@ -149,9 +169,7 @@ const NFT = () => {
           <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
             <div className="w-full md:w-[40%] min-w-[40%]">
               <Image
-                src={
-                  validURL(nftData?.image || "/default.jpeg")
-                }
+                src={validURL(nftData?.image || "/default.jpeg")}
                 width={200}
                 height={200}
                 className="flex w-full aspect-square rounded-[20px] object-cover"
@@ -186,6 +204,9 @@ const NFT = () => {
                     <p className="text-[20px]">Current Price :</p>
                     <p className="text-[20px] md:text-[24px] font-bold">
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
+                      {dataCoingecko &&
+                        dataCoingecko > 0 &&
+                        `(~ $${dataCoingecko})`}
                       {/* {`(~ $${Number(
                         nftData.saleStatus.usdPrice
                       ).toPrecision()})`} */}
@@ -194,7 +215,8 @@ const NFT = () => {
                 ) : (
                   <div />
                 )}
-                {nftData && nftData.owner?.address &&
+                {nftData &&
+                  nftData.owner?.address &&
                   nftData.owner &&
                   !nftData?.saleStatus &&
                   nftData.owner?.address?.address === address && (
@@ -211,7 +233,8 @@ const NFT = () => {
                       List Now
                     </button>
                   )}
-                {nftData?.saleStatus && nftData.owner?.address && 
+                {nftData?.saleStatus &&
+                  nftData.owner?.address &&
                   nftData.saleStatus.onSale &&
                   nftData.owner?.address.address !== address && (
                     <button
@@ -236,7 +259,8 @@ const NFT = () => {
                       )}
                     </button>
                   )}
-                {nftData?.saleStatus && nftData.owner?.address &&
+                {nftData?.saleStatus &&
+                  nftData.owner?.address &&
                   nftData.owner?.address.address === address &&
                   nftData.saleStatus.onSale && (
                     <button

@@ -9,3 +9,12 @@ export const createAxios = (accessToken?: string) => {
     },
   });
 };
+
+export const createAxiosCoinGecko = () => {
+  return axios.create({
+    baseURL: process.env.NEXT_PUBLIC_COINGECKO,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
