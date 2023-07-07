@@ -91,13 +91,6 @@ const Tickets = () => {
   const onChangeWeek = (s: string, e: string) => {
     setFilterWeek({ start: s, end: e });
     setNextPage(1);
-    // if (keyword) {
-    //   fetchAllData(keyword);
-    //   fetchDataLeaderBoard(keyword);
-    // } else {
-    //   fetchAllData();
-    //   fetchDataLeaderBoard();
-    // }
   };
 
   const api = createAxios();
@@ -106,10 +99,11 @@ const Tickets = () => {
     await api
       .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${numberOfWeek}`)
       .then((res) => {
-        setWeek(res.data.data);
+        const { data } = res.data;
+        setWeek(data);
         setFilterWeek({
-          start: res.data.data[0].start,
-          end: res.data.data[0].end,
+          start: data[0].start,
+          end: data[0].end,
         });
       });
   };
@@ -128,8 +122,9 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
-        setUserTicketData(res.data.data.data);
-        setUserMeta(res.data.data.meta);
+        const { data } = res.data;
+        setUserTicketData(data.data);
+        setUserMeta(data.meta);
       })
       .catch(() => {
         setUserTicketData([]);
@@ -152,8 +147,9 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
-        setAllTicketData(res.data.data.data);
-        setAllMeta(res.data.data.meta);
+        const { data } = res.data;
+        setAllTicketData(data.data);
+        setAllMeta(data.meta);
         setLoading(false);
       })
       .catch((e) => {
@@ -169,13 +165,6 @@ const Tickets = () => {
     }
     const token = await getAccessToken(address);
     const api = createAxios(token);
-
-    // const params = {
-    //   page: nextPage,
-    //   walletAddress: keyword ? keyword : address,
-    //   startDate: filterWeek?.start + " 00:00:00",
-    //   endDate: filterWeek?.end + " 23:59:59",
-    // };
 
     const params = {
       page: nextPage,
@@ -197,8 +186,9 @@ const Tickets = () => {
         params: params,
       })
       .then((res) => {
-        setLeaderBoard(res.data.data.leaderboard);
-        setLeaderBoardMeta(res.data.data.meta);
+        const { data } = res.data;
+        setLeaderBoard(data.leaderboard);
+        setLeaderBoardMeta(data.meta);
         setLoading(false);
       })
       .catch((e) => {

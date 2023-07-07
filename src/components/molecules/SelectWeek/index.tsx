@@ -8,13 +8,13 @@ interface Props {
   week?: Week[];
   numberOfWeek: number;
   onChangeWeek: (start: string, end: string) => void;
-  seeMore?: boolean;
+  type?: string;
 }
 const SelectWeek: React.FC<Props> = ({
   week,
   numberOfWeek,
   onChangeWeek,
-  seeMore,
+  type,
 }) => {
   const [selectedWeek, setSelectedWeek] = React.useState<Week>();
 
@@ -39,11 +39,13 @@ const SelectWeek: React.FC<Props> = ({
     };
   });
   React.useEffect(() => {
-    if (seeMore && week) {
-      setSelectedWeek(week?.length > 1 ? week[1] : week[0]);
-    }
     if (week && !selectedWeek) {
-      const currentWeek = week?.find((i) => i.current);
+      let currentWeek;
+      if (!type) {
+        currentWeek = week?.find((i) => i.current);
+      } else {
+        currentWeek = week[0];
+      }
       setSelectedWeek(currentWeek);
       onChangeWeek(
         dayjs(currentWeek?.start).format("YYYY-MM-DD"),

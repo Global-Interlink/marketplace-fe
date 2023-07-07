@@ -80,19 +80,9 @@ const Results = () => {
   const [rewards1, setRewards1] = React.useState<Rewards[]>([]);
   const [rewards2, setRewards2] = React.useState<Rewards[]>([]);
   const [rewards3, setRewards3] = React.useState<Rewards[]>([]);
-  const [rewardWeek, setRewardWeek] = React.useState<Week>();
-  const [seeMore, setSeeMore] = React.useState(false);
+  const [keyword, setKeyword] = React.useState("");
 
   const api = createAxios();
-
-  function formatDate(date: Date) {
-    let d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
 
   const onChangeTab = (tabId: string) => {
     setActiveTab(tabId);
@@ -104,28 +94,21 @@ const Results = () => {
     setFilterWeek({ start: s, end: e });
   };
 
-  const fetchData = async (keyword?: string) => {
-    let seeMoreWeek: any;
-
+  const fetchWeekData = async () => {
     await api
-      .get<{ data: Week[] }>("/ticket/weekly?numberWeeks=1")
+      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${2}`)
       .then((res) => {
         const { data } = res.data;
-        const currentWeek = data.find(
-          (i) =>
-            formatDate(new Date(i?.start)) ===
-            formatDate(new Date(filterWeek?.start || ""))
-        );
-        seeMoreWeek = seeMore
-          ? data.length > 1
-            ? data[1]
-            : data[0]
-          : currentWeek;
-        if (seeMore) {
-          handleChangeWeek(seeMoreWeek?.start, seeMoreWeek?.end);
-        }
+        const rewardWeek = data.slice(1);
+        setWeek(rewardWeek);
+        setFilterWeek({
+          start: rewardWeek[0].start,
+          end: rewardWeek[0].end,
+        });
       });
+  };
 
+  const fetchData = async (keyword?: string) => {
     const params = {
       page: nextPage,
       walletAddress: keyword,
@@ -134,101 +117,52 @@ const Results = () => {
     };
 
     api
-      .get<{ data: any }>(
-        `/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${
-          params.page
-        }&orderPrize=${1}`
-      )
+      .get<{ data: any }>("/win-prize/weekly-rewar?orderPrize=1", {
+        params: params,
+      })
       .then((res) => {
         setMeta1(res.data.data?.meta);
         setRewards1(res.data.data.data);
         setLoading(false);
-        setSeeMore(false);
       })
       .catch((e) => {
         setRewards1([]);
         setMeta1(metaData);
-        setSeeMore(false);
       });
 
     api
-      .get<{ data: any }>(
-        `/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${
-          params.page
-        }&orderPrize=${2}`
-      )
+      .get<{ data: any }>("/win-prize/weekly-rewar?orderPrize=2", {
+        params: params,
+      })
       .then((res) => {
         setMeta2(res.data.data?.meta);
         setRewards2(res.data.data.data);
         setLoading(false);
-        setSeeMore(false);
       })
       .catch(() => {
         setRewards2([]);
         setMeta2(metaData);
-        setSeeMore(false);
       });
 
     api
-      .get<{ data: any }>(
-        `/win-prize/weekly-rewar?start=${params.start}&end=${params.end}&page=${
-          params.page
-        }&orderPrize=${3}`
-      )
+      .get<{ data: any }>("/win-prize/weekly-rewar?orderPrize=3", {
+        params: params,
+      })
       .then((res) => {
         setMeta3(res.data.data?.meta);
         setRewards3(res.data.data.data);
         setLoading(false);
-        setSeeMore(false);
       })
       .catch(() => {
         setRewards3([]);
         setMeta3(metaData);
-        setSeeMore(false);
       });
-    // api
-    //   .get<{ data: { data: Rewards[] } }>(
-    //     `/win-prize/weekly-rewar?start=${
-    //       "2023-06-26 00:00:00" || params.start
-    //     }&end=${"2023-07-02 23:59:59" || params.end}&page=${
-    //       params.page
-    //     }&limit=10&orderPrize=${1}`
-    //   )
-    //   .then((res) => {
-    //     setRewards1(res.data.data.data);
-    //     setLoading(false);
-    //   });
-    // api
-    //   .get<{ data: { data: Rewards[] } }>(
-    //     `/win-prize/weekly-rewar?start=${
-    //       "2023-06-26 00:00:00" || params.start
-    //     }&end=${"2023-07-02 23:59:59" || params.end}&page=${
-    //       params.page
-    //     }&limit=10&orderPrize=${2}`
-    //   )
-    //   .then((res) => {
-    //     setRewards2(res.data.data.data);
-    //     setLoading(false);
-    //   });
-    // api
-    //   .get<{ data: { data: Rewards[] } }>(
-    //     `/win-prize/weekly-rewar?start=${
-    //       "2023-06-26 00:00:00" || params.start
-    //     }&end=${"2023-07-02 23:59:59" || params.end}&page=${
-    //       params.page
-    //     }&limit=10&orderPrize=${3}`
-    //   )
-    //   .then((res) => {
-    //     setRewards3(res.data.data.data);
-    //     setLoading(false);
-    //   });
+
     setLoading(false);
   };
 
   React.useEffect(() => {
-    api.get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${1}`).then((res) => {
-      setWeek(res.data.data);
-    });
+    fetchWeekData();
   }, []);
 
   const debounceSearch = React.useCallback(
@@ -239,16 +173,21 @@ const Results = () => {
       }
       fetchData(nextValue);
     }, 1000),
-    []
+    [activeTab, filterWeek]
   );
 
   React.useEffect(() => {
-    fetchData();
-  }, [address, nextPage, filterWeek]);
+    if (keyword) {
+      fetchData(keyword);
+    } else {
+      fetchData();
+    }
+  }, [nextPage, filterWeek]);
 
   React.useEffect(() => {
-    if (router.query.rank === "") return;
-    setSeeMore(true);
+    if (router.query.rank === "") {
+      return;
+    }
     switch (router.query.rank) {
       case "gold":
         return setActiveTab("1");
@@ -295,10 +234,11 @@ const Results = () => {
               week={week}
               onChangeWeek={(s, e) => handleChangeWeek(s, e)}
               numberOfWeek={0}
-              seeMore={seeMore}
+              type="reward-result"
             />
             <SearchTicket
               onChangeText={(keyword) => {
+                setKeyword(keyword);
                 setNextPage(1);
                 debounceSearch(keyword);
               }}

@@ -14,10 +14,14 @@ const RewardItem: React.FC<Props> = ({ rank, reward }) => {
       : "bg-[#EFE5DE] dark:bg-boxRewardBronzeItem";
   return (
     <div
-      className={`flex items-center mt-4 justify-around w-full xl:w-[417px] py-2 px-5 rounded-lg ${bgColor}`}
+      className={`flex items-center mt-4 justify-around w-full py-2 px-5 rounded-lg gap-2 ${bgColor}`}
     >
-      <p>{formatRewardAddress(reward.walletAddress)}</p>
-      <p>{reward.amount} {reward.currency.toUpperCase()}</p>
+      <p className="text-ellipsis overflow-hidden">
+        {formatRewardAddress(reward.walletAddress)}
+      </p>
+      <p className="min-w-fit">
+        {reward.amount} {reward.currency.toUpperCase()}
+      </p>
     </div>
   );
 };
