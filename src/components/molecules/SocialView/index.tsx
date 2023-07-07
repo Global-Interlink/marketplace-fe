@@ -49,7 +49,7 @@ const SocialView: React.FC<Props> = ({ response }) => {
           <Image src={"/ic-twitter.svg"} width={15} height={15} alt={""} />
         </a>
       )}
-          {response?.facebook_url && (
+      {response?.facebook_url && (
         <a
           href={response?.facebook_url}
           target="_blank"
@@ -59,7 +59,7 @@ const SocialView: React.FC<Props> = ({ response }) => {
           <Image src={"/ic-facebooknew.svg"} width={15} height={15} alt={""} />
         </a>
       )}
-          {response?.github_url && (
+      {response?.github_url && (
         <a
           href={response?.github_url}
           target="_blank"
@@ -69,7 +69,7 @@ const SocialView: React.FC<Props> = ({ response }) => {
           <Image src={"/ic-github.svg"} width={15} height={15} alt={""} />
         </a>
       )}
-          {response?.instagram_url && (
+      {response?.instagram_url && (
         <a
           href={response?.instagram_url}
           target="_blank"
@@ -79,7 +79,7 @@ const SocialView: React.FC<Props> = ({ response }) => {
           <Image src={"/ic-instagram.svg"} width={15} height={15} alt={""} />
         </a>
       )}
-          {response?.reddit_url && (
+      {response?.reddit_url && (
         <a
           href={response?.reddit_url}
           target="_blank"
@@ -89,7 +89,7 @@ const SocialView: React.FC<Props> = ({ response }) => {
           <Image src={"/ic-reddit.svg"} width={15} height={15} alt={""} />
         </a>
       )}
-          {response?.youtube_url && (
+      {response?.youtube_url && (
         <a
           href={response?.youtube_url}
           target="_blank"
