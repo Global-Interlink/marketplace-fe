@@ -130,17 +130,17 @@ const Collection = () => {
               className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
               alt="banner"
             />
-            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px]  -mt-14 z-[9999] relative">
+            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-14 z-[9999] relative">
               <Image
                 alt="logo-lp"
                 src={collectionData?.logo}
                 width={160}
                 height={160}
-                className="md:w-[160px] md:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[24px]"
+                className=" w-[80px] h-[80px] sm:w-[160px] sm:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[12px] sm:m-[24px] items-center"
               />
               <div className="w-full my-auto">
                 <p
-                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
+                   className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
                   title={collectionData?.name}
                 >
                   {collectionData?.name}
@@ -180,7 +180,7 @@ const Collection = () => {
                     {showMore ? <BsChevronUp /> : <BsChevronDown />}
                   </button>
                 </div>
-                <div className="flex items-center space-x-3 my-[12px]">
+                <div className="flex items-center space-x-3">
                   <SocialView response={collectionData} />
                 </div>
               </div>
