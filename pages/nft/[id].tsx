@@ -159,6 +159,7 @@ const NFT = () => {
       toast.error(e.message);
     }
   };
+console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price));
 
   return (
     <BaseComponent>
@@ -206,7 +207,7 @@ const NFT = () => {
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
                       {dataCoingecko &&
                         dataCoingecko > 0 &&
-                        `(~ $${dataCoingecko})`}
+                        `(~ $${(dataCoingecko*Number(nftData?.saleStatus.price)).toFixed(2)})`}
                       {/* {`(~ $${Number(
                         nftData.saleStatus.usdPrice
                       ).toPrecision()})`} */}
