@@ -130,13 +130,13 @@ const Collection = () => {
               className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
               alt="banner"
             />
-            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-14 z-[9999] relative">
+            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-6 sm:-mt-14 z-[9999] relative">
               <Image
                 alt="logo-lp"
                 src={collectionData?.logo}
                 width={160}
                 height={160}
-                className=" w-[80px] h-[80px] sm:w-[160px] sm:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[12px] sm:m-[24px] items-center"
+                className=" w-[60px] h-[60px] sm:w-[160px] sm:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[12px] sm:m-[24px] items-center"
               />
               <div className="w-full my-auto">
                 <p
