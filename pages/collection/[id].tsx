@@ -193,7 +193,7 @@ const Collection = () => {
           ) : (
             <>
               <div className="flex items-center justify-between">
-                <div className="text-black">
+                <div className="text-black dark:text-white">
                   {/* <SearchForm /> */}
                   Items
                 </div>

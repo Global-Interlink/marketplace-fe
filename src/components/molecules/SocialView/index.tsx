@@ -56,7 +56,7 @@ const SocialView: React.FC<Props> = ({ response }) => {
           rel="noreferrer"
           className="h-[24px] !w-[24px] bg-[#A0A0A0]/50 hover:bg-[#F626D1] rounded !flex justify-center items-center transition-all duration-500"
         >
-          <Image src={"/ic-facebooknew.svg"} width={15} height={15} alt={""} />
+          <Image src={"/ic-facebookNew.svg"} width={10} height={10} alt={""} />
         </a>
       )}
       {response?.github_url && (
