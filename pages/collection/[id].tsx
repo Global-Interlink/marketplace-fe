@@ -140,7 +140,7 @@ const Collection = () => {
               />
               <div className="w-full my-auto">
                 <p
-                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px]"
+                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
                   title={collectionData?.name}
                 >
                   {collectionData?.name}
