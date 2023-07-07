@@ -16,7 +16,7 @@ import { useTheme } from "next-themes";
 import MoreTicketList, {
   MoreTicket,
 } from "../../src/components/organisms/MoreTicketList";
-import { useWallet } from "@suiet/wallet-kit";
+import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
 import { getNextSunday, getThisWeek } from "../../src/utils/common";
@@ -259,16 +259,21 @@ const Campaign = () => {
               <WeeklyProgress data={weeklyProgress} />
             </div>
             {!connected ? (
-              <div className="bg-white shadow-2xl shadow-gray-800/60 p-10 rounded-xl flex flex-col items-center absolute z-10 mx-[6%]">
+              <div
+                className={`flex justify-center ${
+                  theme === "dark" ? "darkGradientConnect" : "bg-white"
+                } shadow-2xl shadow-gray-800/60 rounded-xl flex-col absolute z-10 w-4/5 p-4 justify-center items-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 `}
+              >
                 <div className="text-[30px] font-medium">
                   Wallet not connected
                 </div>
-                <div className="text-[#667085] dark:text-[#D0D5DD] py-4">
+                <div className="text-[#667085] dark:text-white py-4">
                   Please connect wallet to check about daily tasks and so on
                 </div>
-                <button className="primaryButton rounded-full w-[180px] sm:w-[240px] h-[40px] text-white">
-                  Connect wallet
-                </button>
+                <ConnectButton
+                  label="Connect Wallet"
+                  className="primaryButton !rounded-full !w-[180px] !sm:w-[240px]"
+                />
               </div>
             ) : null}
             <div className="mt-5">
@@ -406,7 +411,7 @@ const Campaign = () => {
           numberOfNFTs={numberDynamicNft}
           handleBuy={handleBuy}
           close={() => {
-            setConfirmBuyType(confirmBuy.type)
+            setConfirmBuyType(confirmBuy.type);
             setConfirmBuy({ isOpen: false, type: "forEvery" });
           }}
         />
