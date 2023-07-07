@@ -30,13 +30,11 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
             className="rounded-full w-[80px] h-[80px] min-w-[52px] object-cover absolute -bottom-4 right-10 border-4 border-white"
           />
         </div>
-        <div className="group flex p-5 w-full space-x-[14px] dark:border-none rounded-b-[20px] ">
-          <div className="truncate text-primary dark:text-white">
-            <div className=" relative flex items-center space-x-1">
+        <div className="group flex px-5 pb-5 w-full space-x-[14px] dark:border-none rounded-b-[20px] ">
+          <div className="text-primary dark:text-white w-full">
+            <div className={`relative flex items-center space-x-1 mr-[90px]`}>
               <p className="truncate">
-                {data.name.length > 36
-                  ? `${data.name.substring(0, 36)} ...`
-                  : data.name}
+                {data.name}
               </p>
               <ICBadgeCheck />
             </div>
@@ -47,9 +45,6 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
             <span className="group-hover:opacity-100 transition-opacity bg-gray-800 px-2 text-sm text-gray-100 rounded-md absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 m-4 mx-auto ">
               {data.name}
             </span>
-            {/* <span className="absolute top-5 scale-0 rounded bg-gray-800 p-1 text-xs text-white group-hover:scale-100 ">
-              {data.name}
-              </span> */}
           </div>
         </div>
       </div>
