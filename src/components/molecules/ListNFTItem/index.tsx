@@ -220,7 +220,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {isShowDelist && (
                   <button
                     disabled={!connected || isLoading}
-                    className="primaryButton h-[36px] w-full text-center text-[12px] text-white border dark:border-none rounded-full "
+                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white border dark:border-none rounded-full max-w-[120px]"
                     onClick={(e: any) => {
                       setOpenDelist(true);
                     }}
@@ -228,7 +228,7 @@ const ListNFTItem: React.FC<Props> = ({
                     {isLoading ? (
                       <LoadingOutlined className="text-white" size={20} />
                     ) : (
-                      "Delist"
+                      "DELIST"
                     )}
                   </button>
                 )}
