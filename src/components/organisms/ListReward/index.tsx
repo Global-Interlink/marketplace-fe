@@ -32,7 +32,7 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
       : "bg-[#FFF9F4] dark:bg-boxRewardBronze";
   return (
     <div
-      className={`relative flex flex-col w-full min-h-[260px] xl:w-[480px] 2xl:w-[580px]  py-6 pl-6 pr-6 md:pr-0 rounded-xl ${bgColor}`}
+      className={`relative flex flex-col w-full min-h-[260px] xl:w-[480px] 2xl:w-[580px]  py-6 px-6 rounded-xl ${bgColor}`}
     >
       {data.slice(0, 4).map((i) => {
         return <RewardItem key={i.winPrizeId} rank={rank} reward={i} />;
@@ -52,8 +52,7 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
         />
       </div>
       {data.length > 4 && (
-        <div className="absolute w-full flex -bottom-[26px] h-8 justify-center items-center">
-          {/* <Link href={"/event/weekly-reward/results"}> */}
+        <div className="absolute w-full flex left-0 -bottom-[26px] h-8 justify-center items-center">
           <Image
             preview={false}
             src={"/more-icon.svg"}
@@ -66,7 +65,6 @@ const ListReward: React.FC<Props> = ({ rank, data }) => {
               })
             }
           />
-          {/* </Link> */}
         </div>
       )}
       {data.length === 0 && (

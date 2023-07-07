@@ -80,11 +80,6 @@ const Results = () => {
   const [rewards1, setRewards1] = React.useState<Rewards[]>([]);
   const [rewards2, setRewards2] = React.useState<Rewards[]>([]);
   const [rewards3, setRewards3] = React.useState<Rewards[]>([]);
-  // const [rewardWeek, setRewardWeek] = React.useState<{
-  //   start: string;
-  //   end: string;
-  // }>();
-  const [rank, setRank] = React.useState<string | string[] | undefined>("");
   const [keyword, setKeyword] = React.useState("");
 
   const api = createAxios();
@@ -100,51 +95,26 @@ const Results = () => {
   };
 
   const fetchWeekData = async () => {
-    // await api
-    //   .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${1}`)
-    //   .then((res) => {
-    //     const { data } = res.data;
-    //     setWeek(data);
-    //     if (rank === "") {
-    //       setFilterWeek({
-    //         start: data[0].start,
-    //         end: data[0].end,
-    //       });
-    //     } else {
-    //       setRewardWeek({ start: data[1].start, end: data[1].end });
-    //     }
-    //   });
+    await api
+      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${2}`)
+      .then((res) => {
+        const { data } = res.data;
+        const rewardWeek = data.slice(1);
+        setWeek(rewardWeek);
+        setFilterWeek({
+          start: rewardWeek[0].start,
+          end: rewardWeek[0].end,
+        });
+      });
   };
 
   const fetchData = async (keyword?: string) => {
-    let rewardWeek: {
-      start: string;
-      end: string;
-    };
-
-    await api
-      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${1}`)
-      .then((res) => {
-        const { data } = res.data;
-        setWeek(data);
-        if (rank === "") {
-          setFilterWeek({
-            start: data[0].start,
-            end: data[0].end,
-          });
-        } else {
-          rewardWeek = { start: data[1].start, end: data[1].end };
-        }
-      });
-
     const params = {
       page: nextPage,
       walletAddress: keyword,
-      start: rank ? rewardWeek?.start : filterWeek?.start,
-      end: rank ? rewardWeek?.end : filterWeek?.end,
+      start: filterWeek?.start,
+      end: filterWeek?.end,
     };
-
-    console.log("check", { rank, params });
 
     api
       .get<{ data: any }>("/win-prize/weekly-rewar?orderPrize=1", {
@@ -187,12 +157,13 @@ const Results = () => {
         setRewards3([]);
         setMeta3(metaData);
       });
+
     setLoading(false);
   };
 
-  // React.useEffect(() => {
-  //   fetchWeekData();
-  // }, []);
+  React.useEffect(() => {
+    fetchWeekData();
+  }, []);
 
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
@@ -217,7 +188,6 @@ const Results = () => {
     if (router.query.rank === "") {
       return;
     }
-    setRank(router.query.rank);
     switch (router.query.rank) {
       case "gold":
         return setActiveTab("1");
@@ -264,6 +234,7 @@ const Results = () => {
               week={week}
               onChangeWeek={(s, e) => handleChangeWeek(s, e)}
               numberOfWeek={0}
+              type="reward-result"
             />
             <SearchTicket
               onChangeText={(keyword) => {

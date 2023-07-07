@@ -8,8 +8,14 @@ interface Props {
   week?: Week[];
   numberOfWeek: number;
   onChangeWeek: (start: string, end: string) => void;
+  type?: string;
 }
-const SelectWeek: React.FC<Props> = ({ week, numberOfWeek, onChangeWeek }) => {
+const SelectWeek: React.FC<Props> = ({
+  week,
+  numberOfWeek,
+  onChangeWeek,
+  type,
+}) => {
   const [selectedWeek, setSelectedWeek] = React.useState<Week>();
 
   // const index = selectedWeek && week ? week?.indexOf(selectedWeek) : 0;
@@ -34,7 +40,12 @@ const SelectWeek: React.FC<Props> = ({ week, numberOfWeek, onChangeWeek }) => {
   });
   React.useEffect(() => {
     if (week && !selectedWeek) {
-      const currentWeek = week?.find((i) => i.current);
+      let currentWeek;
+      if (!type) {
+        currentWeek = week?.find((i) => i.current);
+      } else {
+        currentWeek = week[0];
+      }
       setSelectedWeek(currentWeek);
       onChangeWeek(
         dayjs(currentWeek?.start).format("YYYY-MM-DD"),
