@@ -36,6 +36,8 @@ export interface Collection {
   twitter_url?: string;
   website_url?: string;
   youtube_url?: string;
+  github_url?: string;
+  instagram_url?: string;
 }
 
 export interface Meta {
