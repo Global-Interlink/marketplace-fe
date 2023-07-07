@@ -194,7 +194,8 @@ const Collection = () => {
             <>
               <div className="flex items-center justify-between">
                 <div className="text-black">
-                  <SearchForm />
+                  {/* <SearchForm /> */}
+                  Items
                 </div>
                 <Sort
                   onChange={(sort) => {
