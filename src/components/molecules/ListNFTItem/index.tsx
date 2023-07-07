@@ -214,7 +214,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {!connected && (
                   <ConnectButton
                     label="Connect wallet"
-                    className="primaryButton h-[36px] w-full text-center !text-[12px] text-white !rounded-full max-w-[160px] !p-0 uppercase"
+                    className="primaryButton h-[36px] w-full text-center !text-[12px] text-white !rounded-full max-w-[160px] !p-0 uppercase ml-auto"
                   />
                 )}
                 {isShowDelist && (
