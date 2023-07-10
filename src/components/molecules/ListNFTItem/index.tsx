@@ -130,7 +130,7 @@ const ListNFTItem: React.FC<Props> = ({
     data.saleStatus.onSale;
   return (
     <div>
-      <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl hover:scale-105 duration-100">
+      <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
         <div className="flex w-full">
           <Image
             src={validURL(data?.image || '/default.jpeg')}
