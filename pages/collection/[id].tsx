@@ -138,9 +138,9 @@ const Collection = () => {
                 height={160}
                 className=" w-[60px] h-[60px] sm:w-[160px] sm:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[14px] sm:m-[24px] items-center"
               />
-              <div className="w-full my-auto">
+              <div className="w-full mt-3">
                 <p
-                   className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
+                   className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mr-[24px]"
                   title={collectionData?.name}
                 >
                   {collectionData?.name}
