@@ -13,6 +13,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { start } from "repl";
 import * as jose from "jose";
 import { useRouter } from "next/router";
+import { NUMBER_OF_WEEK } from "../../../../src/api/constants";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -96,7 +97,7 @@ const Results = () => {
 
   const fetchWeekData = async () => {
     await api
-      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${2}`)
+      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${NUMBER_OF_WEEK}`)
       .then((res) => {
         const { data } = res.data;
         const rewardWeek = data.slice(1);
@@ -233,7 +234,6 @@ const Results = () => {
             <SelectWeek
               week={week}
               onChangeWeek={(s, e) => handleChangeWeek(s, e)}
-              numberOfWeek={0}
               type="reward-result"
             />
             <SearchTicket

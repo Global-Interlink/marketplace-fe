@@ -6,13 +6,11 @@ import React from "react";
 
 interface Props {
   week?: Week[];
-  numberOfWeek: number;
   onChangeWeek: (start: string, end: string) => void;
   type?: string;
 }
 const SelectWeek: React.FC<Props> = ({
   week,
-  numberOfWeek,
   onChangeWeek,
   type,
 }) => {
