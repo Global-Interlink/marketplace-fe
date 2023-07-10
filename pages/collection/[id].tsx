@@ -130,7 +130,7 @@ const Collection = () => {
               className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
               alt="banner"
             />
-            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-0 sm:-mt-14 z-[9999] relative">
+            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-0 sm:-mt-14 z-[9999] relative drop-shadow-xl hover:shadow-2xl shadow-[#515151]">
               <Image
                 alt="logo-lp"
                 src={collectionData?.logo}
@@ -180,7 +180,7 @@ const Collection = () => {
                     {showMore ? <BsChevronUp /> : <BsChevronDown />}
                   </button>
                 </div>
-                <div className="flex items-center space-x-3 mb-2 sm:mb-0">
+                <div className="flex items-center space-x-3 mb-3">
                   <SocialView response={collectionData} />
                 </div>
               </div>
