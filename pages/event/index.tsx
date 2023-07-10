@@ -142,11 +142,10 @@ const Campaign = () => {
     });
   };
 
-  const fetchLeaderBoard = async (address: string) => {
-    const token = await getAccessToken(address);
-    const api = createAxios(token);
+  const fetchLeaderBoard = async () => {
+    const api = createAxios();
     api
-      .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
+      .get<LeaderBoard>(`/ticket/leaderboard`)
       .then((res) => {
         setLeaderBoard(res.data);
       });
@@ -163,7 +162,6 @@ const Campaign = () => {
         setBuy({ isOpen: true });
         if (address) {
           fetchMoreTicketData(address);
-          fetchLeaderBoard(address);
         }
       })
       .catch((e) => {
@@ -180,6 +178,7 @@ const Campaign = () => {
 
   React.useEffect(() => {
     fetchData();
+    fetchLeaderBoard();
   }, []);
 
   React.useEffect(() => {
@@ -187,7 +186,6 @@ const Campaign = () => {
       setStatusTasks([]);
       setWeeklyProgress(undefined);
       setMoreTicket(undefined);
-      setLeaderBoard(undefined);
       setFetched(false);
     }
   }, [connected]);
@@ -209,7 +207,6 @@ const Campaign = () => {
   React.useEffect(() => {
     if (address) {
       fetchMoreTicketData(address);
-      fetchLeaderBoard(address);
       fetchAllTask(address);
       setFetched(true);
     }
