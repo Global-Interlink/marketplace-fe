@@ -33,7 +33,7 @@ export function validURL(url: string) {
         "(\\#[-a-z\\d_]*)?$",
       "i"
     ); // fragment locator
-    if (!!pattern.test(url)) {
+    if(!!pattern.test(url)) {
       return url;
     }
   }
@@ -132,7 +132,7 @@ const ListNFTItem: React.FC<Props> = ({
     <div>
       <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl sm:hover:scale-105 transition duration-300 ease-in-out">
         <div className="flex w-full">
-          {/* <Image
+          <Image
             src={validURL(data?.image || '/default.jpeg')}
             className="rounded-[32px] object-cover cursor-pointer aspect-[1/1] min-h-[310px] min-w-[310px] p-4"
             height={"auto"}
@@ -142,25 +142,8 @@ const ListNFTItem: React.FC<Props> = ({
               router.push(`/nft/${data?.id}`);
             }}
             fallback="/default.jpeg"
-          /> */}
-          <div
-            className="rounded-[32px] cursor-pointer overflow-hidden p-4"
-            style={{
-              paddingTop: "100%",
-              position: "relative",
-            }}
-            onClick={(e) => {
-              router.push(`/nft/${data?.id}`);
-            }}
-          >
-            <Image
-              src={validURL(data?.image || "/default.jpeg")}
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              alt="mock"
-              preview={false}
-              fallback="/default.jpeg"
-            />
-          </div>
+          />
+
         </div>
         <div className="flex p-5 space-x-[14px]  rounded-b-[20px] pt-0">
           <div className="w-full">
