@@ -20,9 +20,9 @@ interface Props {
 }
 export function validURL(url: string) {
   if (url) {
-    let ipfs_pattern = new RegExp("^ipfs://");
-    if (ipfs_pattern.test(url)) {
-      url = url.replace("ipfs://", "https://ipfs.io/ipfs/");
+    let ipfs_pattern = new RegExp('^ipfs:\/\/')
+    if(ipfs_pattern.test(url)) {
+      url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
     }
     var pattern = new RegExp(
       "^(https?:\\/\\/)?" + // protocol
