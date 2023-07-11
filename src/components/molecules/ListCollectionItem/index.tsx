@@ -11,7 +11,7 @@ interface Props {
 const ListCollectionItem: React.FC<Props> = ({ data }) => {
   return (
     <Link href={`/collection/${data.id}`}>
-      <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] hover:scale-105 transition duration-300 ease-in-out dark:bg-bgLinearCollectionItem">
+      <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] sm:hover:scale-105 transition duration-300 ease-in-out dark:bg-bgLinearCollectionItem">
         <div className="relative">
           <div className="rounded-t-[20px] ">
             <Image
@@ -40,9 +40,23 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
               <p>{data.totalNfts} NFTs</p>
               <ImgIcon />
             </div>
-            <span className="group-hover:opacity-100 transition-opacity bg-white dark:bg-[#19012F] px-3 py-2 text-xs font-semibold text-black dark:text-white rounded-md absolute left-5 right-5 bottom-[5%] md:bottom-[10%] -translate-y-full opacity-0 m-4 mx-auto drop-shadow-xl shadow-xl">
+            {/* <span className="group-hover:opacity-100 transition-opacity bg-white dark:bg-[#19012F] px-3 py-2 text-xs font-semibold text-black dark:text-white rounded-md absolute left-5 right-5 bottom-[5%] md:bottom-[10%] -translate-y-full opacity-0 m-4 mx-auto drop-shadow-xl shadow-xl">
               {data.name}
               <svg className="absolute text-white dark:text-[#19012F] h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255" ><polygon className="fill-current" points="0,0 127.5,127.5 255,0"/></svg>
+            </span> */}
+            <span className="absolute top-[65%] mr-5 scale-0 rounded-md bg-white dark:bg-[#19012F] px-3 py-2 text-xs font-semibold text-black dark:text-white sm:group-hover:scale-100 drop-shadow-xl shadow-xl">
+              {data.name}
+              <svg
+                className="absolute text-white dark:text-[#19012F] h-2 w-full left-0 top-full"
+                x="0px"
+                y="0px"
+                viewBox="0 0 255 255"
+              >
+                <polygon
+                  className="fill-current"
+                  points="0,0 127.5,127.5 255,0"
+                />
+              </svg>
             </span>
           </div>
         </div>
