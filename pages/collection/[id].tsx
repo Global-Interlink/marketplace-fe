@@ -232,7 +232,7 @@ const Collection = () => {
                   <div
                     className={` ${
                       isFocus ? "border" : "border border-transparent"
-                    } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
+                    } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-10 bg-white dark:bg-[#392B4A]/50 rounded-full`}
                   >
                     <Image
                       src="/ic_search.svg"
