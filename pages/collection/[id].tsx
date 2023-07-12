@@ -106,7 +106,7 @@ const Collection = () => {
         })
       );
     }, 2000),
-    [id,text]
+    [id]
   );
 
   React.useEffect(() => {
