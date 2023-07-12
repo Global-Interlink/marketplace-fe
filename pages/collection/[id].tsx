@@ -24,6 +24,7 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
 import SearchForm from "../../src/components/molecules/Search";
+import { debounce } from "lodash";
 
 const Collection = () => {
   const router = useRouter();
@@ -41,6 +42,9 @@ const Collection = () => {
   const [showMore, setShowMore] = React.useState(false);
   const [isShow, setIsShow] = React.useState(false);
   const [listNFT, setListNFT] = React.useState<NFT[]>([]);
+  const [isFocus, setFocus] = React.useState(false);
+  const [text, setText] = React.useState("");
+  const [checkCloseSearch, setCheckCloseSearch] = React.useState(false);
 
   React.useEffect(() => {
     if (id) {
@@ -64,6 +68,7 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          nameNft: text,
         })
       );
     }
@@ -77,10 +82,34 @@ const Collection = () => {
           page: currentPage,
           limit: LIMIT,
           sort: sort,
+          nameNft: text,
         })
       );
     }
   }, [id]);
+  console.log("id", id);
+  const debounceSearch = React.useCallback(
+    debounce((nextValue) => {
+      console.log("nextValue", nextValue);
+      console.log("id dboundce", id);
+      if (nextValue.length === 0) {
+        // dispatch(clear());
+        setText("")
+        // return;
+      }
+      setText(nextValue)
+      dispatch(
+        fetchListNFTOfCollection({
+          id: String(id),
+          page: 1,
+          limit: LIMIT,
+          sort: sort,
+          nameNft: nextValue,
+        })
+      );
+    }, 2000),
+    [id,text]
+  );
 
   React.useEffect(() => {
     if (listNFT && listNFT.length > 0) {
@@ -92,6 +121,7 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          nameNft: text,
         })
       );
     }
@@ -109,11 +139,16 @@ const Collection = () => {
 
   React.useEffect(() => {
     if (response?.data) {
-      setListNFT((s) => {
-        return getUnique([...s, ...response.data], "id");
-      });
+      // setListNFT((s) => {
+      //   return getUnique([...s, ...response.data], "id");
+      // });
+      setListNFT(response?.data)
     }
   }, [response]);
+
+  React.useEffect(() => {
+    debounceSearch(text);
+  }, [checkCloseSearch]);
 
   return collectionData ? (
     <BaseComponent>
@@ -194,8 +229,49 @@ const Collection = () => {
             <>
               <div className="flex items-center justify-between">
                 <div className="text-black dark:text-white">
-                  {/* <SearchForm /> */}
-                  Items
+                  <div
+                    className={` ${
+                      isFocus ? "border" : "border border-transparent"
+                    } px-2 py-4 flex items-center space-x-2 w-[100%] lg:w-[300px] xl:w-[380px] h-10 bg-white dark:bg-[#392B4A]/50 rounded-full`}
+                  >
+                    <Image
+                      src="/ic_search.svg"
+                      width={20}
+                      height={20}
+                      alt="ic-search"
+                    />
+                    <input
+                      placeholder="Search NFTs"
+                      className="bg-transparent text-sm flex-1 outline-none dark:caret-white text-[#475467] dark:text-white"
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        setText(value);
+                        debounceSearch(value);
+                      }}
+                      value={text}
+                      onFocus={() => {
+                        setFocus(true);
+                      }}
+                      onBlur={() => {
+                        setFocus(false);
+                      }}
+                    />
+                    {text.length > 0 && (
+                      <button
+                        onClick={() => {
+                          setText("");
+                          setCheckCloseSearch(!checkCloseSearch)
+                        }}
+                      >
+                        <Image
+                          width={20}
+                          height={20}
+                          src="/ic-close.svg"
+                          alt="ic-close"
+                        />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <Sort
                   onChange={(sort) => {
@@ -242,6 +318,7 @@ const Collection = () => {
                           page: response?.meta.currentPage + 1,
                           limit: LIMIT,
                           sort: sort,
+                          nameNft: text,
                         })
                       );
                     }
