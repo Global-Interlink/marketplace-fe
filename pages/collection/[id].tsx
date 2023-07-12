@@ -87,11 +87,9 @@ const Collection = () => {
       );
     }
   }, [id]);
-  console.log("id", id);
+
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
-      console.log("nextValue", nextValue);
-      console.log("id dboundce", id);
       if (nextValue.length === 0) {
         // dispatch(clear());
         setText("")
