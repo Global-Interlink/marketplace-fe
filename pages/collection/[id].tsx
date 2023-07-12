@@ -237,6 +237,7 @@ const Collection = () => {
                       width={20}
                       height={20}
                       alt="ic-search"
+                      className="min-w-[18px]"
                     />
                     <input
                       placeholder="Search NFTs"
