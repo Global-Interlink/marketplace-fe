@@ -197,7 +197,7 @@ const Collection = () => {
                     </ReactMarkdown>
                   </div>
                   <div
-                    className={` text-black dark:text-white transition-all duration-300 text-justify ${
+                    className={` text-black dark:text-white transition-all duration-300 sm:text-justify ${
                       showMore ? "" : "ellipsis-multi"
                     }`}
                   >
@@ -232,7 +232,7 @@ const Collection = () => {
                   <div
                     className={` ${
                       isFocus ? "border" : "border border-transparent"
-                    } px-2 py-4 flex items-center space-x-2 w-[100%] lg:w-[300px] xl:w-[380px] h-10 bg-white dark:bg-[#392B4A]/50 rounded-full`}
+                    } px-2 py-4 flex items-center space-x-2 w-[160px] lg:w-[300px] xl:w-[380px] h-10 bg-white dark:bg-[#392B4A]/50 rounded-full`}
                   >
                     <Image
                       src="/ic_search.svg"
