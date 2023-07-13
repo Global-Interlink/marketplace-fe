@@ -13,7 +13,7 @@ const ListCollectionItem: React.FC<Props> = ({ data }) => {
     <Link href={`/collection/${data.id}`}>
       <div className="flex flex-col w-full shadow-collectionItem dark:shadow-none bg-transparent rounded-[20px] sm:hover:scale-105 transition duration-300 ease-in-out dark:bg-bgLinearCollectionItem">
         <div className="relative">
-          <div className="rounded-t-[20px] ">
+          <div className="rounded-t-[20px] wrap-ratio-[310/216]">
             <Image
               src={validURL(data?.featuredImage || "/default.jpeg")}
               width={500}

@@ -183,7 +183,7 @@ const Collection = () => {
                 <div className="mt-[12px] mr-[24px]">
                   <div
                     className={
-                      "collection-description text-transparent absolute -z-10 break-all"
+                      "collection-description text-transparent absolute -z-10 break-all prevent-select"
                     }
                   >
                     <ReactMarkdown
