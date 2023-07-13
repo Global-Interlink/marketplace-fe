@@ -143,11 +143,15 @@ const Campaign = () => {
     });
   };
 
-  const fetchLeaderBoard = async () => {
+  const fetchLeaderBoard = async (address?: string) => {
     const api = createAxios();
-    api.get<LeaderBoard>(`/ticket/leaderboard`).then((res) => {
-      setLeaderBoard(res.data);
-    });
+    api
+      .get<LeaderBoard>(
+        `/ticket/leaderboard${address ? `?walletAddress=${address}` : ""}`
+      )
+      .then((res) => {
+        setLeaderBoard(res.data);
+      });
     return;
   };
 
@@ -177,11 +181,10 @@ const Campaign = () => {
 
   React.useEffect(() => {
     fetchData();
-    fetchLeaderBoard();
   }, []);
 
   React.useEffect(() => {
-    const timeout =  setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (!connected && !connecting && status === "disconnected") {
         setCheckConnected(true);
       } else {
@@ -219,7 +222,9 @@ const Campaign = () => {
       fetchMoreTicketData(address);
       fetchAllTask(address);
       setFetched(true);
+      fetchLeaderBoard(address);
     }
+    fetchLeaderBoard();
   }, [address]);
 
   const timeCountdown = React.useMemo(() => {
