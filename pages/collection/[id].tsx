@@ -46,18 +46,6 @@ const Collection = () => {
   const [text, setText] = React.useState("");
   const [checkCloseSearch, setCheckCloseSearch] = React.useState(false);
 
-  React.useEffect(() => {
-    if (id) {
-      dispatch(fetchCollectionDetail({ id: String(id) }));
-    }
-  }, [id]);
-
-  React.useEffect(() => {
-    return () => {
-      dispatch(clear());
-    };
-  }, []);
-
   const handleFetchData = () => {
     if (id) {
       setListNFT([]);
@@ -74,6 +62,26 @@ const Collection = () => {
     }
   };
 
+  const debounceSearch = React.useCallback(
+    debounce((nextValue) => {
+      if (nextValue.length === 0) {
+        setText("")
+      }
+      if (id) {
+        dispatch(
+          fetchListNFTOfCollection({
+            id: String(id),
+            page: 1,
+            limit: LIMIT,
+            sort: sort,
+            nameNft: nextValue,
+          })
+        );
+      }
+    }, 2000),
+    [id,sort]
+  );
+
   React.useEffect(() => {
     if (id) {
       dispatch(
@@ -88,26 +96,17 @@ const Collection = () => {
     }
   }, [id]);
 
-  const debounceSearch = React.useCallback(
-    debounce((nextValue) => {
-      if (nextValue.length === 0) {
-        // dispatch(clear());
-        setText("")
-        // return;
-      }
-      setText(nextValue)
-      dispatch(
-        fetchListNFTOfCollection({
-          id: String(id),
-          page: 1,
-          limit: LIMIT,
-          sort: sort,
-          nameNft: nextValue,
-        })
-      );
-    }, 2000),
-    [id]
-  );
+  React.useEffect(() => {
+    if (id) {
+      dispatch(fetchCollectionDetail({ id: String(id) }));
+    }
+  }, [id]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(clear());
+    };
+  }, []);
 
   React.useEffect(() => {
     if (listNFT && listNFT.length > 0) {
