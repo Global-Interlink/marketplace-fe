@@ -223,14 +223,14 @@ const Campaign = () => {
       fetchAllTask(address);
       setFetched(true);
       fetchLeaderBoard(address);
+    } else {
+      fetchLeaderBoard();
     }
-    fetchLeaderBoard();
   }, [address]);
 
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
-
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
