@@ -138,8 +138,8 @@ const Tickets = () => {
     const params = {
       page: nextPage,
       walletAddress: keyword || "",
-      startDate: filterWeek?.start,
-      endDate: filterWeek?.end,
+      startDate: filterWeek?.start || "",
+      endDate: filterWeek?.end || "",
     };
 
     setLoading(true);
