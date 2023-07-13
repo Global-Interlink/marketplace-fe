@@ -44,7 +44,6 @@ const Collection = () => {
   const [listNFT, setListNFT] = React.useState<NFT[]>([]);
   const [isFocus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
-  const [checkCloseSearch, setCheckCloseSearch] = React.useState(false);
 
   const handleFetchData = () => {
     if (id) {
@@ -142,10 +141,6 @@ const Collection = () => {
       setListNFT(response?.data)
     }
   }, [response]);
-
-  React.useEffect(() => {
-    debounceSearch(text);
-  }, [checkCloseSearch]);
 
   return collectionData ? (
     <BaseComponent>
@@ -258,7 +253,7 @@ const Collection = () => {
                       <button
                         onClick={() => {
                           setText("");
-                          setCheckCloseSearch(!checkCloseSearch)
+                          debounceSearch("");
                         }}
                       >
                         <Image
