@@ -149,14 +149,16 @@ const Collection = () => {
         collectionStatus === FetchStatus.pending ? (
           <CollectionDetailTopSkeleton />
         ) : (
-          <div>
-            <Image
-              src={validURL(collectionData.banner || "/default.jpeg")}
-              width={1305}
-              height={228}
-              className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
-              alt="banner"
-            />
+          <div className="relative z-0">
+            <div className="wrap-ratio-[1305/228]">
+              <Image
+                src={validURL(collectionData.banner || "/default.jpeg")}
+                width={1305}
+                height={228}
+                className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
+                alt="banner"
+              />
+            </div>
             <div className="flex w-[90%] mx-[5%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-0 sm:-mt-14 z-[9999] relative drop-shadow-xl shadow-[#515151]">
               <Image
                 alt="logo-lp"
@@ -214,7 +216,7 @@ const Collection = () => {
             </div>
           </div>
         )}
-        <div className="mt-[40px]">
+        <div className="mt-[40px] z-10 relative">
           {status === FetchStatus.idle || status === FetchStatus.pending ? (
             <NFTListSkeleton />
           ) : (
