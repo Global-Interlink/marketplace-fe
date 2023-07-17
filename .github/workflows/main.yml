@@ -13,6 +13,7 @@ on:
         options:
         - development
         - staging
+        - product
 
 run-name: Triggered to deploy on ${{ inputs.environment || 'development' }} by ${{ github.actor }}
 
@@ -47,6 +48,24 @@ jobs:
           host: ${{ vars.STAGING_HOST }}
           username: ${{ vars.DEV_USERNAME }}
           key: ${{ secrets.STAGING_SSH_KEY }}
+          port: ${{ vars.DEV_PORT }}
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd marketplace-fe
+            ./deploy
+  deploy-product:
+    runs-on: ubuntu-latest
+    if: inputs.environment == 'product'
+    concurrency: product
+    environment: product
+    steps:
+      - name: SSH to dev server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ vars.PROD_HOST }}
+          username: ${{ vars.DEV_USERNAME }}
+          key: ${{ secrets.PROD_SSH_KEY }}
           port: ${{ vars.DEV_PORT }}
           script: |
             export NVM_DIR=~/.nvm
