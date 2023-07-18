@@ -24,7 +24,7 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
 import SearchForm from "../../src/components/molecules/Search";
-
+var canLoad = true;
 const Collection = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -46,6 +46,7 @@ const Collection = () => {
     if (id) {
       dispatch(fetchCollectionDetail({ id: String(id) }));
     }
+    console.log("hello collection")
   }, [id]);
 
   React.useEffect(() => {
@@ -53,6 +54,28 @@ const Collection = () => {
       dispatch(clear());
     };
   }, []);
+
+  React.useEffect(() => {
+    window.addEventListener('scroll', checkScroll);
+    return () => {
+        window.removeEventListener('scroll', checkScroll);
+    }
+  }, [response?.meta?.totalPages]);
+
+  const checkScroll = () => {
+    const list = document.getElementById('list-nft')
+    if(list?.clientHeight ){
+      const x = window.scrollY + window.innerHeight
+      const y = list?.clientHeight + list?.offsetTop
+      if (x >= y && status != FetchStatus.pending && canLoad) {
+        if(response?.meta?.totalPages && currentPage < Number(response?.meta?.totalPages)) {
+          console.log('hell')
+          setCurrentPage(prev => prev + 1)
+        }
+        canLoad = false;     
+      }
+    }
+  }   
 
   const handleFetchData = () => {
     if (id) {
@@ -70,7 +93,7 @@ const Collection = () => {
   };
 
   React.useEffect(() => {
-    if (id) {
+    if (id ) {
       dispatch(
         fetchListNFTOfCollection({
           id: String(id),
@@ -80,7 +103,7 @@ const Collection = () => {
         })
       );
     }
-  }, [id]);
+  }, [id, currentPage]);
 
   React.useEffect(() => {
     if (listNFT && listNFT.length > 0) {
@@ -112,6 +135,7 @@ const Collection = () => {
       setListNFT((s) => {
         return getUnique([...s, ...response.data], "id");
       });
+      canLoad = true
     }
   }, [response]);
 
@@ -188,7 +212,7 @@ const Collection = () => {
           </div>
         )}
         <div className="mt-[40px]">
-          {status === FetchStatus.idle || status === FetchStatus.pending ? (
+          {(status === FetchStatus.idle || status === FetchStatus.pending) && listNFT.length == 0 ? (
             <NFTListSkeleton />
           ) : (
             <>
@@ -207,7 +231,7 @@ const Collection = () => {
                 />
               </div>
               {listNFT && listNFT.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5" id="list-nft">
                   {listNFT.map((i) => {
                     return (
                       <ListNFTItem
@@ -225,33 +249,6 @@ const Collection = () => {
               )}
             </>
           )}
-          {listNFT &&
-            listNFT.length > 0 &&
-            response &&
-            currentPage < response.meta.totalPages && (
-              <div className="mt-[70px] flex justify-center">
-                <button
-                  onClick={() => {
-                    if (
-                      response?.meta.currentPage < response?.meta.totalPages
-                    ) {
-                      setCurrentPage(response?.meta.currentPage + 1);
-                      dispatch(
-                        fetchListNFTOfCollection({
-                          id: String(id),
-                          page: response?.meta.currentPage + 1,
-                          limit: LIMIT,
-                          sort: sort,
-                        })
-                      );
-                    }
-                  }}
-                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                >
-                  Load more
-                </button>
-              </div>
-            )}
         </div>
       </div>
     </BaseComponent>
