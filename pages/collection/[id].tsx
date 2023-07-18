@@ -25,7 +25,7 @@ import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
 import SearchForm from "../../src/components/molecules/Search";
 import { debounce } from "lodash";
-
+var canLoad = true;
 const Collection = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -42,6 +42,41 @@ const Collection = () => {
   const [showMore, setShowMore] = React.useState(false);
   const [isShow, setIsShow] = React.useState(false);
   const [listNFT, setListNFT] = React.useState<NFT[]>([]);
+
+  React.useEffect(() => {
+    if (id) {
+      dispatch(fetchCollectionDetail({ id: String(id) }));
+    }
+    console.log("hello collection")
+  }, [id]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(clear());
+    };
+  }, []);
+
+  React.useEffect(() => {
+    window.addEventListener('scroll', checkScroll);
+    return () => {
+        window.removeEventListener('scroll', checkScroll);
+    }
+  }, [response?.meta?.totalPages]);
+
+  const checkScroll = () => {
+    const list = document.getElementById('list-nft')
+    if(list?.clientHeight ){
+      const x = window.scrollY + window.innerHeight
+      const y = list?.clientHeight + list?.offsetTop
+      if (x >= y && status != FetchStatus.pending && canLoad) {
+        if(response?.meta?.totalPages && currentPage < Number(response?.meta?.totalPages)) {
+          console.log('hell')
+          setCurrentPage(prev => prev + 1)
+        }
+        canLoad = false;     
+      }
+    }
+  }   
   const [isFocus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
 
@@ -82,7 +117,7 @@ const Collection = () => {
   );
 
   React.useEffect(() => {
-    if (id) {
+    if (id ) {
       dispatch(
         fetchListNFTOfCollection({
           id: String(id),
@@ -93,7 +128,7 @@ const Collection = () => {
         })
       );
     }
-  }, [id]);
+  }, [id, currentPage]);
 
   React.useEffect(() => {
     if (id) {
@@ -135,10 +170,10 @@ const Collection = () => {
 
   React.useEffect(() => {
     if (response?.data) {
-      // setListNFT((s) => {
-      //   return getUnique([...s, ...response.data], "id");
-      // });
-      setListNFT(response?.data)
+      setListNFT((s) => {
+        return getUnique([...s, ...response.data], "id");
+      });
+      canLoad = true
     }
   }, [response]);
 
@@ -149,17 +184,15 @@ const Collection = () => {
         collectionStatus === FetchStatus.pending ? (
           <CollectionDetailTopSkeleton />
         ) : (
-          <div className="relative z-0">
-            <div className="wrap-ratio-[1305/228]">
-              <Image
-                src={validURL(collectionData.banner || "/default.jpeg")}
-                width={1305}
-                height={228}
-                className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
-                alt="banner"
-              />
-            </div>
-            <div className="flex w-[90%] mx-[5%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-0 sm:-mt-14 z-[9999] relative drop-shadow-xl shadow-[#515151]">
+          <div>
+            <Image
+              src={validURL(collectionData.banner || "/default.jpeg")}
+              width={1305}
+              height={228}
+              className="flex w-full aspect-[1305/228] rounded-[20px] object-cover mt-5"
+              alt="banner"
+            />
+            <div className="flex w-[80%] mx-[10%] bg-white dark:bg-[#1F0844] rounded-[10px] -mt-0 sm:-mt-14 z-[9999] relative">
               <Image
                 alt="logo-lp"
                 src={collectionData?.logo}
@@ -167,20 +200,17 @@ const Collection = () => {
                 height={160}
                 className=" w-[60px] h-[60px] sm:w-[160px] sm:h-[160px] aspect-[1/1] object-cover rounded-[10px] m-[14px] sm:m-[24px] items-center"
               />
-              <div className="w-full my-3">
+              <div className="w-full my-auto">
                 <p
-                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mr-[24px]"
+                   className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
                   title={collectionData?.name}
                 >
                   {collectionData?.name}
                 </p>
-                <div className="flex items-center my-3">
-                  <SocialView response={collectionData} />
-                </div>
-                <div className="mt-[12px] mr-[24px]">
+                <div className="mt-[12px] mr-[12px]">
                   <div
                     className={
-                      "collection-description text-transparent absolute -z-10 break-all prevent-select"
+                      "collection-description text-transparent absolute -z-10 break-all"
                     }
                   >
                     <ReactMarkdown
@@ -191,7 +221,7 @@ const Collection = () => {
                     </ReactMarkdown>
                   </div>
                   <div
-                    className={` text-black dark:text-white transition-all duration-300 sm:text-justify ${
+                    className={` text-black dark:text-white transition-all duration-300 ${
                       showMore ? "" : "ellipsis-multi"
                     }`}
                   >
@@ -212,61 +242,22 @@ const Collection = () => {
                     {showMore ? <BsChevronUp /> : <BsChevronDown />}
                   </button>
                 </div>
+                <div className="flex items-center space-x-3 mb-2 sm:mb-0">
+                  <SocialView response={collectionData} />
+                </div>
               </div>
             </div>
           </div>
         )}
-        <div className="mt-[40px] z-10 relative">
-          {status === FetchStatus.idle || status === FetchStatus.pending ? (
+        <div className="mt-[40px]">
+          {(status === FetchStatus.idle || status === FetchStatus.pending) && listNFT.length == 0 ? (
             <NFTListSkeleton />
           ) : (
             <>
               <div className="flex items-center justify-between">
                 <div className="text-black dark:text-white">
-                  <div
-                    className={` ${
-                      isFocus ? "border" : "border border-transparent"
-                    } px-2 py-4 flex items-center space-x-2 w-[160px] lg:w-[300px] xl:w-[380px] h-10 bg-white dark:bg-[#392B4A]/50 rounded-full`}
-                  >
-                    <Image
-                      src="/ic_search.svg"
-                      width={20}
-                      height={20}
-                      alt="ic-search"
-                      className="min-w-[18px]"
-                    />
-                    <input
-                      placeholder="Search NFTs"
-                      className="bg-transparent text-sm flex-1 outline-none dark:caret-white text-[#475467] dark:text-white"
-                      onChange={(e) => {
-                        const { value } = e.target;
-                        setText(value);
-                        debounceSearch(value);
-                      }}
-                      value={text}
-                      onFocus={() => {
-                        setFocus(true);
-                      }}
-                      onBlur={() => {
-                        setFocus(false);
-                      }}
-                    />
-                    {text.length > 0 && (
-                      <button
-                        onClick={() => {
-                          setText("");
-                          debounceSearch("");
-                        }}
-                      >
-                        <Image
-                          width={20}
-                          height={20}
-                          src="/ic-close.svg"
-                          alt="ic-close"
-                        />
-                      </button>
-                    )}
-                  </div>
+                  {/* <SearchForm /> */}
+                  Items
                 </div>
                 <Sort
                   onChange={(sort) => {
@@ -278,7 +269,7 @@ const Collection = () => {
                 />
               </div>
               {listNFT && listNFT.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5" id="list-nft">
                   {listNFT.map((i) => {
                     return (
                       <ListNFTItem
@@ -296,34 +287,6 @@ const Collection = () => {
               )}
             </>
           )}
-          {listNFT &&
-            listNFT.length > 0 &&
-            response &&
-            currentPage < response.meta.totalPages && (
-              <div className="mt-[70px] flex justify-center">
-                <button
-                  onClick={() => {
-                    if (
-                      response?.meta.currentPage < response?.meta.totalPages
-                    ) {
-                      setCurrentPage(response?.meta.currentPage + 1);
-                      dispatch(
-                        fetchListNFTOfCollection({
-                          id: String(id),
-                          page: response?.meta.currentPage + 1,
-                          limit: LIMIT,
-                          sort: sort,
-                          nameNft: text,
-                        })
-                      );
-                    }
-                  }}
-                  className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                >
-                  Load more
-                </button>
-              </div>
-            )}
         </div>
       </div>
     </BaseComponent>
