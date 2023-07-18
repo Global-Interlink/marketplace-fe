@@ -11,7 +11,7 @@ import jwt_decode from "jwt-decode";
 import SearchForm from "../../molecules/Search";
 import SuccessModal from "../../molecules/SuccessModal";
 import AccountBalance from "../../molecules/AccountBalance";
-
+import { BackToTop } from "../../molecules/BackToTop";
 interface Props {
   children: React.ReactNode;
   showBgTop?: boolean;
@@ -119,6 +119,7 @@ const BaseComponent: React.FC<Props> = ({ children, showBgTop, showBg404 }) => {
           )}
         </div>
       )}
+      <BackToTop />
     </div>
   );
 };

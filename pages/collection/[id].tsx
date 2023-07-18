@@ -102,6 +102,7 @@ const Collection = () => {
         setText("")
       }
       if (id) {
+        setListNFT([]);
         dispatch(
           fetchListNFTOfCollection({
             id: String(id),
@@ -250,14 +251,45 @@ const Collection = () => {
           </div>
         )}
         <div className="mt-[40px]">
-          {(status === FetchStatus.idle || status === FetchStatus.pending) && listNFT.length == 0 ? (
+          {(status === FetchStatus.idle || status === FetchStatus.pending) && currentPage == 1 ? (
             <NFTListSkeleton />
           ) : (
             <>
               <div className="flex items-center justify-between">
                 <div className="text-black dark:text-white">
-                  {/* <SearchForm /> */}
-                  Items
+                  <div
+                    className={` ${
+                      isFocus ? "border" : "border border-transparent"
+                    } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
+                  >
+                    <Image src="/ic_search.svg" width={20} height={20} alt="ic-search"/>
+                    <input
+                      placeholder="Search NFTs"
+                      className="bg-transparent text-sm flex-1 outline-none dark:caret-white dark:text-white"
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        setText(value);
+                        debounceSearch(value);
+                      }}
+                      value={text}
+                      onFocus={() => {
+                        setFocus(true);
+                      }}
+                      onBlur={() => {
+                        setFocus(false);
+                      }}
+                    />
+                    {text.length > 0 && (
+                      <button
+                        onClick={() => {
+                          setText("");
+                          debounceSearch("");
+                        }}
+                      >
+                        <Image width={24} height={24} src="/ic-close.svg" alt="ic-close" />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <Sort
                   onChange={(sort) => {

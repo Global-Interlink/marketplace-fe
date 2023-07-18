@@ -21,7 +21,9 @@ import {
 } from "../../src/redux/profile/profileSlice";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
-
+import { BackToTop } from "../../src/components/molecules/BackToTop";
+var canLoadMyItem = true;
+var canLoadListing = true;
 const Collection = () => {
   const dispatch = useAppDispatch();
   const { response, status } = useAppSelector(
@@ -39,6 +41,8 @@ const Collection = () => {
   const [currentPageItems, setCurrentPageItems] = useState(1);
   const [listNFT, setListNFT] = useState<NFT[]>([]);
   const [listedNFT, setListedNFT] = useState<NFT[]>([]);
+  const [isFocus, setFocus] = React.useState(false);
+  const [text, setText] = React.useState("");
 
   const handleFetchData = () => {
     setTimeout(() => {
@@ -97,15 +101,47 @@ const Collection = () => {
   useEffect(() => {
     if (response?.data) {
       setListNFT(getUnique([...listNFT, ...response?.data], "id"));
+      canLoadMyItem = true
     }
-  }, [currentPageItems, response?.data]);
+  }, [response]);
 
   useEffect(() => {
     if (listed?.data) {
       setListedNFT(getUnique([...listedNFT, ...listed?.data], "id"));
+      canLoadListing = true
     }
-  }, [currentPage, listed?.data]);
+  }, [listed]);
+  React.useEffect(() => {
+    window.addEventListener('scroll', checkScroll);
+    return () => {
+        window.removeEventListener('scroll', checkScroll);
+    }
+  }, [response]);
 
+  const checkScroll = () => {
+    const MyItems = document.getElementById('my-items')
+    if(MyItems?.clientHeight ){
+      const x = window.scrollY + window.innerHeight
+      const y = MyItems?.clientHeight + MyItems?.offsetTop
+      if (x >= y && status != FetchStatus.pending && canLoadMyItem) {
+        if(response?.meta?.totalPages && currentPageItems < Number(response?.meta?.totalPages)) {
+          setCurrentPageItems(prev => prev + 1)
+        }
+        canLoadMyItem = false;     
+      }
+    }
+    const Listing = document.getElementById('listing')
+    if(Listing?.clientHeight ){
+      const x = window.scrollY + window.innerHeight
+      const y = Listing?.clientHeight + Listing?.offsetTop
+      if (x >= y && listedStatus != FetchStatus.pending && canLoadListing) {
+        if(listed?.meta?.totalPages && currentPage < Number(listed?.meta?.totalPages)) {
+          setCurrentPage(prev => prev + 1)
+        }
+        canLoadListing = false;     
+      }
+    }
+  }  
   const tabs = [
     {
       label: (
@@ -123,9 +159,8 @@ const Collection = () => {
           ) : (
             <div>
               {response?.data && response.data.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5" id="my-items">
                   {listNFT.map((i) => {
-                    console.log("items",i)
                     return (
                       <ListNFTItem
                         key={i.onChainId}
@@ -150,28 +185,6 @@ const Collection = () => {
               ) : (
                 status !== FetchStatus.pending && <Empty />
               )}
-              {response &&
-                response.data &&
-                currentPageItems < response?.meta.totalPages && (
-                  <>
-                    {status === FetchStatus.pending && currentPageItems > 1 ? (
-                      <NFTListSkeleton hideTab />
-                    ) : (
-                      <div className="mt-[70px] flex justify-center">
-                        <button
-                          onClick={() => {
-                            if (currentPageItems < response?.meta.totalPages) {
-                              setCurrentPageItems(currentPageItems + 1);
-                            }
-                          }}
-                          className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                        >
-                          Load more
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
             </div>
           )}
         </div>
@@ -194,7 +207,7 @@ const Collection = () => {
           ) : (
             <div>
               {listed?.data && listed.data.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5" id="listing">
                   {listedNFT.map((i) => {
                     return (
                       <ListNFTItem
@@ -210,28 +223,6 @@ const Collection = () => {
               ) : (
                 status !== FetchStatus.pending && <Empty />
               )}
-              {listed &&
-                listed.data &&
-                currentPage < listed?.meta.totalPages && (
-                  <>
-                    {listedStatus === FetchStatus.pending && currentPage > 1 ? (
-                      <NFTListSkeleton hideTab />
-                    ) : (
-                      <div className="mt-[70px] flex justify-center">
-                        <button
-                          onClick={() => {
-                            if (currentPage < listed?.meta.totalPages) {
-                              setCurrentPage(currentPage + 1);
-                            }
-                          }}
-                          className="bg-white text-primary dark:bg-[#71659C] dark:text-white font-bold rounded-lg border border-[#c2c2c2] w-[189px] h-[49px]"
-                        >
-                          Load more
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
             </div>
           )}
         </div>
@@ -284,8 +275,47 @@ const Collection = () => {
                 <Tabs
                   items={tabs}
                   className="dark:text-gray-500 text-primary"
+                  onChange={e=> console.log('e', e)}
+                  // tabBarExtraContent={
+                  //   <div className="text-black dark:text-white">
+                  //     <div
+                  //       className={` ${
+                  //         isFocus ? "border" : "border border-transparent"
+                  //       } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
+                  //     >
+                  //       <Image src="/ic_search.svg" width={20} height={20} alt="ic-search"/>
+                  //       <input
+                  //         placeholder="Search NFTs"
+                  //         className="bg-transparent text-sm flex-1 outline-none dark:caret-white dark:text-white"
+                  //         onChange={(e) => {
+                  //           const { value } = e.target;
+                  //           setText(value);
+                  //           debounceSearch(value);
+                  //         }}
+                  //         value={text}
+                  //         onFocus={() => {
+                  //           setFocus(true);
+                  //         }}
+                  //         onBlur={() => {
+                  //           setFocus(false);
+                  //         }}
+                  //       />
+                  //       {text.length > 0 && (
+                  //         <button
+                  //           onClick={() => {
+                  //             setText("");
+                  //             debounceSearch("");
+                  //           }}
+                  //         >
+                  //           <Image width={24} height={24} src="/ic-close.svg" alt="ic-close" />
+                  //         </button>
+                  //       )}
+                  //     </div>
+                  //   </div>
+                  // }
                 />
               </div>
+
               {(status === FetchStatus.idle ||
                 status === FetchStatus.pending ||
                 listedStatus === FetchStatus.idle ||
