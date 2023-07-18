@@ -8,7 +8,7 @@ interface Props {
 const SocialView: React.FC<Props> = ({ response }) => {
   const { theme } = useTheme();
   return (
-<div className="flex flex-wrap mx-auto md:mx-[0px]">
+<div className="flex flex-wrap">
       {response?.website_url && (
         <a
           href={response?.website_url}

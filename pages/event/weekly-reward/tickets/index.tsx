@@ -138,8 +138,8 @@ const Tickets = () => {
     const params = {
       page: nextPage,
       walletAddress: keyword || "",
-      startDate: filterWeek?.start,
-      endDate: filterWeek?.end,
+      startDate: filterWeek?.start || "",
+      endDate: filterWeek?.end || "",
     };
 
     setLoading(true);
@@ -161,11 +161,7 @@ const Tickets = () => {
   };
 
   const fetchDataLeaderBoard = async (keyword?: string) => {
-    if (!address) {
-      return;
-    }
-    const token = await getAccessToken(address);
-    const api = createAxios(token);
+    const api = createAxios();
 
     const params = {
       page: nextPage,

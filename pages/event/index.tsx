@@ -48,7 +48,7 @@ const getAccessToken = async (walletAddress: string) => {
 };
 
 const Campaign = () => {
-  const { address, connected } = useWallet();
+  const { address, connected, connecting, status } = useWallet();
   const { theme } = useTheme();
   const router = useRouter();
   const [weeklyProgress, setWeeklyProgress] = React.useState<AllTaskDay>();
@@ -56,6 +56,7 @@ const Campaign = () => {
   const [leaderBoard, setLeaderBoard] = React.useState<LeaderBoard>();
   const [moreTicket, setMoreTicket] = React.useState<MoreTicket>();
   const [isFetched, setFetched] = React.useState(false);
+  const [checkConnected, setCheckConnected] = React.useState(false);
   const api = createAxios();
   const [numberDynamicNft, setNumberDynamicNft] = React.useState<number>();
   const [isOpenModal, setOpenModal] = React.useState(false);
@@ -142,11 +143,12 @@ const Campaign = () => {
     });
   };
 
-  const fetchLeaderBoard = async (address: string) => {
-    const token = await getAccessToken(address);
-    const api = createAxios(token);
+  const fetchLeaderBoard = async (address?: string) => {
+    const api = createAxios();
     api
-      .get<LeaderBoard>(`/ticket/leaderboard?walletAddress=${address}`)
+      .get<LeaderBoard>(
+        `/ticket/leaderboard${address ? `?walletAddress=${address}` : ""}`
+      )
       .then((res) => {
         setLeaderBoard(res.data);
       });
@@ -163,7 +165,6 @@ const Campaign = () => {
         setBuy({ isOpen: true });
         if (address) {
           fetchMoreTicketData(address);
-          fetchLeaderBoard(address);
         }
       })
       .catch((e) => {
@@ -183,11 +184,21 @@ const Campaign = () => {
   }, []);
 
   React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!connected && !connecting && status === "disconnected") {
+        setCheckConnected(true);
+      } else {
+        setCheckConnected(false);
+      }
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [connected, connecting, status]);
+
+  React.useEffect(() => {
     if (!connected && isFetched) {
       setStatusTasks([]);
       setWeeklyProgress(undefined);
       setMoreTicket(undefined);
-      setLeaderBoard(undefined);
       setFetched(false);
     }
   }, [connected]);
@@ -209,16 +220,17 @@ const Campaign = () => {
   React.useEffect(() => {
     if (address) {
       fetchMoreTicketData(address);
-      fetchLeaderBoard(address);
       fetchAllTask(address);
       setFetched(true);
+      fetchLeaderBoard(address);
+    } else {
+      fetchLeaderBoard();
     }
   }, [address]);
 
   const timeCountdown = React.useMemo(() => {
     return getNextSunday().valueOf();
   }, []);
-
   return (
     <BaseComponent>
       <div className="py-4 md:py-8">
@@ -258,7 +270,7 @@ const Campaign = () => {
               <p className="dark:text-[#EAECF0]">Weekly progression</p>
               <WeeklyProgress data={weeklyProgress} />
             </div>
-            {!connected ? (
+            {checkConnected ? (
               <div
                 className={`flex justify-center text-center ${
                   theme === "dark" ? "darkGradientConnect" : "bg-white"

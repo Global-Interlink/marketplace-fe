@@ -24,6 +24,7 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
 import SearchForm from "../../src/components/molecules/Search";
+import { debounce } from "lodash";
 var canLoad = true;
 const Collection = () => {
   const router = useRouter();
@@ -76,6 +77,8 @@ const Collection = () => {
       }
     }
   }   
+  const [isFocus, setFocus] = React.useState(false);
+  const [text, setText] = React.useState("");
 
   const handleFetchData = () => {
     if (id) {
@@ -87,10 +90,31 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          nameNft: text,
         })
       );
     }
   };
+
+  const debounceSearch = React.useCallback(
+    debounce((nextValue) => {
+      if (nextValue.length === 0) {
+        setText("")
+      }
+      if (id) {
+        dispatch(
+          fetchListNFTOfCollection({
+            id: String(id),
+            page: 1,
+            limit: LIMIT,
+            sort: sort,
+            nameNft: nextValue,
+          })
+        );
+      }
+    }, 2000),
+    [id,sort]
+  );
 
   React.useEffect(() => {
     if (id ) {
@@ -100,10 +124,23 @@ const Collection = () => {
           page: currentPage,
           limit: LIMIT,
           sort: sort,
+          nameNft: text,
         })
       );
     }
   }, [id, currentPage]);
+
+  React.useEffect(() => {
+    if (id) {
+      dispatch(fetchCollectionDetail({ id: String(id) }));
+    }
+  }, [id]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(clear());
+    };
+  }, []);
 
   React.useEffect(() => {
     if (listNFT && listNFT.length > 0) {
@@ -115,6 +152,7 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          nameNft: text,
         })
       );
     }
