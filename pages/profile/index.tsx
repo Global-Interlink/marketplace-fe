@@ -21,6 +21,7 @@ import {
 } from "../../src/redux/profile/profileSlice";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
+import KioskInfo from "../../src/components/molecules/Kiosk";
 
 const Collection = () => {
   const dispatch = useAppDispatch();
@@ -50,10 +51,13 @@ const Collection = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
+  }, []);
+
+  useEffect(() => {
     return () => {
       dispatch(clear());
     };
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (!connected) {
@@ -237,6 +241,7 @@ const Collection = () => {
       ),
       key: "2",
     },
+    { label: "Kiosk", key: "3", children: <KioskInfo /> },
   ];
   return (
     <BaseComponent>

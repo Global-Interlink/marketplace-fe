@@ -80,7 +80,7 @@ const ListNFTItem: React.FC<Props> = ({
         typeArguments: [nftType],
       });
       const tx = (await signAndExecuteTransactionBlock({
-        transactionBlock: txb,
+        transactionBlock: txb as any,
         options: {
           showEffects: true,
         },

@@ -14,6 +14,7 @@ import BaseComponent from "../../src/components/organisms/BaseComponent";
 import {
   clear,
   fetchCollectionDetail,
+  fetchFilterItems,
   fetchListNFTOfCollection,
 } from "../../src/redux/collection/collectionSlice";
 import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
@@ -23,7 +24,7 @@ import CollectionDetailTopSkeleton from "../../src/components/molecules/Collecti
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
-import SearchForm from "../../src/components/molecules/Search";
+import NFTAttributeItem from "../../src/components/molecules/NFTAttributeItem";
 
 const Collection = () => {
   const router = useRouter();
@@ -35,6 +36,10 @@ const Collection = () => {
   const { response, status } = useAppSelector(
     (store) => store.collection.nftData
   );
+  const { properties } = useAppSelector(
+    (store) => store.collection.filterItems
+  );
+  const [filterQueries, setFilterQueries] = React.useState<string[]>([]);
   const LIMIT = 12;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -71,14 +76,24 @@ const Collection = () => {
 
   React.useEffect(() => {
     if (id) {
+      setListNFT([]);
+      setCurrentPage(1);
       dispatch(
         fetchListNFTOfCollection({
           id: String(id),
-          page: currentPage,
+          page: 1,
           limit: LIMIT,
           sort: sort,
+          queries:
+            filterQueries.length > 0 ? filterQueries.join("&") : undefined,
         })
       );
+    }
+  }, [id, filterQueries]);
+
+  React.useEffect(() => {
+    if (id) {
+      dispatch(fetchFilterItems({ id: String(id) }));
     }
   }, [id]);
 
@@ -92,6 +107,8 @@ const Collection = () => {
           page: 1,
           limit: LIMIT,
           sort: sort,
+          queries:
+            filterQueries.length > 0 ? filterQueries.join("&") : undefined,
         })
       );
     }
@@ -140,7 +157,7 @@ const Collection = () => {
               />
               <div className="w-full my-auto">
                 <p
-                   className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
+                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
                   title={collectionData?.name}
                 >
                   {collectionData?.name}
@@ -188,43 +205,92 @@ const Collection = () => {
           </div>
         )}
         <div className="mt-[40px]">
-          {status === FetchStatus.idle || status === FetchStatus.pending ? (
-            <NFTListSkeleton />
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <div className="text-black dark:text-white">
-                  {/* <SearchForm /> */}
-                  Items
-                </div>
-                <Sort
-                  onChange={(sort) => {
-                    setSort(sort);
-                  }}
-                  sort={sort}
-                  firstChoose="High to low"
-                  secondChoose="Low to high"
-                />
+          <>
+            <div className="flex items-center justify-between">
+              <div className="text-black dark:text-white">
+                {/* <SearchForm /> */}
+                Items
               </div>
-              {listNFT && listNFT.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
-                  {listNFT.map((i) => {
-                    return (
-                      <ListNFTItem
-                        key={i.id}
-                        data={i}
-                        onBuySuccess={handleFetchData}
-                        onDelistSuccess={handleFetchData}
-                        onListSuccess={handleFetchData}
-                      />
-                    );
-                  })}
+              <Sort
+                onChange={(sort) => {
+                  setSort(sort);
+                }}
+                sort={sort}
+                firstChoose="High to low"
+                secondChoose="Low to high"
+              />
+            </div>
+            <div className="flex space-x-6 ">
+              {properties && Object.entries(properties).length > 0 && (
+                <div className="min-w-[260px] mt-4 space-y-4 max-w-[260px] dark:text-white text-[#101828] rounded-[20px]  p-4 bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold">Filter</p>
+                    {filterQueries.length > 0 && (
+                      <button
+                        onClick={() => {
+                          setFilterQueries([]);
+                        }}
+                        className="hover:text-[#E23DCC] dark:text-white text-[#101828] font-bold"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                  <p className="font-bold">Attributes</p>
+                  <div className="space-y-4">
+                    {properties &&
+                      Object.entries(properties).map((item) => {
+                        return (
+                          <NFTAttributeItem
+                            key={item[0]}
+                            attribute={item[0]}
+                            values={item[1] as any}
+                            onSelect={(value) => {
+                              setFilterQueries((s) => {
+                                return [...s, value];
+                              });
+                            }}
+                            onRemove={(value) => {
+                              setFilterQueries((s) => {
+                                return s.filter((i) => i !== value);
+                              });
+                            }}
+                            filterQueries={filterQueries}
+                          />
+                        );
+                      })}
+                  </div>
+                </div>
+              )}
+              {status === FetchStatus.idle || status === FetchStatus.pending ? (
+                <div className="flex w-full">
+                  <NFTListSkeleton hideSort hideHeader hideTab />
                 </div>
               ) : (
-                <Empty />
+                <>
+                  {listNFT && listNFT.length > 0 ? (
+                    <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
+                      {listNFT.map((i) => {
+                        return (
+                          <ListNFTItem
+                            key={i.id}
+                            data={i}
+                            onBuySuccess={handleFetchData}
+                            onDelistSuccess={handleFetchData}
+                            onListSuccess={handleFetchData}
+                          />
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex w-full items-center justify-center">
+                      <Empty />
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
+            </div>
+          </>
           {listNFT &&
             listNFT.length > 0 &&
             response &&

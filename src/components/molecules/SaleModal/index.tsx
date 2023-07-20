@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../../redux/hook";
 import { NFT } from "../../../api/types";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
 import { TransactionBlock } from "@mysten/sui.js";
+import { objArg } from "@mysten/kiosk";
 interface Props {
   close?: () => void;
   onSuccess: () => void;
@@ -26,35 +27,61 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
     nftId: string,
     price: number,
     nftType: string,
-    id: string
+    id: string,
+    kioskId?: string,
+    kioskOwnerCapId?: string
   ) => {
     setLoading(true);
     const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
     const contractModule = process.env.NEXT_PUBLIC_MODULE;
     const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
-    if (!marketId || !packageObjectId || !contractModule) {
+    const kioskMarketId = process.env.NEXT_PUBLIC_KIOSK_MARKET_ID;
+    const kioskModule = process.env.NEXT_PUBLIC_KIOSK_MODULE;
+    const kioskPackageId = process.env.NEXT_PUBLIC_KIOSK_PACKAGE_ID;
+    if (
+      !marketId ||
+      !packageObjectId ||
+      !contractModule ||
+      !kioskMarketId ||
+      !kioskPackageId ||
+      !kioskModule
+    ) {
       setLoading(false);
       return;
     }
-
     try {
       const txb = new TransactionBlock();
-      txb.moveCall({
-        target: `${packageObjectId}::${contractModule}::list`,
-        arguments: [
-          txb.pure(marketId),
-          txb.pure(nftId),
-          txb.pure(String(price * SUI_DECIMAL)),
-          txb.makeMoveVec({
-            objects: [
-              txb.splitCoins(txb.gas, [txb.pure(String(0.12 * SUI_DECIMAL))]),
-            ],
-          }),
-        ],
-        typeArguments: [nftType],
-      });
+      if (kioskId && kioskOwnerCapId) {
+        txb.setGasBudget(200000000);
+        txb.moveCall({
+          target: `${kioskPackageId}::${kioskModule}::list`,
+          typeArguments: [nftType],
+          arguments: [
+            txb.pure(kioskMarketId),
+            objArg(txb, kioskId),
+            objArg(txb, kioskOwnerCapId),
+            txb.pure(nftId, "address"),
+            txb.pure(String(price * SUI_DECIMAL), "u64"),
+          ],
+        });
+      } else {
+        txb.moveCall({
+          target: `${packageObjectId}::${contractModule}::list`,
+          arguments: [
+            txb.pure(marketId),
+            txb.pure(nftId),
+            txb.pure(String(price * SUI_DECIMAL)),
+            txb.makeMoveVec({
+              objects: [
+                txb.splitCoins(txb.gas, [txb.pure(String(0.12 * SUI_DECIMAL))]),
+              ],
+            }),
+          ],
+          typeArguments: [nftType],
+        });
+      }
       const tx = (await signAndExecuteTransactionBlock({
-        transactionBlock: txb,
+        transactionBlock: txb as any,
         options: {
           showEffects: true,
         },
@@ -97,7 +124,9 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
     >
       <div className="flex flex-col justify-center">
         <div className="mt-8 space-y-2">
-          <p className="text-[24px] font-bold text-left break-all">{item?.name}</p>
+          <p className="text-[24px] font-bold text-left break-all">
+            {item?.name}
+          </p>
           {item?.collection && (
             <div className="flex w-full items-center space-x-2">
               <div className="">
@@ -161,7 +190,9 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
                   item?.onChainId || "",
                   Number(price),
                   item?.nftType || "",
-                  item?.id || ""
+                  item?.id || "",
+                  item.kioskId,
+                  item.kioskOwnerCapId
                 );
               } else {
                 toast.error("This NFT isn't supported on SAKAYA");

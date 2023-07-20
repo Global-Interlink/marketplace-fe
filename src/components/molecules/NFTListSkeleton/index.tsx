@@ -4,7 +4,7 @@ const NFTListSkeleton: React.FC<{
   hideTab?: boolean;
 }> = ({ hideSort, hideHeader, hideTab }) => {
   return (
-    <div>
+    <div className="flex w-full flex-col">
       {!hideTab&&(hideHeader ? (
         <div className="flex items-center mt-[36px] space-x-6 pb-6 border-b">
           <div className="flex h-10 animate-pulse w-40 rounded-lg  bg-slate-400 dark:bg-purple-500" />

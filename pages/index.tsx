@@ -13,6 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../src/redux/hook";
 import Image from "next/image";
 import Link from "next/link";
+import KioskButtonPlaceAndList from "../src/components/molecules/KioskButtonPlaceAndList";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +40,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1)
+    setCurrentPage(1);
   }, [sort]);
 
   useEffect(() => {
@@ -132,6 +133,7 @@ const Home = () => {
           </>
         )}
       </div>
+      <KioskButtonPlaceAndList />
     </BaseComponent>
   );
 };

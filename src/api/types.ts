@@ -74,6 +74,8 @@ export interface NFT {
   description: string;
   image: string;
   fileType: string;
+  kioskId?: string;
+  kioskOwnerCapId?: string;
   state: string;
   ownedDate?: any;
   saleStatus?: {

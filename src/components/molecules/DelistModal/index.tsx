@@ -7,12 +7,15 @@ import { verifyDelistTransaction } from "../../../redux/verify/verifySlice";
 import { useAppDispatch } from "../../../redux/hook";
 import CloseIcon from "../../atoms/Icons/CloseIcon";
 import { TransactionBlock } from "@mysten/sui.js";
+import { objArg } from "@mysten/kiosk";
 interface Props {
   close?: () => void;
   nftId: string;
   nftType: string;
   id: string;
   onSuccess: () => void;
+  kioskId?: string;
+  kioskOwnerCapId?: string;
 }
 
 const DelistModal: React.FC<Props> = ({
@@ -21,37 +24,62 @@ const DelistModal: React.FC<Props> = ({
   nftType,
   id,
   onSuccess,
+  kioskId,
+  kioskOwnerCapId,
 }) => {
   const dispatch = useAppDispatch();
   const { signAndExecuteTransactionBlock, connected } = useWallet();
   const [isLoading, setLoading] = React.useState(false);
 
-  // React.useEffect(() => {
-  //   document.body.style.overflow = "hidden";
-  //   return () => {
-  //     document.body.style.overflow = "unset";
-  //   };
-  // });
-
-  const handleDelist = async (nftId: string, nftType: string, id: string) => {
+  const handleDelist = async (
+    nftId: string,
+    nftType: string,
+    id: string,
+    kioskId?: string,
+    kioskOwnerCapId?: string
+  ) => {
     setLoading(true);
     const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
     const contractModule = process.env.NEXT_PUBLIC_MODULE;
     const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
-    if (!marketId || !packageObjectId || !contractModule) {
+    const kioskMarketId = process.env.NEXT_PUBLIC_KIOSK_MARKET_ID;
+    const kioskModule = process.env.NEXT_PUBLIC_KIOSK_MODULE;
+    const kioskPackageId = process.env.NEXT_PUBLIC_KIOSK_PACKAGE_ID;
+    if (
+      !marketId ||
+      !packageObjectId ||
+      !contractModule ||
+      !kioskMarketId ||
+      !kioskPackageId ||
+      !kioskModule
+    ) {
       setLoading(false);
       return;
     }
 
     try {
       const txb = new TransactionBlock();
-      txb.moveCall({
-        target: `${packageObjectId}::${contractModule}::delist`,
-        arguments: [txb.pure(marketId), txb.pure(nftId)],
-        typeArguments: [nftType],
-      });
+      if (kioskId && kioskOwnerCapId) {
+        txb.setGasBudget(1000000000);
+        txb.moveCall({
+          target: `${kioskPackageId}::${kioskModule}::delist`,
+          typeArguments: [nftType],
+          arguments: [
+            txb.pure(kioskMarketId),
+            objArg(txb, kioskId),
+            objArg(txb, kioskOwnerCapId),
+            txb.pure(nftId, "address"),
+          ],
+        });
+      } else {
+        txb.moveCall({
+          target: `${packageObjectId}::${contractModule}::delist`,
+          arguments: [txb.pure(marketId), txb.pure(nftId)],
+          typeArguments: [nftType],
+        });
+      }
       const tx = (await signAndExecuteTransactionBlock({
-        transactionBlock: txb,
+        transactionBlock: txb as any,
         options: {
           showEffects: true,
         },
@@ -104,7 +132,7 @@ const DelistModal: React.FC<Props> = ({
             className="hoverCommon primaryButton  text-white font-medium w-1/2 h-12 rounded-full"
             disabled={!connected || isLoading}
             onClick={() => {
-              handleDelist(nftId, nftType, id);
+              handleDelist(nftId, nftType, id, kioskId, kioskOwnerCapId);
             }}
           >
             {isLoading ? (

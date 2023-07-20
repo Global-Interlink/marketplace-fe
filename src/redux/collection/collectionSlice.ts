@@ -22,6 +22,7 @@ export type FetchListCollectionNFTPrams = {
   limit: number;
   sort: "DESC" | "ASC";
   id: string;
+  queries?: string;
 };
 
 export interface DetailNFTState {
@@ -32,6 +33,10 @@ export interface DetailNFTState {
   nftData: {
     status: FetchStatus;
     response?: FetchListCollectionNFTSuccess;
+  };
+  filterItems: {
+    status: FetchStatus;
+    properties?: any;
   };
 }
 
@@ -53,7 +58,22 @@ export const fetchListNFTOfCollection = createAsyncThunk(
   async (params: FetchListCollectionNFTPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListCollectionNFTSuccess>(
-        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=saleItems.price:${params.sort}`
+        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=saleItems.price:${params.sort}${params.queries
+          ? `&${params.queries}`
+          : ""}`
+      );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+export const fetchFilterItems = createAsyncThunk(
+  "collection/filter-item",
+  async (params: { id: string }, { rejectWithValue }) => {
+    try {
+      const response = await APIFunctions.get<FetchListCollectionNFTSuccess>(
+        `/nft-property/collection/${params.id}/filter-property-data`
       );
       return response.data;
     } catch (err: any) {
@@ -62,12 +82,20 @@ export const fetchListNFTOfCollection = createAsyncThunk(
   }
 );
 
+// /api/v1/nft-property/collection/<id collection>/filter-property-data
+
 const initialState: DetailNFTState = {
   collectionData: {
     status: FetchStatus.idle,
+    response: undefined,
   },
   nftData: {
     status: FetchStatus.idle,
+    response: undefined,
+  },
+  filterItems: {
+    status: FetchStatus.idle,
+    properties: undefined,
   },
 };
 
@@ -104,6 +132,20 @@ export const collectionSlice = createSlice({
       })
       .addCase(fetchListNFTOfCollection.rejected, (state, action) => {
         state.nftData.status = FetchStatus.failed;
+        const error = action.payload as CommonError;
+        toast.error(error?.message);
+      });
+    builder
+      .addCase(fetchFilterItems.pending, (state) => {
+        state.filterItems.status = FetchStatus.pending;
+        state.filterItems.properties = undefined;
+      })
+      .addCase(fetchFilterItems.fulfilled, (state, action) => {
+        state.filterItems.status = FetchStatus.succeeded;
+        state.filterItems.properties = action.payload;
+      })
+      .addCase(fetchFilterItems.rejected, (state, action) => {
+        state.filterItems.status = FetchStatus.failed;
         const error = action.payload as CommonError;
         toast.error(error?.message);
       });
