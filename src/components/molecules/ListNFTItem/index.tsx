@@ -1,5 +1,5 @@
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
-import { Image } from "antd";
+// import { Image } from "antd";
 import React from "react";
 import { NFT } from "../../../api/types";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -12,6 +12,7 @@ import SaleModal from "../SaleModal";
 import DelistModal from "../DelistModal";
 import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
+import Image from "next/image";
 interface Props {
   data?: NFT;
   onListSuccess: (onChainId?: string) => void;
@@ -130,19 +131,19 @@ const ListNFTItem: React.FC<Props> = ({
     data.saleStatus.onSale;
   return (
     <div>
-      <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl hover:scale-105 duration-100">
-        <div className="flex w-full">
+      <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl sm:hover:scale-105 transition duration-300 ease-in-out">
+        <div className="flex w-full wrap-ratio-[1/1]">
           <Image
             src={validURL(data?.image || '/default.jpeg')}
             className="rounded-[32px] object-cover cursor-pointer aspect-[1/1] p-4"
-            height={"auto"}
+            width={500}
+              height={500}
             alt="mock"
-            preview={false}
             onClick={(e: any) => {
               router.push(`/nft/${data?.id}`);
             }}
-            fallback="/default.jpeg"
           />
+
         </div>
         <div className="flex p-5 space-x-[14px]  rounded-b-[20px] pt-0">
           <div className="w-full">

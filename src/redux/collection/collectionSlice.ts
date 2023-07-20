@@ -22,6 +22,7 @@ export type FetchListCollectionNFTPrams = {
   limit: number;
   sort: "DESC" | "ASC";
   id: string;
+  nameNft: string;
   queries?: string;
 };
 
@@ -58,9 +59,11 @@ export const fetchListNFTOfCollection = createAsyncThunk(
   async (params: FetchListCollectionNFTPrams, { rejectWithValue }) => {
     try {
       const response = await APIFunctions.get<FetchListCollectionNFTSuccess>(
-        `/nft/by-collection/${params.id}?page=${params.page}&limit=${params.limit}&sortBy=saleItems.price:${params.sort}${params.queries
-          ? `&${params.queries}`
-          : ""}`
+        `/nft/by-collection/${params.id}?page=${params.page}&limit=${
+          params.limit
+        }&sortBy=saleItems.price:${params.sort}&nameNft=${params.nameNft}${
+          params.queries ? `&${params.queries}` : ""
+        }`
       );
       return response.data;
     } catch (err: any) {
@@ -81,8 +84,6 @@ export const fetchFilterItems = createAsyncThunk(
     }
   }
 );
-
-// /api/v1/nft-property/collection/<id collection>/filter-property-data
 
 const initialState: DetailNFTState = {
   collectionData: {
@@ -135,6 +136,7 @@ export const collectionSlice = createSlice({
         const error = action.payload as CommonError;
         toast.error(error?.message);
       });
+
     builder
       .addCase(fetchFilterItems.pending, (state) => {
         state.filterItems.status = FetchStatus.pending;

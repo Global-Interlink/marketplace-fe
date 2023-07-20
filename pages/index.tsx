@@ -13,7 +13,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../src/redux/hook";
 import Image from "next/image";
 import Link from "next/link";
-import KioskButtonPlaceAndList from "../src/components/molecules/KioskButtonPlaceAndList";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -133,7 +132,6 @@ const Home = () => {
           </>
         )}
       </div>
-      <KioskButtonPlaceAndList />
     </BaseComponent>
   );
 };

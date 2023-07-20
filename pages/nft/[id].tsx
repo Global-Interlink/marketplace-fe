@@ -168,7 +168,7 @@ console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price
           <NFTDetailTopSkeleton />
         ) : (
           <div className="mt-10 flex flex-col space-y-10 md:space-y-0 md:flex-row md:space-x-20 lg:space-x-30 xl:space-x-40">
-            <div className="w-full md:w-[40%] min-w-[40%]">
+            <div className="w-full md:w-[40%] min-w-[40%] wrap-ratio-[1/1]">
               <Image
                 src={validURL(nftData?.image || "/default.jpeg")}
                 width={200}

@@ -13,6 +13,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { start } from "repl";
 import * as jose from "jose";
 import { useRouter } from "next/router";
+import { NUMBER_OF_WEEK } from "../../../../src/api/constants";
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -56,8 +57,8 @@ export interface Week {
   end: string;
   current?: boolean;
 }
+
 const Tickets = () => {
-  const numberOfWeek = 1;
   const { address } = useWallet();
   const router = useRouter();
   const [allTickets, setAllTicketData] = React.useState<Ticket[]>([]);
@@ -97,7 +98,7 @@ const Tickets = () => {
 
   const fetchWeekData = async () => {
     await api
-      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${numberOfWeek}`)
+      .get<{ data: Week[] }>(`/ticket/weekly?numberWeeks=${NUMBER_OF_WEEK}`)
       .then((res) => {
         const { data } = res.data;
         setWeek(data);
@@ -137,8 +138,8 @@ const Tickets = () => {
     const params = {
       page: nextPage,
       walletAddress: keyword || "",
-      startDate: filterWeek?.start,
-      endDate: filterWeek?.end,
+      startDate: filterWeek?.start || "",
+      endDate: filterWeek?.end || "",
     };
 
     setLoading(true);
@@ -160,11 +161,7 @@ const Tickets = () => {
   };
 
   const fetchDataLeaderBoard = async (keyword?: string) => {
-    if (!address) {
-      return;
-    }
-    const token = await getAccessToken(address);
-    const api = createAxios(token);
+    const api = createAxios();
 
     const params = {
       page: nextPage,
@@ -273,7 +270,6 @@ const Tickets = () => {
             />
             <SelectWeek
               week={week}
-              numberOfWeek={numberOfWeek}
               onChangeWeek={(s, e) => onChangeWeek(s, e)}
             />
             <SearchTicket
