@@ -52,7 +52,7 @@ const SaleModal: React.FC<Props> = ({ close, item, onSuccess }) => {
     try {
       const txb = new TransactionBlock();
       if (kioskId && kioskOwnerCapId) {
-        txb.setGasBudget(200000000);
+        txb.setGasBudget(100000000);
         txb.moveCall({
           target: `${kioskPackageId}::${kioskModule}::list`,
           typeArguments: [nftType],

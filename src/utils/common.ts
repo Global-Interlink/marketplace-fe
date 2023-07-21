@@ -1,7 +1,6 @@
 import {
   JsonRpcClient,
   JsonRpcProvider,
-  MIST_PER_SUI,
   devnetConnection,
   testnetConnection,
 } from "@mysten/sui.js";
@@ -82,15 +81,3 @@ export function getThisWeek() {
   var endMonth = endOfWeek.getUTCMonth() + 1; // Tháng trong JavaScript được đếm từ 0
   return `(${startDate}/${startMonth} - ${endDate}/${endMonth})`;
 }
-
-export const mistToSui = (mist: bigint | string | undefined) => {
-	if (!mist) return 0;
-	return Number(mist || 0) / Number(MIST_PER_SUI);
-};
-
-export const formatSui = (amount: number) => {
-	return new Intl.NumberFormat('en-US', {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 5,
-	}).format(amount);
-};

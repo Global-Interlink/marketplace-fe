@@ -3,6 +3,7 @@ import { getConnectedChain, getRPCConnection } from "../../../utils/common";
 import {
   Kiosk,
   OwnedKiosks,
+  createKioskAndShare,
   getKioskObject,
   getOwnedKiosks,
   withdrawFromKiosk,
@@ -32,7 +33,6 @@ const KioskInfo = () => {
     });
     Promise.all(balances).then((res) => {
       setListKiosk(res);
-      console.log("=res", res);
     });
   };
   React.useEffect(() => {
@@ -48,7 +48,12 @@ const KioskInfo = () => {
       return;
     }
     const txb = new TransactionBlock();
-    const coin = withdrawFromKiosk(txb, kiosk.id, kioskOwnerCap, String(Number(kiosk.profits) * SUI_DECIMAL));
+    const coin = withdrawFromKiosk(
+      txb,
+      kiosk.id,
+      kioskOwnerCap,
+      String(Number(kiosk.profits) * SUI_DECIMAL)
+    );
 
     txb.transferObjects([coin], txb.pure(address, "address"));
     const tx = (await signAndExecuteTransactionBlock({

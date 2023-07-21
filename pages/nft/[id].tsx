@@ -30,6 +30,15 @@ import { APIFunctions, FetchStatus } from "../../src/api/APIFunctions";
 import NFTDetailTopSkeleton from "../../src/components/molecules/NFTDetailTopSkeleton";
 import CopyIcon from "../../src/components/atoms/Icons/CopyIcon";
 import { createAxiosCoinGecko } from "../../src/api/axiosWallet";
+import {
+  createKioskAndShare,
+  getOwnedKiosks,
+  mainnetEnvironment,
+  place,
+  purchaseAndResolvePolicies,
+  queryTransferPolicy,
+} from "@mysten/kiosk";
+import { getConnectedChain, getRPCConnection } from "../../src/utils/common";
 
 const NFT = () => {
   const router = useRouter();
@@ -39,7 +48,8 @@ const NFT = () => {
     (store) => store.nft.nftData
   );
   const { response, status } = useAppSelector((store) => store.nft.listNFTData);
-  const { signAndExecuteTransactionBlock, connected, address } = useWallet();
+  const { signAndExecuteTransactionBlock, connected, address, chain } =
+    useWallet();
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
@@ -88,33 +98,129 @@ const NFT = () => {
     handleFetchData();
   }, [id]);
 
+  const handleCreateKiosk = async () => {
+    try {
+      const txb = new TransactionBlock();
+      const kiosk_cap = createKioskAndShare(txb);
+      txb.transferObjects([kiosk_cap], txb.pure(address, "address"));
+      const tx = (await signAndExecuteTransactionBlock({
+        transactionBlock: txb as any,
+        options: {
+          showEffects: true,
+        },
+      })) as any;
+      const { status } = tx.effects.status;
+      if (status === "success") {
+        toast.success("Create Kiosk success!");
+        return true;
+      } else {
+        toast.error("Create Kiosk error!");
+        return false;
+      }
+    } catch (e: any) {
+      setLoading(false);
+      if (e.message.includes("amount sufficient for the required gas amount")) {
+        toast.error("Your SUI balance is not enough to buy this item!");
+        return;
+      }
+
+      toast.error(e.message);
+    }
+  };
+
   const handleBuyNow = async (
     nftId: string,
     nftType: string,
-    price: number
+    price: number,
+    kioskId?: string
   ) => {
     setLoading(true);
     const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
     const contractModule = process.env.NEXT_PUBLIC_MODULE;
     const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
-    if (!marketId || !packageObjectId || !contractModule || !address) {
+    const kioskMarketId = process.env.NEXT_PUBLIC_KIOSK_MARKET_ID;
+    const kioskModule = process.env.NEXT_PUBLIC_KIOSK_MODULE;
+    const kioskPackageId = process.env.NEXT_PUBLIC_KIOSK_PACKAGE_ID;
+    if (
+      !marketId ||
+      !packageObjectId ||
+      !contractModule ||
+      !address ||
+      !kioskMarketId ||
+      !kioskPackageId ||
+      !kioskModule
+    ) {
       setLoading(false);
       return;
     }
-    const fee = 0.12 * SUI_DECIMAL;
+
     try {
       const txb = new TransactionBlock();
-      txb.moveCall({
-        target: `${packageObjectId}::${contractModule}::buy`,
-        arguments: [
-          txb.pure(marketId),
-          txb.pure(nftId),
-          txb.makeMoveVec({
-            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price + fee))])],
-          }),
-        ],
-        typeArguments: [nftType],
-      });
+      const chainConnected = getConnectedChain(chain?.id);
+      const provider = getRPCConnection(chainConnected);
+      if (kioskId && provider) {
+        const kiosk = await getOwnedKiosks(provider, address);
+        if (kiosk.kioskOwnerCaps.length === 0) {
+          const createdNewKisok = await handleCreateKiosk();
+          if (createdNewKisok) {
+            handleBuyNow(nftId, nftType, price, kioskId);
+          } else {
+            setLoading(false);
+          }
+          return;
+        }
+        const policies = await queryTransferPolicy(provider, nftType);
+
+        const policyId = policies[0]?.id;
+        if (!policyId) {
+          throw new Error(
+            `This item doesn't have a Transfer Policy attached so it can't be traded through kiosk.`
+          );
+        }
+        const buyerKiosk = kiosk.kioskOwnerCaps[0];
+        const txb = new TransactionBlock();
+        txb.setGasBudget(100000000);
+        const environment = mainnetEnvironment;
+
+        const result = purchaseAndResolvePolicies(
+          txb,
+          nftType,
+          String(price),
+          kioskId, // kiosk id của nft
+          nftId,
+          policies[0],
+          environment,
+          {
+            ownedKiosk: buyerKiosk?.kioskId, // kiosk id của ví mua
+            ownedKioskCap: buyerKiosk?.objectId, // kiosk cap của ví mua
+          }
+        );
+
+        if (result.canTransfer) {
+          place(
+            txb,
+            nftType,
+            buyerKiosk?.kioskId,
+            buyerKiosk?.objectId,
+            result.item
+          );
+        }
+      } else {
+        const fee = 0.12 * SUI_DECIMAL;
+        txb.moveCall({
+          target: `${packageObjectId}::${contractModule}::buy`,
+          arguments: [
+            txb.pure(marketId),
+            txb.pure(nftId),
+            txb.makeMoveVec({
+              objects: [
+                txb.splitCoins(txb.gas, [txb.pure(String(price + fee))]),
+              ],
+            }),
+          ],
+          typeArguments: [nftType],
+        });
+      }
       const tx = (await signAndExecuteTransactionBlock({
         transactionBlock: txb as any,
         options: {
@@ -159,7 +265,10 @@ const NFT = () => {
       toast.error(e.message);
     }
   };
-console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price));
+  console.log(
+    "Number(nftData.saleStatus.price)",
+    Number(nftData?.saleStatus?.price)
+  );
 
   return (
     <BaseComponent>
@@ -207,7 +316,9 @@ console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price
                       {Number(nftData.saleStatus.price).toPrecision()} SUI{" "}
                       {dataCoingecko &&
                         dataCoingecko > 0 &&
-                        `(~ $${(dataCoingecko*Number(nftData?.saleStatus.price)).toFixed(2)})`}
+                        `(~ $${(
+                          dataCoingecko * Number(nftData?.saleStatus.price)
+                        ).toFixed(2)})`}
                       {/* {`(~ $${Number(
                         nftData.saleStatus.usdPrice
                       ).toPrecision()})`} */}
@@ -246,7 +357,8 @@ console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price
                           handleBuyNow(
                             nftData?.onChainId,
                             nftData?.nftType,
-                            Number(nftData.saleStatus?.price) * SUI_DECIMAL
+                            Number(nftData.saleStatus?.price) * SUI_DECIMAL,
+                            nftData.kioskId
                           );
                         }
                       }}
