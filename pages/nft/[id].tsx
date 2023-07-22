@@ -518,6 +518,8 @@ const NFT = () => {
               }}
               nftId={nftData.onChainId}
               nftType={nftData.nftType}
+              kioskId={nftData.kioskId}
+              kioskOwnerCapId={nftData.kioskOwnerCapId}
               id={nftData.id}
               onSuccess={() => {
                 setOpenDelist(false);

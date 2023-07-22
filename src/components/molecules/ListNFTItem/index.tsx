@@ -372,6 +372,8 @@ const ListNFTItem: React.FC<Props> = ({
           }}
           nftId={data.onChainId}
           nftType={data.nftType}
+          kioskId={data.kioskId}
+          kioskOwnerCapId={data.kioskOwnerCapId}
           id={data.id}
           onSuccess={() => {
             setOpenDelist(false);
