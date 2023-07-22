@@ -47,9 +47,9 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
               <div>
                 <p>You are trying to buy:</p>
                 {type === "forEvery" && (
-                  <p className="text-[12px] font-light">
+                  <span className="text-[12px] font-light">
                     (Dynamic NFT Holder can buy at 1000 tGIL)
-                  </p>
+                  </span>
                 )}
               </div>
               <p className="text-[#EB77DC] text-end">
@@ -61,9 +61,9 @@ const ConfirmBuyTicketModal: React.FC<Props> = ({
               <div>
                 <p className="text-[#EB77DC] text-end">{currentTGIL} tGIL</p>
                 {isNotEnoughTGIL && (
-                  <p className="text-[#F04438] text-end text-[12px] font-light">
+                  <span className="text-[#F04438] text-end text-[12px] font-light">
                     (Not enough tGIL)
-                  </p>
+                  </span>
                 )}
               </div>
             </div>

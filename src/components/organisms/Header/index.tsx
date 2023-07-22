@@ -120,18 +120,6 @@ const Header = () => {
           <div className="relative hidden md:block">
             <SearchForm />
           </div>
-          {/* <Dropdown
-            menu={{
-              items,
-              onClick: handleMenuClick,
-            }}
-            className="hidden md:flex"
-          >
-            <div className="text-gray-400 flex items-center gap-1 cursor-pointer text-sm">
-              <span className="block">Launchpad</span>
-              <BiChevronDown />
-            </div>
-          </Dropdown> */}
         </div>
         <Link href={"/event"} className="hidden lg2:block">
           <div className="flex items-center space-x-2 relative">
@@ -298,63 +286,61 @@ const Header = () => {
               <AiOutlineMenu size={24} />
             </button>
           </div>
-          {theme && (
-            <div className="hidden lg2:flex items-center h-[40px] gap-1 px-1 text-white bg-white dark:bg-[#4F2A8A]/25 rounded-[52px]">
-              <button
-                className={`flex justify-center items-center w-[32px] h-[32px] rounded-full ${
-                  theme === "light" ? "primaryButton" : "bg-transparent"
-                }`}
-                onClick={() => {
-                  // TODO
-                  setTheme("light");
-                }}
-              >
-                {theme === "dark" ? (
-                  <Image
-                    className="change-theme-img"
-                    src="/ic-light-dark.svg"
-                    alt="light"
-                    width={18}
-                    height={18}
-                  />
-                ) : (
-                  <Image
-                    className="change-theme-img"
-                    src="/ic-light.svg"
-                    alt="light"
-                    width={18}
-                    height={18}
-                  />
-                )}
-              </button>
-              <button
-                className={`flex justify-center items-center w-[32px] h-[32px] rounded-full ${
-                  theme === "dark" ? "primaryButton" : "bg-white"
-                }`}
-                onClick={() => {
-                  setTheme("dark");
-                }}
-              >
-                {theme === "dark" ? (
-                  <Image
-                    className="change-theme-img"
-                    src="/ic-dark.svg"
-                    alt="light"
-                    width={18}
-                    height={18}
-                  />
-                ) : (
-                  <Image
-                    className="change-theme-img"
-                    src="/ic-dark-light.svg"
-                    alt="light"
-                    width={18}
-                    height={18}
-                  />
-                )}
-              </button>
-            </div>
-          )}
+          <div className="hidden lg2:flex items-center h-[40px] gap-1 px-1 text-white bg-white dark:bg-[#4F2A8A]/25 rounded-[52px]">
+            <button
+              className={`flex justify-center items-center w-[32px] h-[32px] rounded-full ${
+                theme === "light" ? "primaryButton" : "bg-transparent"
+              }`}
+              onClick={() => {
+                // TODO
+                setTheme("light");
+              }}
+            >
+              {theme === "dark" ? (
+                <Image
+                  className="change-theme-img"
+                  src="/ic-light-dark.svg"
+                  alt="light"
+                  width={18}
+                  height={18}
+                />
+              ) : (
+                <Image
+                  className="change-theme-img"
+                  src="/ic-light.svg"
+                  alt="light"
+                  width={18}
+                  height={18}
+                />
+              )}
+            </button>
+            <button
+              className={`flex justify-center items-center w-[32px] h-[32px] rounded-full ${
+                theme === "dark" ? "primaryButton" : "bg-white"
+              }`}
+              onClick={() => {
+                setTheme("dark");
+              }}
+            >
+              {theme === "dark" ? (
+                <Image
+                  className="change-theme-img"
+                  src="/ic-dark.svg"
+                  alt="light"
+                  width={18}
+                  height={18}
+                />
+              ) : (
+                <Image
+                  className="change-theme-img"
+                  src="/ic-dark-light.svg"
+                  alt="light"
+                  width={18}
+                  height={18}
+                />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
