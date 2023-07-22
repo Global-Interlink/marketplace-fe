@@ -282,12 +282,12 @@ const NFT = () => {
                 src={validURL(nftData?.image || "/default.jpeg")}
                 width={200}
                 height={200}
-                className="flex w-full aspect-square rounded-[20px] object-cover"
+                className="flex w-full aspect-square rounded-[20px] !h-auto object-cover"
                 alt="mock"
               />
             </div>
             <div className="w-full">
-              <p className="text-black dark:text-white text-[24px] md:text-[36px] font-medium">
+              <p className="text-black whitespace-pre-wrap break-all line-clamp-1 dark:text-white text-[24px] md:text-[36px] font-medium">
                 {nftData?.name}
               </p>
               {nftData?.collection && (
@@ -449,7 +449,7 @@ const NFT = () => {
                           <p className="text-[#F626D1] text-sm font-semibold">
                             {i.name.toUpperCase()}
                           </p>
-                          <p className="text-[#827E7E] dark:text-white font-semibold">
+                          <p className="text-[#827E7E] whitespace-pre-wrap break-all line-clamp-1 dark:text-white font-semibold">
                             {i.value.toUpperCase() || "-"}
                           </p>
                         </div>
