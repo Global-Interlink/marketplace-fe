@@ -140,10 +140,11 @@ const ListNFTItem: React.FC<Props> = ({
             `This item doesn't have a Transfer Policy attached so it can't be traded through kiosk.`
           );
         }
+        const [coin] = txb.splitCoins(txb.gas, [txb.pure(1)]);
+        // txb.transferObjects([coin], txb.pure(address, "address")); //send token to address
         txb.setGasBudget(100000000);
         const environment = mainnetEnvironment;
         const buyerKiosk = kiosk.kioskOwnerCaps[0];
-
         const result = purchaseAndResolvePolicies(
           txb,
           nftType,
@@ -157,7 +158,6 @@ const ListNFTItem: React.FC<Props> = ({
             ownedKioskCap: buyerKiosk.objectId, // kiosk cap của ví mua
           }
         );
-        console.log("==handleBuyNow", txb);
         if (result.canTransfer) {
           place(
             txb,
