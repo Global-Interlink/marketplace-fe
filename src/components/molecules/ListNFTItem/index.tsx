@@ -143,11 +143,6 @@ const ListNFTItem: React.FC<Props> = ({
         txb.setGasBudget(100000000);
         const environment = mainnetEnvironment;
         const buyerKiosk = kiosk.kioskOwnerCaps[0];
-        console.log("=buyerKiosk", buyerKiosk);
-        console.log("=nftType", nftType);
-        console.log("=price", String(price));
-        console.log("=kioskId", kioskId);
-        console.log("=nftId", nftId);
 
         const result = purchaseAndResolvePolicies(
           txb,
