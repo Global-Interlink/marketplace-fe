@@ -178,7 +178,6 @@ const NFT = () => {
           );
         }
         const buyerKiosk = kiosk.kioskOwnerCaps[0];
-        const txb = new TransactionBlock();
         txb.setGasBudget(100000000);
         const environment = mainnetEnvironment;
 

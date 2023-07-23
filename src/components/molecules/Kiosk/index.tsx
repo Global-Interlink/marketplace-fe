@@ -40,8 +40,8 @@ const KioskInfo = () => {
   }, [address]);
 
   const withdraw = async (kiosk: Kiosk) => {
-    const kioskOwnerCap = ownedKiosk?.kioskOwnerCaps.find(
-      (i) => i.kioskId === kiosk.id
+    const kioskOwnerCap = ownedKiosk?.kioskOwnerCaps.find((i) =>
+      i.kioskId.includes(kiosk.id)
     )?.objectId;
     if (!kioskOwnerCap) {
       toast.error("Missing KioskOwnerCap!");
@@ -52,7 +52,7 @@ const KioskInfo = () => {
       txb,
       kiosk.id,
       kioskOwnerCap,
-      String(Number(kiosk.profits) * SUI_DECIMAL)
+      String(kiosk.profits)
     );
 
     txb.transferObjects([coin], txb.pure(address, "address"));
@@ -65,6 +65,7 @@ const KioskInfo = () => {
     const { status, error } = tx.effects.status;
     if (status === "success") {
       toast.success("Withdraw profit success!");
+      getKiosk();
     } else {
       toast.error(error);
       close && close();
@@ -73,7 +74,7 @@ const KioskInfo = () => {
 
   return (
     <div>
-      <div className="mt-10 bg-white shadow dark:bg-[#2B294F] dark:text-white text-[#101828]">
+      <div className="mt-10 bg-white shadow rounded-xl dark:bg-[#2B294F] dark:text-white text-[#101828]">
         <table className="w-full whitespace-pre-wrap block md:table overflow-x-auto">
           <thead>
             <tr className="text-left">
@@ -90,14 +91,17 @@ const KioskInfo = () => {
                     {item.id}
                   </td>
                   <td className=" px-6 py-4 text-[#101828] dark:text-white">
-                    {item.profits}
+                    <div className="flex items-center space-x-2">
+                      <img src="/ic-sui.svg" width={20} />
+                      <p>{Number(item.profits) / SUI_DECIMAL}</p>
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-[#101828] dark:text-white ">
                     <button
                       onClick={() => {
                         withdraw(item);
                       }}
-                      className="hover:text-[#E23DCC]"
+                      className="commonGradientText"
                     >
                       Withdraw
                     </button>

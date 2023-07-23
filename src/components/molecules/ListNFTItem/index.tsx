@@ -16,12 +16,11 @@ import Image from "next/image";
 import {
   queryTransferPolicy,
   getOwnedKiosks,
-  mainnetEnvironment,
   purchaseAndResolvePolicies,
+  mainnetEnvironment,
   place,
   createKioskAndShare,
 } from "@mysten/kiosk";
-import { chain } from "lodash";
 import { getConnectedChain, getRPCConnection } from "../../../utils/common";
 interface Props {
   data?: NFT;
@@ -141,11 +140,15 @@ const ListNFTItem: React.FC<Props> = ({
             `This item doesn't have a Transfer Policy attached so it can't be traded through kiosk.`
           );
         }
-
-        const txb = new TransactionBlock();
         txb.setGasBudget(100000000);
         const environment = mainnetEnvironment;
         const buyerKiosk = kiosk.kioskOwnerCaps[0];
+        console.log("=buyerKiosk", buyerKiosk);
+        console.log("=nftType", nftType);
+        console.log("=price", String(price));
+        console.log("=kioskId", kioskId);
+        console.log("=nftId", nftId);
+
         const result = purchaseAndResolvePolicies(
           txb,
           nftType,
@@ -159,7 +162,7 @@ const ListNFTItem: React.FC<Props> = ({
             ownedKioskCap: buyerKiosk.objectId, // kiosk cap của ví mua
           }
         );
-
+        console.log("==handleBuyNow", txb);
         if (result.canTransfer) {
           place(
             txb,
