@@ -46,6 +46,10 @@ const Collection = () => {
 
   const handleFetchData = () => {
     setTimeout(() => {
+      setListNFT([])
+      setListedNFT([])
+      setCurrentPage(1)
+      setCurrentPageItems(1)
       dispatch(fetchUser());
       dispatch(fetchMyListingNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
       dispatch(fetchMyNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
