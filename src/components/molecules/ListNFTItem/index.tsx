@@ -13,6 +13,15 @@ import DelistModal from "../DelistModal";
 import { useRouter } from "next/router";
 import { setSuccess } from "../../../redux/app/appSlice";
 import Image from "next/image";
+import {
+  queryTransferPolicy,
+  getOwnedKiosks,
+  purchaseAndResolvePolicies,
+  mainnetEnvironment,
+  place,
+  createKioskAndShare,
+} from "@mysten/kiosk";
+import { getConnectedChain, getRPCConnection } from "../../../utils/common";
 interface Props {
   data?: NFT;
   onListSuccess: (onChainId?: string) => void;
@@ -21,9 +30,9 @@ interface Props {
 }
 export function validURL(url: string) {
   if (url) {
-    let ipfs_pattern = new RegExp('^ipfs:\/\/')
-    if(ipfs_pattern.test(url)) {
-      url = url.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    let ipfs_pattern = new RegExp("^ipfs://");
+    if (ipfs_pattern.test(url)) {
+      url = url.replace("ipfs://", "https://ipfs.io/ipfs/");
     }
     var pattern = new RegExp(
       "^(https?:\\/\\/)?" + // protocol
@@ -34,7 +43,7 @@ export function validURL(url: string) {
         "(\\#[-a-z\\d_]*)?$",
       "i"
     ); // fragment locator
-    if(!!pattern.test(url)) {
+    if (!!pattern.test(url)) {
       return url;
     }
   }
@@ -46,42 +55,136 @@ const ListNFTItem: React.FC<Props> = ({
   onBuySuccess,
   onDelistSuccess,
 }) => {
-  const { signAndExecuteTransactionBlock, address, connected } = useWallet();
+  const { signAndExecuteTransactionBlock, address, connected, chain } =
+    useWallet();
   const [isLoading, setLoading] = React.useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [openListing, setOpenListing] = React.useState(false);
   const [openDelist, setOpenDelist] = React.useState(false);
+
+  const handleCreateKiosk = async () => {
+    try {
+      const txb = new TransactionBlock();
+      const kiosk_cap = createKioskAndShare(txb);
+      txb.transferObjects([kiosk_cap], txb.pure(address, "address"));
+      const tx = (await signAndExecuteTransactionBlock({
+        transactionBlock: txb as any,
+        options: {
+          showEffects: true,
+        },
+      })) as any;
+      const { status } = tx.effects.status;
+      if (status === "success") {
+        toast.success("Create Kiosk success!");
+        return true;
+      } else {
+        toast.error("Create Kiosk error!");
+        return false;
+      }
+    } catch (e: any) {
+      setLoading(false);
+      if (e.message.includes("amount sufficient for the required gas amount")) {
+        toast.error("Your SUI balance is not enough to buy this item!");
+        return;
+      }
+
+      toast.error(e.message);
+    }
+  };
+
   const handleBuyNow = async (
     nftId: string,
     nftType: string,
-    price: number
+    price: number,
+    kioskId?: string
   ) => {
     setLoading(true);
     const packageObjectId = process.env.NEXT_PUBLIC_PACKAGE_OBJECT_ID;
     const contractModule = process.env.NEXT_PUBLIC_MODULE;
     const marketId = process.env.NEXT_PUBLIC_MARKET_OBJECT_ID;
-    if (!marketId || !packageObjectId || !contractModule || !address) {
+    const kioskMarketId = process.env.NEXT_PUBLIC_KIOSK_MARKET_ID;
+    const kioskModule = process.env.NEXT_PUBLIC_KIOSK_MODULE;
+    const kioskPackageId = process.env.NEXT_PUBLIC_KIOSK_PACKAGE_ID;
+    if (
+      !marketId ||
+      !packageObjectId ||
+      !contractModule ||
+      !address ||
+      !kioskMarketId ||
+      !kioskPackageId ||
+      !kioskModule
+    ) {
       setLoading(false);
       return;
     }
-
-    const fee = 0.12 * SUI_DECIMAL;
     try {
       const txb = new TransactionBlock();
-      txb.moveCall({
-        target: `${packageObjectId}::${contractModule}::buy`,
-        arguments: [
-          txb.pure(marketId),
-          txb.pure(nftId),
-          txb.makeMoveVec({
-            objects: [txb.splitCoins(txb.gas, [txb.pure(String(price + fee))])],
-          }),
-        ],
-        typeArguments: [nftType],
-      });
+      const chainConnected = getConnectedChain(chain?.id);
+      const provider = getRPCConnection(chainConnected);
+      if (kioskId && provider) {
+        const kiosk = await getOwnedKiosks(provider, address);
+        if (kiosk.kioskOwnerCaps.length === 0) {
+          const createdNewKisok = await handleCreateKiosk();
+          if (createdNewKisok) {
+            handleBuyNow(nftId, nftType, price, kioskId);
+          } else {
+            setLoading(false);
+          }
+          return;
+        }
+        const policies = await queryTransferPolicy(provider, nftType);
+        const policyId = policies[0]?.id;
+        if (!policyId) {
+          throw new Error(
+            `This item doesn't have a Transfer Policy attached so it can't be traded through kiosk.`
+          );
+        }
+        const [coin] = txb.splitCoins(txb.gas, [txb.pure(1)]);
+        // txb.transferObjects([coin], txb.pure(address, "address")); //send token to address
+        txb.setGasBudget(100000000);
+        const environment = mainnetEnvironment;
+        const buyerKiosk = kiosk.kioskOwnerCaps[0];
+        const result = purchaseAndResolvePolicies(
+          txb,
+          nftType,
+          String(price),
+          kioskId, // kiosk id của nft
+          nftId,
+          policies[0],
+          environment,
+          {
+            ownedKiosk: buyerKiosk.kioskId, // kiosk id của ví mua
+            ownedKioskCap: buyerKiosk.objectId, // kiosk cap của ví mua
+          }
+        );
+        if (result.canTransfer) {
+          place(
+            txb,
+            nftType,
+            buyerKiosk.kioskId,
+            buyerKiosk.objectId,
+            result.item
+          );
+        }
+      } else {
+        const fee = 0.12 * SUI_DECIMAL;
+        txb.moveCall({
+          target: `${packageObjectId}::${contractModule}::buy`,
+          arguments: [
+            txb.pure(marketId),
+            txb.pure(nftId),
+            txb.makeMoveVec({
+              objects: [
+                txb.splitCoins(txb.gas, [txb.pure(String(price + fee))]),
+              ],
+            }),
+          ],
+          typeArguments: [nftType],
+        });
+      }
       const tx = (await signAndExecuteTransactionBlock({
-        transactionBlock: txb,
+        transactionBlock: txb as any,
         options: {
           showEffects: true,
         },
@@ -134,16 +237,15 @@ const ListNFTItem: React.FC<Props> = ({
       <div className="flex flex-col w-full rounded-[20px] bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl hover:shadow-2xl sm:hover:scale-105 transition duration-300 ease-in-out">
         <div className="flex w-full wrap-ratio-[1/1]">
           <Image
-            src={validURL(data?.image || '/default.jpeg')}
+            src={validURL(data?.image || "/default.jpeg")}
             className="rounded-[32px] object-cover cursor-pointer aspect-[1/1] p-4"
             width={500}
-              height={500}
+            height={500}
             alt="mock"
             onClick={(e: any) => {
               router.push(`/nft/${data?.id}`);
             }}
           />
-
         </div>
         <div className="flex p-5 space-x-[14px]  rounded-b-[20px] pt-0">
           <div className="w-full">
@@ -199,7 +301,8 @@ const ListNFTItem: React.FC<Props> = ({
                         handleBuyNow(
                           data?.onChainId,
                           data?.nftType,
-                          Number(data.saleStatus?.price) * SUI_DECIMAL
+                          Number(data.saleStatus?.price) * SUI_DECIMAL,
+                          data.kioskId
                         );
                       }
                     }}
@@ -267,6 +370,8 @@ const ListNFTItem: React.FC<Props> = ({
           }}
           nftId={data.onChainId}
           nftType={data.nftType}
+          kioskId={data.kioskId}
+          kioskOwnerCapId={data.kioskOwnerCapId}
           id={data.id}
           onSuccess={() => {
             setOpenDelist(false);

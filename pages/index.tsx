@@ -39,7 +39,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1)
+    setCurrentPage(1);
   }, [sort]);
 
   useEffect(() => {

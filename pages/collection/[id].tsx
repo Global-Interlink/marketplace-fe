@@ -15,6 +15,7 @@ import {
   clear,
   fetchCollectionDetail,
   fetchListNFTOfCollection,
+  fetchFilterItems,
 } from "../../src/redux/collection/collectionSlice";
 import { useAppDispatch, useAppSelector } from "../../src/redux/hook";
 import NFTListSkeleton from "../../src/components/molecules/NFTListSkeleton";
@@ -23,7 +24,8 @@ import CollectionDetailTopSkeleton from "../../src/components/molecules/Collecti
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
-import SearchForm from "../../src/components/molecules/Search";
+
+import NFTAttributeItem from "../../src/components/molecules/NFTAttributeItem";
 import { debounce } from "lodash";
 var canLoad = true;
 const Collection = () => {
@@ -36,6 +38,10 @@ const Collection = () => {
   const { response, status } = useAppSelector(
     (store) => store.collection.nftData
   );
+  const { properties } = useAppSelector(
+    (store) => store.collection.filterItems
+  );
+  const [filterQueries, setFilterQueries] = React.useState<string[]>([]);
   const LIMIT = 12;
   const [sort, setSort] = React.useState<"ASC" | "DESC">("DESC");
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -47,7 +53,7 @@ const Collection = () => {
     if (id) {
       dispatch(fetchCollectionDetail({ id: String(id) }));
     }
-    console.log("hello collection")
+    console.log("hello collection");
   }, [id]);
 
   React.useEffect(() => {
@@ -57,26 +63,29 @@ const Collection = () => {
   }, []);
 
   React.useEffect(() => {
-    window.addEventListener('scroll', checkScroll);
+    window.addEventListener("scroll", checkScroll);
     return () => {
-        window.removeEventListener('scroll', checkScroll);
-    }
+      window.removeEventListener("scroll", checkScroll);
+    };
   }, [response?.meta?.totalPages]);
 
   const checkScroll = () => {
-    const list = document.getElementById('list-nft')
-    if(list?.clientHeight ){
-      const x = window.scrollY + window.innerHeight
-      const y = list?.clientHeight + list?.offsetTop
+    const list = document.getElementById("list-nft");
+    if (list?.clientHeight) {
+      const x = window.scrollY + window.innerHeight;
+      const y = list?.clientHeight + list?.offsetTop;
       if (x >= y && status != FetchStatus.pending && canLoad) {
-        if(response?.meta?.totalPages && currentPage < Number(response?.meta?.totalPages)) {
-          console.log('hell')
-          setCurrentPage(prev => prev + 1)
+        if (
+          response?.meta?.totalPages &&
+          currentPage < Number(response?.meta?.totalPages)
+        ) {
+          console.log("hell");
+          setCurrentPage((prev) => prev + 1);
         }
-        canLoad = false;     
+        canLoad = false;
       }
     }
-  }   
+  };
   const [isFocus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
 
@@ -99,7 +108,7 @@ const Collection = () => {
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
       if (nextValue.length === 0) {
-        setText("")
+        setText("");
       }
       if (id) {
         setListNFT([]);
@@ -114,11 +123,11 @@ const Collection = () => {
         );
       }
     }, 2000),
-    [id,sort]
+    [id, sort]
   );
 
   React.useEffect(() => {
-    if (id ) {
+    if (id) {
       dispatch(
         fetchListNFTOfCollection({
           id: String(id),
@@ -142,6 +151,11 @@ const Collection = () => {
       dispatch(clear());
     };
   }, []);
+  React.useEffect(() => {
+    if (id) {
+      dispatch(fetchFilterItems({ id: String(id) }));
+    }
+  }, [id]);
 
   React.useEffect(() => {
     if (listNFT && listNFT.length > 0) {
@@ -154,10 +168,12 @@ const Collection = () => {
           limit: LIMIT,
           sort: sort,
           nameNft: text,
+          queries:
+            filterQueries.length > 0 ? filterQueries.join("&") : undefined,
         })
       );
     }
-  }, [sort]);
+  }, [sort, filterQueries]);
 
   React.useEffect(() => {
     const divElement = document.querySelector(".collection-description");
@@ -174,7 +190,7 @@ const Collection = () => {
       setListNFT((s) => {
         return getUnique([...s, ...response.data], "id");
       });
-      canLoad = true
+      canLoad = true;
     }
   }, [response]);
 
@@ -203,7 +219,7 @@ const Collection = () => {
               />
               <div className="w-full my-auto">
                 <p
-                   className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
+                  className="text-xl md:text-[24px] external leading-8 font-semibold text-black dark:text-white font-display break-all mt-[12px] mr-[24px]"
                   title={collectionData?.name}
                 >
                   {collectionData?.name}
@@ -251,74 +267,136 @@ const Collection = () => {
           </div>
         )}
         <div className="mt-[40px]">
-          {(status === FetchStatus.idle || status === FetchStatus.pending) && currentPage == 1 ? (
-            <NFTListSkeleton />
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <div className="text-black dark:text-white">
-                  <div
-                    className={` ${
-                      isFocus ? "border" : "border border-transparent"
-                    } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
-                  >
-                    <Image src="/ic_search.svg" width={20} height={20} alt="ic-search"/>
-                    <input
-                      placeholder="Search NFTs"
-                      className="bg-transparent text-sm flex-1 outline-none dark:caret-white dark:text-white"
-                      onChange={(e) => {
-                        const { value } = e.target;
-                        setText(value);
-                        debounceSearch(value);
+          <>
+            <div className="flex items-center justify-between">
+              <div className="text-black dark:text-white">
+                <div
+                  className={` ${
+                    isFocus ? "border" : "border border-transparent"
+                  } px-6 py-4 flex items-center space-x-4 w-[100%] lg:w-[300px] xl:w-[380px] h-12 bg-white dark:bg-[#392B4A]/50 rounded-full`}
+                >
+                  <Image
+                    src="/ic_search.svg"
+                    width={20}
+                    height={20}
+                    alt="ic-search"
+                  />
+                  <input
+                    placeholder="Search NFTs"
+                    className="bg-transparent text-sm flex-1 outline-none dark:caret-white dark:text-white"
+                    onChange={(e) => {
+                      const { value } = e.target;
+                      setText(value);
+                      debounceSearch(value);
+                    }}
+                    value={text}
+                    onFocus={() => {
+                      setFocus(true);
+                    }}
+                    onBlur={() => {
+                      setFocus(false);
+                    }}
+                  />
+                  {text.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setText("");
+                        debounceSearch("");
                       }}
-                      value={text}
-                      onFocus={() => {
-                        setFocus(true);
-                      }}
-                      onBlur={() => {
-                        setFocus(false);
-                      }}
-                    />
-                    {text.length > 0 && (
+                    >
+                      <Image
+                        width={24}
+                        height={24}
+                        src="/ic-close.svg"
+                        alt="ic-close"
+                      />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <Sort
+                onChange={(sort) => {
+                  setSort(sort);
+                }}
+                sort={sort}
+                firstChoose="High to low"
+                secondChoose="Low to high"
+              />
+            </div>
+            <div className="flex items-start space-x-6">
+              {properties && Object.entries(properties).length > 0 && (
+                <div className="min-w-[260px] mt-4 space-y-4 max-w-[260px] dark:text-white text-[#101828] rounded-[20px]  p-4 bg-bgLinearNFTItem dark:bg-bgLinearCollectionItem drop-shadow-xl shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold">Filter</p>
+                    {filterQueries.length > 0 && (
                       <button
                         onClick={() => {
-                          setText("");
-                          debounceSearch("");
+                          setFilterQueries([]);
                         }}
+                        className="hover:text-[#E23DCC] dark:text-white text-[#101828] font-bold"
                       >
-                        <Image width={24} height={24} src="/ic-close.svg" alt="ic-close" />
+                        Reset
                       </button>
                     )}
                   </div>
+                  <p className="font-bold">Attributes</p>
+                  <div className="space-y-4">
+                    {properties &&
+                      Object.entries(properties).map((item) => {
+                        return (
+                          <NFTAttributeItem
+                            key={item[0]}
+                            attribute={item[0]}
+                            values={item[1] as any}
+                            onSelect={(value) => {
+                              setFilterQueries((s) => {
+                                return [...s, value];
+                              });
+                            }}
+                            onRemove={(value) => {
+                              setFilterQueries((s) => {
+                                return s.filter((i) => i !== value);
+                              });
+                            }}
+                            filterQueries={filterQueries}
+                          />
+                        );
+                      })}
+                  </div>
                 </div>
-                <Sort
-                  onChange={(sort) => {
-                    setSort(sort);
-                  }}
-                  sort={sort}
-                  firstChoose="High to low"
-                  secondChoose="Low to high"
-                />
-              </div>
-              {listNFT && listNFT.length > 0 ? (
-                <div className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5" id="list-nft">
-                  {listNFT.map((i) => {
-                    return (
-                      <ListNFTItem
-                        key={i.id}
-                        data={i}
-                        onBuySuccess={handleFetchData}
-                        onDelistSuccess={handleFetchData}
-                        onListSuccess={handleFetchData}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <Empty />
               )}
-            </>
-          )}
+              {(status === FetchStatus.idle ||
+                status === FetchStatus.pending) &&
+              currentPage == 1 ? (
+                <NFTListSkeleton hideHeader hideSort hideTab />
+              ) : (
+                <>
+                  {listNFT && listNFT.length > 0 ? (
+                    <div
+                      className="py-4 md:py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5"
+                      id="list-nft"
+                    >
+                      {listNFT.map((i) => {
+                        return (
+                          <ListNFTItem
+                            key={i.id}
+                            data={i}
+                            onBuySuccess={handleFetchData}
+                            onDelistSuccess={handleFetchData}
+                            onListSuccess={handleFetchData}
+                          />
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex w-full items-center justify-center">
+                      <Empty />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </>
         </div>
       </div>
     </BaseComponent>

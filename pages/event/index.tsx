@@ -1,5 +1,4 @@
 import React from "react";
-import CountDown from "../../src/components/molecules/Countdown";
 import BaseComponent from "../../src/components/organisms/BaseComponent";
 import ListRanking, {
   LeaderBoard,
@@ -19,7 +18,7 @@ import MoreTicketList, {
 import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import { createAxios } from "../../src/api/axiosWallet";
 import Link from "next/link";
-import { getNextSunday, getThisWeek } from "../../src/utils/common";
+import { getNextSunday } from "../../src/utils/common";
 import usePizePoolBalance from "../../src/hooks/usePizePoolBalance";
 import { SUI_DECIMAL } from "../../src/api/constants";
 import NotEligible from "../../src/components/molecules/EligibleModal";
@@ -30,6 +29,14 @@ import Image from "next/image";
 import { Week } from "./weekly-reward/tickets";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
+
+import dynamic from "next/dynamic";
+const CountDown = dynamic(
+  () => import("../../src/components/molecules/Countdown"),
+  {
+    ssr: false,
+  }
+);
 
 const getAccessToken = async (walletAddress: string) => {
   const secret = new TextEncoder().encode("ABCCD");
@@ -308,6 +315,7 @@ const Campaign = () => {
               />
             </div>
           </div>
+
           <div
             className={`w-full lg:w-1/2 mp-4 p-4 md:p-8   rounded-lg campaignboxshadow  ${
               theme === "dark" ? "darkGradient" : "bg-white"

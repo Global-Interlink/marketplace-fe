@@ -21,7 +21,8 @@ import {
 } from "../../src/redux/profile/profileSlice";
 import { NFT } from "../../src/api/types";
 import { getUnique } from "../../src/utils/localStorage";
-import { BackToTop } from "../../src/components/molecules/BackToTop";
+import KioskInfo from "../../src/components/molecules/Kiosk";
+
 var canLoadMyItem = true;
 var canLoadListing = true;
 const Collection = () => {
@@ -29,7 +30,6 @@ const Collection = () => {
   const { response, status } = useAppSelector(
     (store) => store.profie.profileData
   );
-  const { response: user } = useAppSelector((store) => store.profie.userData);
   const { response: listed, status: listedStatus } = useAppSelector(
     (store) => store.profie.listedData
   );
@@ -41,8 +41,7 @@ const Collection = () => {
   const [currentPageItems, setCurrentPageItems] = useState(1);
   const [listNFT, setListNFT] = useState<NFT[]>([]);
   const [listedNFT, setListedNFT] = useState<NFT[]>([]);
-  const [isFocus, setFocus] = React.useState(false);
-  const [text, setText] = React.useState("");
+
 
   const handleFetchData = () => {
     setTimeout(() => {
@@ -54,10 +53,13 @@ const Collection = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
+  }, []);
+
+  useEffect(() => {
     return () => {
       dispatch(clear());
     };
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (!connected) {
@@ -229,6 +231,7 @@ const Collection = () => {
       ),
       key: "2",
     },
+    { label: "Kiosk", key: "3", children: <KioskInfo /> },
   ];
   return (
     <BaseComponent>
