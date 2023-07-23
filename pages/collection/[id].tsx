@@ -70,7 +70,6 @@ const Collection = () => {
       const y = list?.clientHeight + list?.offsetTop
       if (x >= y && status != FetchStatus.pending && canLoad) {
         if(response?.meta?.totalPages && currentPage < Number(response?.meta?.totalPages)) {
-          console.log('hell')
           setCurrentPage(prev => prev + 1)
         }
         canLoad = false;     
@@ -103,6 +102,7 @@ const Collection = () => {
       }
       if (id) {
         setListNFT([]);
+        setCurrentPage(1);
         dispatch(
           fetchListNFTOfCollection({
             id: String(id),

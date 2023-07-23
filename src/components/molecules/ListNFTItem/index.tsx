@@ -207,7 +207,7 @@ const ListNFTItem: React.FC<Props> = ({
                     {isLoading ? (
                       <LoadingOutlined className="text-white" size={20} />
                     ) : (
-                      "BUY"
+                      "QUICK BUY"
                     )}
                   </button>
                 )}
