@@ -72,7 +72,7 @@ const SearchForm = () => {
         )}
       </div>
       {showBottom && response && response.data.length > 0 && (
-        <div className="absolute z-20 shadow-2xl text-white w-full lg:w-[300px] xl:w-[380px] max-h-[428px] bg-white dark:bg-bgProperty mt-14 py-3 overflow-y-auto rounded-xl">
+        <div id="home-search" className="absolute z-20 shadow-2xl text-white w-full lg:w-[300px] xl:w-[380px] max-h-[428px] bg-white dark:bg-bgProperty mt-14 py-3 overflow-y-auto rounded-xl">
           <p className="px-6 text-gray-400">Collections</p>
           <hr className="border-gray-300 dark:border-gray-800 mt-3" />
           {response.data.map((i, idx) => {
