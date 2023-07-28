@@ -533,3 +533,6 @@ div[type="button"] {
 #home-search:hover::-webkit-scrollbar-thumb {
   display: block !important;
 }
+.back-top svg {
+  fill: #fff;
+}
