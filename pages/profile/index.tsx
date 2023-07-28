@@ -125,7 +125,7 @@ const Collection = () => {
     return () => {
         window.removeEventListener('scroll', checkScroll);
     }
-  }, [response]);
+  }, [response, listed]);
 
   const checkScroll = () => {
     const MyItems = document.getElementById('my-items')
@@ -144,8 +144,9 @@ const Collection = () => {
       const x = window.scrollY + window.innerHeight
       const y = Listing?.clientHeight + Listing?.offsetTop
       if (x >= y && listedStatus != FetchStatus.pending && canLoadListing) {
-        if(listed?.meta?.totalPages && currentPage < Number(listed?.meta?.totalPages)) {
+        if(currentPage < Number(listed?.meta?.totalPages)) {
           setCurrentPage(prev => prev + 1)
+          console.log("currentPage 11", currentPage)
         }
         canLoadListing = false;     
       }
@@ -325,12 +326,12 @@ const Collection = () => {
                 />
               </div>
 
-              {(status === FetchStatus.idle ||
+              {/* {(status === FetchStatus.idle ||
                 status === FetchStatus.pending ||
                 listedStatus === FetchStatus.idle ||
                 listedStatus === FetchStatus.pending) && (
                 <NFTListSkeleton hideTab />
-              )}
+              )} */}
             </div>
           </div>
         </div>
