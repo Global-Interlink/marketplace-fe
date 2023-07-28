@@ -12,13 +12,13 @@ export const BackToTop = () => {
             console.log('window.scrollY', window.scrollY)
             if (y > window.scrollY) {
                 if(window.scrollY > 600) {
-                    setShow(true)
+
                 } else {
                     setShow(false)
                 }
                 console.log("scrolling up");
             } else if (y < window.scrollY) {
-                setShow(false)
+                setShow(true)
             }
             setY(window.scrollY);
         }, [y]
@@ -36,7 +36,7 @@ export const BackToTop = () => {
         <div className={`${isShow ? 'block' : 'hidden'} fixed bottom-20 right-20`}>
             <div className='wrap-ratio-[1/1]'>
                 <button className='primaryButton back-top p-5 aspect-[1/1] flex justify-center items-center' onClick={backTop}>
-                    <ArrowUpOutlined height={30} width={30} />
+                    <ArrowUpOutlined height={30} width={30} className='text-white' rev={undefined} />
                 </button>
             </div>
         </div>
