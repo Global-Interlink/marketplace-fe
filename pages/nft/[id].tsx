@@ -254,6 +254,7 @@ console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price
                       {isLoading ? (
                         <Spin
                           indicator={<LoadingOutlined className="text-white" />}
+                          className="relative -top-[3px]"
                         />
                       ) : (
                         "Buy Now"
@@ -274,6 +275,7 @@ console.log("Number(nftData.saleStatus.price)",Number(nftData?.saleStatus?.price
                       {isLoading ? (
                         <Spin
                           indicator={<LoadingOutlined className="text-white" />}
+                          className="relative -top-[3px]"
                         />
                       ) : (
                         "Delist"
