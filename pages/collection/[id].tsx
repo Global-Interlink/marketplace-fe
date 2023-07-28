@@ -43,6 +43,11 @@ const Collection = () => {
   const [isShow, setIsShow] = React.useState(false);
   const [listNFT, setListNFT] = React.useState<NFT[]>([]);
 
+  const init = () => {
+      canLoad = true;  
+      setListNFT([]);
+      setCurrentPage(1);
+  }
   React.useEffect(() => {
     if (id) {
       dispatch(fetchCollectionDetail({ id: String(id) }));
@@ -81,8 +86,7 @@ const Collection = () => {
 
   const handleFetchData = () => {
     if (id) {
-      setListNFT([]);
-      setCurrentPage(1);
+      init()
       dispatch(
         fetchListNFTOfCollection({
           id: String(id),
@@ -97,12 +101,8 @@ const Collection = () => {
 
   const debounceSearch = React.useCallback(
     debounce((nextValue) => {
-      if (nextValue.length === 0) {
-        setText("")
-      }
       if (id) {
-        setListNFT([]);
-        setCurrentPage(1);
+        init()
         dispatch(
           fetchListNFTOfCollection({
             id: String(id),
@@ -145,17 +145,7 @@ const Collection = () => {
 
   React.useEffect(() => {
     if (listNFT && listNFT.length > 0) {
-      setListNFT([]);
-      setCurrentPage(1);
-      dispatch(
-        fetchListNFTOfCollection({
-          id: String(id),
-          page: 1,
-          limit: LIMIT,
-          sort: sort,
-          nameNft: text,
-        })
-      );
+     handleFetchData()
     }
   }, [sort]);
 

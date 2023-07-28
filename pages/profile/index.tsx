@@ -44,12 +44,17 @@ const Collection = () => {
   const [isFocus, setFocus] = React.useState(false);
   const [text, setText] = React.useState("");
 
+  const init = () => {
+    setListNFT([])
+    setListedNFT([])
+    setCurrentPage(1)
+    setCurrentPageItems(1)
+    canLoadListing = true
+    canLoadMyItem = true
+  }
   const handleFetchData = () => {
     setTimeout(() => {
-      setListNFT([])
-      setListedNFT([])
-      setCurrentPage(1)
-      setCurrentPageItems(1)
+      init()
       dispatch(fetchUser());
       dispatch(fetchMyListingNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
       dispatch(fetchMyNFTs({ page: 1, limit: LIMIT, sort: "DESC" }));
