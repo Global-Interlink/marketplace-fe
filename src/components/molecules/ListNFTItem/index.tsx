@@ -187,7 +187,7 @@ const ListNFTItem: React.FC<Props> = ({
                       }
                     }}
                   >
-                    List Now
+                    LIST NOW
                   </button>
                 )}
                 {isShowBuy && connected && (
@@ -221,7 +221,7 @@ const ListNFTItem: React.FC<Props> = ({
                 {isShowDelist && (
                   <button
                     disabled={!connected || isLoading}
-                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white border dark:border-none rounded-full max-w-[120px]"
+                    className="primaryButton h-[36px] w-full text-center text-[14px] text-white dark:border-none rounded-full max-w-[120px]"
                     onClick={(e: any) => {
                       setOpenDelist(true);
                     }}
